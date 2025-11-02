@@ -1,0 +1,566 @@
+module.exports = {
+
+"[externals]/perf_hooks [external] (perf_hooks, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("perf_hooks", () => require("perf_hooks"));
+
+module.exports = mod;
+}}),
+"[externals]/node:perf_hooks [external] (node:perf_hooks, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("node:perf_hooks", () => require("node:perf_hooks"));
+
+module.exports = mod;
+}}),
+"[externals]/async_hooks [external] (async_hooks, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("async_hooks", () => require("async_hooks"));
+
+module.exports = mod;
+}}),
+"[externals]/events [external] (events, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("events", () => require("events"));
+
+module.exports = mod;
+}}),
+"[externals]/os [external] (os, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("os", () => require("os"));
+
+module.exports = mod;
+}}),
+"[externals]/process [external] (process, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("process", () => require("process"));
+
+module.exports = mod;
+}}),
+"[externals]/child_process [external] (child_process, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("child_process", () => require("child_process"));
+
+module.exports = mod;
+}}),
+"[externals]/util [external] (util, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("util", () => require("util"));
+
+module.exports = mod;
+}}),
+"[externals]/fs [external] (fs, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("fs", () => require("fs"));
+
+module.exports = mod;
+}}),
+"[externals]/crypto [external] (crypto, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("crypto", () => require("crypto"));
+
+module.exports = mod;
+}}),
+"[externals]/require-in-the-middle [external] (require-in-the-middle, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("require-in-the-middle", () => require("require-in-the-middle"));
+
+module.exports = mod;
+}}),
+"[externals]/import-in-the-middle [external] (import-in-the-middle, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("import-in-the-middle", () => require("import-in-the-middle"));
+
+module.exports = mod;
+}}),
+"[externals]/http [external] (http, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("http", () => require("http"));
+
+module.exports = mod;
+}}),
+"[externals]/https [external] (https, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("https", () => require("https"));
+
+module.exports = mod;
+}}),
+"[externals]/zlib [external] (zlib, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("zlib", () => require("zlib"));
+
+module.exports = mod;
+}}),
+"[externals]/stream [external] (stream, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("stream", () => require("stream"));
+
+module.exports = mod;
+}}),
+"[externals]/tls [external] (tls, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("tls", () => require("tls"));
+
+module.exports = mod;
+}}),
+"[externals]/net [external] (net, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("net", () => require("net"));
+
+module.exports = mod;
+}}),
+"[externals]/http2 [external] (http2, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("http2", () => require("http2"));
+
+module.exports = mod;
+}}),
+"[externals]/dns [external] (dns, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("dns", () => require("dns"));
+
+module.exports = mod;
+}}),
+"[externals]/node:async_hooks [external] (node:async_hooks, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("node:async_hooks", () => require("node:async_hooks"));
+
+module.exports = mod;
+}}),
+"[externals]/node:process [external] (node:process, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("node:process", () => require("node:process"));
+
+module.exports = mod;
+}}),
+"[externals]/node:buffer [external] (node:buffer, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("node:buffer", () => require("node:buffer"));
+
+module.exports = mod;
+}}),
+"[externals]/express [external] (express, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("express", () => require("express"));
+
+module.exports = mod;
+}}),
+"[externals]/fs/promises [external] (fs/promises, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("fs/promises", () => require("fs/promises"));
+
+module.exports = mod;
+}}),
+"[externals]/node:crypto [external] (node:crypto, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("node:crypto", () => require("node:crypto"));
+
+module.exports = mod;
+}}),
+"[project]/src/ai/genkit.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({
+    "ai": (()=>ai)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/genkit/lib/index.mjs [app-rsc] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$genkit$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/genkit/lib/genkit.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$genkit$2d$ai$2f$googleai$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/@genkit-ai/googleai/lib/index.mjs [app-rsc] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$genkit$2d$ai$2f$googleai$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@genkit-ai/googleai/lib/index.mjs [app-rsc] (ecmascript) <locals>");
+;
+;
+const ai = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$genkit$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["genkit"])({
+    plugins: [
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$genkit$2d$ai$2f$googleai$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$locals$3e$__["googleAI"])()
+    ],
+    model: 'googleai/gemini-2.0-flash'
+});
+}}),
+"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+/* __next_internal_action_entry_do_not_use__ {"7f41d60e81e261d78502096d2bc3db94492aea0f4e":"chat"} */ __turbopack_context__.s({
+    "chat": (()=>chat)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$app$2d$render$2f$encryption$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/app-render/encryption.js [app-rsc] (ecmascript)");
+/**
+ * @fileoverview A chatbot flow for answering questions about KASUPDA.
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$genkit$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/ai/genkit.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/genkit/lib/index.mjs [app-rsc] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/genkit/lib/common.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-validate.js [app-rsc] (ecmascript)");
+;
+;
+;
+;
+const FaqData = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
+    question: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    answer: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
+});
+const ChatInputSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
+    history: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].array(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
+        role: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+        content: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
+    })),
+    question: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    faq: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].array(FaqData)
+});
+const /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ chat = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$genkit$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ai"].defineFlow({
+    name: 'chatFlow',
+    inputSchema: ChatInputSchema,
+    outputSchema: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$genkit$2f$lib$2f$common$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string()
+}, async (input)=>{
+    const { history, question, faq } = input;
+    const llm = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$genkit$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ai"].llm.chat();
+    const historyMessages = history.map((msg)=>({
+            role: msg.role,
+            content: [
+                {
+                    text: msg.content
+                }
+            ]
+        }));
+    const faqContext = faq.map((item)=>`Q: ${item.question}\nA: ${item.answer}`).join('\n\n');
+    const prompt = `You are a helpful AI assistant for KASUPDA, the Kaduna State Urban Planning and Development Authority. Your role is to answer user questions based on the provided Frequently Asked Questions (FAQs). Be friendly, concise, and professional.
+
+If the user's question is directly answered in the FAQs, provide the answer.
+If the question is related but not directly answered, use the FAQ information to formulate a helpful response.
+If the question is completely unrelated to KASUPDA or the provided FAQs, politely state that you can only answer questions about KASUPDA services and regulations. Do not attempt to answer off-topic questions.
+
+Here are the FAQs to use as your knowledge base:
+---
+${faqContext}
+---
+
+Now, please answer the following question:
+`;
+    const response = await llm.send({
+        messages: [
+            ...historyMessages,
+            {
+                role: 'user',
+                content: [
+                    {
+                        text: prompt + question
+                    }
+                ]
+            }
+        ]
+    });
+    return response.text;
+});
+;
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
+    chat
+]);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(chat, "7f41d60e81e261d78502096d2bc3db94492aea0f4e", null);
+}}),
+"[externals]/firebase-admin [external] (firebase-admin, cjs)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("firebase-admin", () => require("firebase-admin"));
+
+module.exports = mod;
+}}),
+"[project]/src/lib/firebase/admin.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+// src/lib/firebase/admin.ts
+__turbopack_context__.s({
+    "initializeFirebaseAdmin": (()=>initializeFirebaseAdmin)
+});
+var __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin__$5b$external$5d$__$28$firebase$2d$admin$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/firebase-admin [external] (firebase-admin, cjs)");
+;
+// This function ensures that initialization only happens once.
+function getFirebaseAdminApp() {
+    if (__TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin__$5b$external$5d$__$28$firebase$2d$admin$2c$__cjs$29$__["apps"].length > 0) {
+        return __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin__$5b$external$5d$__$28$firebase$2d$admin$2c$__cjs$29$__["apps"][0];
+    }
+    try {
+        // Read credentials from environment variables
+        const projectId = process.env.FIREBASE_PROJECT_ID;
+        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+        // IMPORTANT: When reading from .env, escaped newlines are read literally.
+        // We must replace the string "\\n" with an actual newline character "\n".
+        const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+        if (!projectId || !clientEmail || !privateKey) {
+            throw new Error('Firebase admin credentials are not set in environment variables.');
+        }
+        return (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin__$5b$external$5d$__$28$firebase$2d$admin$2c$__cjs$29$__["initializeApp"])({
+            credential: __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin__$5b$external$5d$__$28$firebase$2d$admin$2c$__cjs$29$__["credential"].cert({
+                projectId,
+                clientEmail,
+                privateKey
+            })
+        });
+    } catch (error) {
+        console.error('Firebase admin initialization error:', error.stack);
+        // Throw a more specific error to help with debugging.
+        throw new Error('Firebase admin initialization failed. Please check the service account credentials provided.');
+    }
+}
+// A single function to get the initialized services.
+function initializeFirebaseAdmin() {
+    const app = getFirebaseAdminApp();
+    return {
+        auth: app.auth(),
+        db: app.firestore()
+    };
+}
+;
+}}),
+"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+/* __next_internal_action_entry_do_not_use__ {"40f2830c5c83ad1a378102d2832ff202e405fc74b2":"saveApplication"} */ __turbopack_context__.s({
+    "saveApplication": (()=>saveApplication)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$app$2d$render$2f$encryption$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/app-render/encryption.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2f$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/firebase/admin.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zod/lib/index.mjs [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-validate.js [app-rsc] (ecmascript)");
+;
+;
+;
+;
+// Initialize Firebase Admin SDK once when the server module loads
+const { db } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$firebase$2f$admin$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["initializeFirebaseAdmin"])();
+// Basic schema for storing the raw data from the form
+const ApplicationSchema = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].object({
+    type: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    applicantName: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    // We will store the rest of the form data as a JSON string.
+    // In a real production app, you would define the full schema for each form type.
+    data: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string(),
+    // Capturing userId will be important and now we mandate it from the forms
+    userId: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["z"].string().min(1, "User ID must be provided.")
+});
+async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ saveApplication(formData) {
+    const rawData = {
+        type: formData.get('type'),
+        applicantName: formData.get('applicantName'),
+        data: formData.get('data'),
+        userId: formData.get('userId')
+    };
+    const validatedFields = ApplicationSchema.safeParse(rawData);
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            error: 'Invalid application data provided. ' + validatedFields.error.flatten().fieldErrors
+        };
+    }
+    try {
+        let parsedData = {};
+        try {
+            parsedData = JSON.parse(validatedFields.data.data);
+        } catch (error) {
+            console.error("Could not parse form data JSON string:", error);
+            return {
+                success: false,
+                error: "Internal server error: Could not process form data."
+            };
+        }
+        const applicationData = {
+            type: validatedFields.data.type,
+            applicantName: validatedFields.data.applicantName,
+            userId: validatedFields.data.userId,
+            data: parsedData,
+            // Add server-side generated fields
+            status: 'Pending',
+            date: new Date().toISOString()
+        };
+        const docRef = await db.collection('applications').add(applicationData);
+        return {
+            success: true,
+            message: 'Application submitted successfully!',
+            applicationId: docRef.id
+        };
+    } catch (error) {
+        console.error('Firestore submission error:', error);
+        // This is a more generic error message that will allow the specific
+        // Firestore error to be visible in the logs.
+        const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred.';
+        return {
+            success: false,
+            error: `Failed to save application: ${errorMessage}`
+        };
+    }
+}
+;
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
+    saveApplication
+]);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(saveApplication, "40f2830c5c83ad1a378102d2832ff202e405fc74b2", null);
+}}),
+"[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <locals>": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({});
+;
+;
+}}),
+"[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <module evaluation>": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({});
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)", ACTIONS_MODULE1 => "[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <locals>');
+}}),
+"[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <exports>": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["saveApplication"]),
+    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["chat"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)", ACTIONS_MODULE1 => "[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <locals>');
+}}),
+"[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["40f2830c5c83ad1a378102d2832ff202e405fc74b2"]),
+    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["7f41d60e81e261d78502096d2bc3db94492aea0f4e"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)", ACTIONS_MODULE1 => "[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation>');
+var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)", ACTIONS_MODULE1 => "[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <exports>');
+}}),
+"[project]/src/app/favicon.ico.mjs { IMAGE => \"[project]/src/app/favicon.ico (static in ecmascript)\" } [app-rsc] (structured image object, ecmascript, Next.js server component)": ((__turbopack_context__) => {
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.n(__turbopack_context__.i("[project]/src/app/favicon.ico.mjs { IMAGE => \"[project]/src/app/favicon.ico (static in ecmascript)\" } [app-rsc] (structured image object, ecmascript)"));
+}}),
+"[project]/src/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)": ((__turbopack_context__) => {
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.n(__turbopack_context__.i("[project]/src/app/layout.tsx [app-rsc] (ecmascript)"));
+}}),
+"[project]/src/app/dashboard/layout.tsx [app-rsc] (ecmascript, Next.js server component)": ((__turbopack_context__) => {
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.n(__turbopack_context__.i("[project]/src/app/dashboard/layout.tsx [app-rsc] (ecmascript)"));
+}}),
+"[project]/src/app/dashboard/apply/residential-building-permit/page.tsx (client reference/proxy) <module evaluation>": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({
+    "default": (()=>__TURBOPACK__default__export__)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$server$2d$dom$2d$turbopack$2d$server$2d$edge$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-server-dom-turbopack-server-edge.js [app-rsc] (ecmascript)");
+;
+const __TURBOPACK__default__export__ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$server$2d$dom$2d$turbopack$2d$server$2d$edge$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerClientReference"])(function() {
+    throw new Error("Attempted to call the default export of [project]/src/app/dashboard/apply/residential-building-permit/page.tsx <module evaluation> from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.");
+}, "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx <module evaluation>", "default");
+}}),
+"[project]/src/app/dashboard/apply/residential-building-permit/page.tsx (client reference/proxy)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.s({
+    "default": (()=>__TURBOPACK__default__export__)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$server$2d$dom$2d$turbopack$2d$server$2d$edge$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-server-dom-turbopack-server-edge.js [app-rsc] (ecmascript)");
+;
+const __TURBOPACK__default__export__ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$server$2d$dom$2d$turbopack$2d$server$2d$edge$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerClientReference"])(function() {
+    throw new Error("Attempted to call the default export of [project]/src/app/dashboard/apply/residential-building-permit/page.tsx from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.");
+}, "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx", "default");
+}}),
+"[project]/src/app/dashboard/apply/residential-building-permit/page.tsx [app-rsc] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2e$tsx__$28$client__reference$2f$proxy$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/src/app/dashboard/apply/residential-building-permit/page.tsx (client reference/proxy) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2e$tsx__$28$client__reference$2f$proxy$29$__ = __turbopack_context__.i("[project]/src/app/dashboard/apply/residential-building-permit/page.tsx (client reference/proxy)");
+;
+__turbopack_context__.n(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$apply$2f$residential$2d$building$2d$permit$2f$page$2e$tsx__$28$client__reference$2f$proxy$29$__);
+}}),
+"[project]/src/app/dashboard/apply/residential-building-permit/page.tsx [app-rsc] (ecmascript, Next.js server component)": ((__turbopack_context__) => {
+
+var { g: global, __dirname } = __turbopack_context__;
+{
+__turbopack_context__.n(__turbopack_context__.i("[project]/src/app/dashboard/apply/residential-building-permit/page.tsx [app-rsc] (ecmascript)"));
+}}),
+
+};
+
+//# sourceMappingURL=%5Broot%20of%20the%20server%5D__bf26f7a0._.js.map

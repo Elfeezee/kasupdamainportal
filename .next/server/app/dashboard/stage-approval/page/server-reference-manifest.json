@@ -1,0 +1,38 @@
+{
+  "node": {
+    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
+      "workers": {
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/stage-approval/page": "action-browser"
+      }
+    },
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
+      "workers": {
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/stage-approval/page": "action-browser"
+      }
+    },
+    "703a62abd91b8fb96e37dd5ce4a1e0958215e38256": {
+      "workers": {
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/stage-approval/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

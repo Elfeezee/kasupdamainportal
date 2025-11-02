@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* White */
+    --foreground: 220 15% 20%; /* Dark Cool Gray for text */
+    --card: 0 0% 100%; /* White card */
+    --card-foreground: 220 15% 20%; /* Dark Cool Gray text on card */
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 220 15% 20%; /* Dark Cool Gray text on popover */
+    --primary: 145 60% 40%; /* Website Green */
+    --primary-foreground: 145 80% 96%; /* Lighter green for text on primary buttons */
+    --secondary: 220 20% 94%; /* Light Cool Gray/Blue for secondary backgrounds */
+    --secondary-foreground: 220 15% 25%; /* Darker Cool Gray for text on secondary */
+    --muted: 220 20% 96.5%; /* Very Light Cool Gray/Blue for muted backgrounds */
+    --muted-foreground: 220 10% 45%; /* Medium Cool Gray for muted text */
+    --accent: 210 90% 55%; /* Vibrant Blue */
+    --accent-foreground: 0 0% 100%; /* White text on accent blue */
+    --destructive: 0 70% 50%; /* Vibrant Red */
+    --destructive-foreground: 0 0% 98%; /* Almost White text on destructive red */
+    --border: 220 15% 88%; /* Light Cool Gray border */
+    --input: 220 15% 96%; /* Light Cool Gray input background */
+    --ring: 145 60% 45%; /* Ring color matching primary green */
+    --chart-1: 145 60% 45%; /* Green variant */
+    --chart-2: 210 80% 55%; /* Blue variant */
+    --chart-3: 145 50% 30%; /* Darker Green variant */
+    --chart-4: 210 70% 40%; /* Darker Blue variant */
+    --chart-5: 160 50% 50%; /* Teal as complementary */
+    --radius: 0.5rem;
+
+    /* Sidebar specific vars for light theme */
+    --sidebar-background: 0 0% 98%; /* Off-white or very light gray for Sidebar */
+    --sidebar-foreground: 220 15% 20%; /* Dark text for Sidebar */
+    --sidebar-primary: 145 60% 45%; /* Website Green for Sidebar primary elements */
+    --sidebar-primary-foreground: 145 80% 96%; /* Lighter green on Sidebar primary */
+    --sidebar-accent: 210 90% 50%; /* Vibrant Blue for Sidebar accents */
+    --sidebar-accent-foreground: 0 0% 100%; /* White text on Sidebar accents */
+    --sidebar-border: 220 15% 88%; /* Border for Sidebar elements */
+    --sidebar-ring: 145 60% 50%; /* Ring for Sidebar focus - green */
+  }
+
+  .dark {
+    --background: 220 20% 10%; /* Dark Desaturated Blue */
+    --foreground: 210 20% 95%; /* Light Grayish Blue */
+    --card: 220 20% 15%; /* Slightly Lighter Dark Desaturated Blue */
+    --card-foreground: 210 20% 95%;
+    --popover: 220 20% 15%;
+    --popover-foreground: 210 20% 95%;
+    --primary: 145 60% 40%; /* Website Green */
+    --primary-foreground: 145 20% 95%; /* Light Green for contrast */
+    --secondary: 220 15% 25%; /* Medium Dark Blue-Gray */
+    --secondary-foreground: 210 20% 95%;
+    --muted: 220 15% 20%; /* Darker Blue-Gray */
+    --muted-foreground: 210 15% 65%; /* Light Gray */
+    --accent: 210 90% 55%; /* Vibrant Blue */
+    --accent-foreground: 210 20% 98%; /* Almost White for contrast on blue */
+    --destructive: 0 70% 50%; /* Vibrant Red */
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 30%; /* Slightly lighter border */
+    --input: 220 15% 20%; /* Darker input background */
+    --ring: 145 60% 45%; /* Ring color matching new primary green */
+    --chart-1: 145 60% 45%;
+    --chart-2: 210 80% 55%;
+    --chart-3: 145 50% 30%;
+    --chart-4: 210 70% 40%;
+    --chart-5: 160 50% 50%;
+
+    /* Sidebar specific vars for dark theme */
+    --sidebar-background: 220 20% 12%; /* Very Dark Desaturated Blue for Sidebar */
+    --sidebar-foreground: 210 20% 90%; /* Light text for Sidebar */
+    --sidebar-primary: 145 60% 45%; /* Website Green for Sidebar primary elements */
+    --sidebar-primary-foreground: 145 20% 98%; /* Light green on Sidebar primary */
+    --sidebar-accent: 210 90% 50%; /* Vibrant Blue for Sidebar accents */
+    --sidebar-accent-foreground: 210 20% 98%; /* Light text on Sidebar accents */
+    --sidebar-border: 220 15% 20%; /* Border for Sidebar elements */
+    --sidebar-ring: 145 60% 50%; /* Ring for Sidebar focus - green */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
