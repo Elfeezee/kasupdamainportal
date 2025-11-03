@@ -65,13 +65,6 @@ export default function Footer() {
             >
               <MapPin className="mr-1 h-4 w-4" /> Map
             </Link>
-             <Link
-              href="/admin/login"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center"
-              prefetch={false}
-            >
-              <ShieldCheck className="mr-1 h-4 w-4" /> Admin Login
-            </Link>
           </nav>
         </div>
 
