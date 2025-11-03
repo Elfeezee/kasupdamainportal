@@ -197,7 +197,7 @@ export default function StageApprovalPage() {
             <div className="flex items-start w-full max-w-lg mx-auto">
             {steps.map((step, index) => (
                 <React.Fragment key={step.id}>
-                <div className="flex flex-col items-center text-center px-1 py-1 flex-shrink-0" style={{width: `${'100 / steps.length'}%`}}>
+                <div className="flex flex-col items-center text-center px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
                     <div
                     className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300",
@@ -345,7 +345,7 @@ function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
-      viewBox="0 0 24"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -356,5 +356,3 @@ function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    
