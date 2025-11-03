@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     template: '%s | KASUPDA',
   },
   description: 'Official portal for KASUPDA, Kaduna State. Find development guidelines, apply for permits, and stay updated on urban planning initiatives.',
+  icons: {
+    icon: '/image/logo.png',
+  },
 };
 
 export const dynamic = 'force-dynamic';

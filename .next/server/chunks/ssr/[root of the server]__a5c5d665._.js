@@ -142,7 +142,10 @@ const metadata = {
         default: 'KASUPDA',
         template: '%s | KASUPDA'
     },
-    description: 'Official portal for KASUPDA, Kaduna State. Find development guidelines, apply for permits, and stay updated on urban planning initiatives.'
+    description: 'Official portal for KASUPDA, Kaduna State. Find development guidelines, apply for permits, and stay updated on urban planning initiatives.',
+    icons: {
+        icon: '/image/logo.png'
+    }
 };
 const dynamic = 'force-dynamic';
 function RootLayout({ children }) {
@@ -155,17 +158,17 @@ function RootLayout({ children }) {
                 children: children
             }, void 0, false, {
                 fileName: "[project]/src/app/layout.tsx",
-                lineNumber: 42,
+                lineNumber: 45,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/layout.tsx",
-            lineNumber: 35,
+            lineNumber: 38,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/layout.tsx",
-        lineNumber: 34,
+        lineNumber: 37,
         columnNumber: 5
     }, this);
 }
