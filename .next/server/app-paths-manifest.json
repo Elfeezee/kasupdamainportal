@@ -1,4 +1,5 @@
 {
+  "/apply-for-permit/page": "app/apply-for-permit/page.js",
   "/dashboard/acknowledgement/[id]/page": "app/dashboard/acknowledgement/[id]/page.js",
   "/dashboard/apply/din-application/page": "app/dashboard/apply/din-application/page.js",
   "/dashboard/my-applications/page": "app/dashboard/my-applications/page.js",
