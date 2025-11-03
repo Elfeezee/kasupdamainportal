@@ -100,10 +100,15 @@ export default function LoginForm() {
   
   const handleGoogleSignIn = async () => {
     try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      if (!siteUrl) {
+          throw new Error("NEXT_PUBLIC_SITE_URL is not defined in your environment variables.");
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`
+          redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(redirectTo)}`
         }
       });
       if (error) throw error;
