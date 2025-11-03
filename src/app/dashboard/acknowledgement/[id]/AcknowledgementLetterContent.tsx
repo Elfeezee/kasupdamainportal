@@ -101,15 +101,10 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                 </div>
                 
                 <div className="relative z-10 flex flex-col flex-grow">
-                     <header className="pb-4 mb-4">
-                        <div className="flex items-center justify-between gap-4">
-                            <div className="text-left">
-                                <h1 className="text-xl font-bold text-black tracking-wide">KADUNA STATE GOVERNMENT</h1>
-                            </div>
-                            <Image src="/image/logo.png" alt="KASUPDA Logo" width={64} height={64} className="h-16 w-16" />
-                        </div>
-                         <h2 className="text-center text-lg font-bold text-black tracking-wide mt-2">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
-                         <h3 className="text-center text-md font-bold text-black tracking-wide">ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT</h3>
+                     <header className="pb-4 mb-4 text-center">
+                        <Image src="/image/logo.png" alt="KASUPDA Logo" width={80} height={80} className="h-20 w-20 mx-auto mb-4" />
+                         <h2 className="text-lg font-bold text-black tracking-wide">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
+                         <h3 className="text-md font-bold text-black tracking-wide mt-1">ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT</h3>
                     </header>
                     
                     <main className="flex-grow">

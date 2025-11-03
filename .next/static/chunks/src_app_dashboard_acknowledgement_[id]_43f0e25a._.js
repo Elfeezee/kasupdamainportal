@@ -160,29 +160,28 @@ const documentChecklistMap = {
     'doc_ncaa_approval_url': 'NCAA Approval'
 };
 const DetailItem = ({ label, value })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-            className: "text-sm",
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                    className: "font-semibold",
-                    children: [
-                        label,
-                        ":"
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                    lineNumber: 74,
-                    columnNumber: 32
-                }, this),
-                " ",
-                value || 'N/A'
-            ]
-        }, void 0, true, {
-            fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-            lineNumber: 74,
-            columnNumber: 9
-        }, this)
-    }, void 0, false, {
+        className: "flex",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "w-36 shrink-0 font-semibold",
+                children: [
+                    label,
+                    ":"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                lineNumber: 74,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: value || 'N/A'
+            }, void 0, false, {
+                fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                lineNumber: 75,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
         lineNumber: 73,
         columnNumber: 5
@@ -191,14 +190,22 @@ _c = DetailItem;
 function AcknowledgementLetterContent({ applicationData }) {
     _s();
     const letterRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const applicationId = applicationData.original_permit_id || applicationData.din || applicationData.id;
+    const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
-    const submissionDate = applicationData.created_at ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseISO"])(applicationData.created_at), 'MMMM d, yyyy') : 'N/A';
+    const submissionDate = applicationData.created_at ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseISO"])(applicationData.created_at), 'dd-MMM-yyyy') : 'N/A';
     const representativeName = [
         applicationData.rep_first_name,
         applicationData.rep_middle_name,
         applicationData.rep_surname
     ].filter(Boolean).join(' ');
+    const applicantAddress = [
+        applicationData.appHouseNo,
+        applicationData.appStreetName,
+        applicationData.appDistrict,
+        applicationData.appCityTown,
+        applicationData.appState
+    ].filter(Boolean).join(', ');
+    const developmentDescription = applicationData.type?.replace(/ permit/i, '').replace(/\(.*\)/i, '').trim();
     const receivedDocuments = Object.keys(applicationData).filter((key)=>key.endsWith('_url') && applicationData[key] && documentChecklistMap[key]).map((key)=>documentChecklistMap[key]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
@@ -216,75 +223,75 @@ function AcknowledgementLetterContent({ applicationData }) {
                             className: "w-2/3 h-2/3 object-contain opacity-5 pointer-events-none"
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                            lineNumber: 97,
+                            lineNumber: 100,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                        lineNumber: 96,
+                        lineNumber: 99,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "relative z-10 flex flex-col flex-grow",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-                                className: "pb-4 mb-4 border-b-4 border-primary",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex items-center justify-between gap-4",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            src: "/image/logo.png",
-                                            alt: "KASUPDA Logo",
-                                            width: 64,
-                                            height: 64,
-                                            className: "h-16 w-16"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                            lineNumber: 103,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-right",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                                    className: "text-2xl font-bold text-primary tracking-wide",
-                                                    children: "KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                    lineNumber: 105,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                    className: "text-sm text-gray-600",
-                                                    children: "No 4 Bida Road, Business District Area, Kaduna State"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                    lineNumber: 106,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                    className: "text-sm text-gray-600",
-                                                    children: "Hotline: 09037236253"
+                                className: "pb-4 mb-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-left",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                                    className: "text-xl font-bold text-black tracking-wide",
+                                                    children: "KADUNA STATE GOVERNMENT"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
                                                     lineNumber: 107,
                                                     columnNumber: 33
                                                 }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                            lineNumber: 104,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                    lineNumber: 102,
-                                    columnNumber: 25
-                                }, this)
-                            }, void 0, false, {
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                                lineNumber: 106,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                src: "/image/logo.png",
+                                                alt: "KASUPDA Logo",
+                                                width: 64,
+                                                height: 64,
+                                                className: "h-16 w-16"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                                lineNumber: 109,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                        lineNumber: 105,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                        className: "text-center text-lg font-bold text-black tracking-wide mt-2",
+                                        children: "KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                        lineNumber: 111,
+                                        columnNumber: 26
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        className: "text-center text-md font-bold text-black tracking-wide",
+                                        children: "ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                        lineNumber: 112,
+                                        columnNumber: 26
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                lineNumber: 101,
+                                lineNumber: 104,
                                 columnNumber: 22
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -294,11 +301,11 @@ function AcknowledgementLetterContent({ applicationData }) {
                                         className: "space-y-1 text-sm my-6",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DetailItem, {
-                                                label: "Application ID",
+                                                label: "File Number",
                                                 value: applicationId
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                lineNumber: 114,
+                                                lineNumber: 117,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DetailItem, {
@@ -306,7 +313,15 @@ function AcknowledgementLetterContent({ applicationData }) {
                                                 value: applicantName
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                lineNumber: 115,
+                                                lineNumber: 118,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DetailItem, {
+                                                label: "Applicant Address",
+                                                value: applicantAddress
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
+                                                lineNumber: 119,
                                                 columnNumber: 29
                                             }, this),
                                             representativeName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DetailItem, {
@@ -314,7 +329,7 @@ function AcknowledgementLetterContent({ applicationData }) {
                                                 value: representativeName
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                lineNumber: 116,
+                                                lineNumber: 120,
                                                 columnNumber: 52
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DetailItem, {
@@ -322,38 +337,27 @@ function AcknowledgementLetterContent({ applicationData }) {
                                                 value: submissionDate
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                lineNumber: 117,
+                                                lineNumber: 121,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                        lineNumber: 113,
+                                        lineNumber: 116,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "text-center my-6",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "text-xl font-bold underline tracking-wider",
-                                            children: "ACKNOWLEDGEMENT OF APPLICATION"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                            lineNumber: 121,
-                                            columnNumber: 29
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                        lineNumber: 120,
-                                        columnNumber: 25
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "space-y-4 text-base leading-relaxed",
+                                        className: "space-y-2 text-sm leading-relaxed",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: [
-                                                    "Dear ",
-                                                    applicantName || 'Applicant',
-                                                    ","
+                                                    "This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area ",
+                                                    applicationData.plotDistrict || '[District not provided]',
+                                                    " in LGA ",
+                                                    applicationData.plotLGA || '[LGA not provided]',
+                                                    " more accurately described as ",
+                                                    applicationData.plotDescriptionAddress,
+                                                    "."
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
@@ -362,28 +366,13 @@ function AcknowledgementLetterContent({ applicationData }) {
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: [
-                                                    "This letter confirms we have received your application for a ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: applicationData.type
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                        lineNumber: 126,
-                                                        columnNumber: 93
-                                                    }, this),
-                                                    ". Your unique Application ID is ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: applicationId
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                                        lineNumber: 126,
-                                                        columnNumber: 164
-                                                    }, this),
-                                                    ". Our team will now review your submission and you will be notified of any updates via your dashboard. Please use your Application ID for all future correspondence."
+                                                    "Description of the development is: ",
+                                                    developmentDescription
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
                                                 lineNumber: 126,
-                                                columnNumber: 29
+                                                columnNumber: 30
                                             }, this)
                                         ]
                                     }, void 0, true, {
@@ -392,19 +381,20 @@ function AcknowledgementLetterContent({ applicationData }) {
                                         columnNumber: 25
                                     }, this),
                                     receivedDocuments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "pt-6 mt-6 border-t",
+                                        className: "pt-6 mt-6",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                className: "text-base font-semibold mb-3",
+                                                className: "text-sm font-semibold mb-3",
                                                 children: "The following documents were received:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
                                                 lineNumber: 131,
                                                 columnNumber: 33
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                                                className: "space-y-1.5 list-disc list-inside text-sm",
-                                                children: receivedDocuments.map((docName)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "space-y-2 text-sm max-w-md",
+                                                children: receivedDocuments.map((docName)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "border-b border-black pb-1",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: docName
                                                         }, void 0, false, {
@@ -431,19 +421,19 @@ function AcknowledgementLetterContent({ applicationData }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                                lineNumber: 112,
+                                lineNumber: 115,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
-                                className: "text-xs text-gray-700 space-y-4 pt-6 mt-auto border-t",
+                                className: "text-xs text-gray-700 space-y-4 pt-6 mt-auto",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex justify-between items-start gap-8",
+                                        className: "flex justify-between items-start gap-8 pt-12",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "w-1/2",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "border-t-2 border-gray-400 pt-2",
+                                                    className: "border-t-2 border-black pt-2",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "font-semibold",
                                                         children: "for: Director General KASUPDA"
@@ -465,7 +455,7 @@ function AcknowledgementLetterContent({ applicationData }) {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "w-1/2",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "border-t-2 border-gray-400 pt-2",
+                                                    className: "border-t-2 border-black pt-2",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "font-semibold",
                                                         children: "Signature (Applicant/Representative)"
@@ -491,9 +481,10 @@ function AcknowledgementLetterContent({ applicationData }) {
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "pt-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                className: "font-bold mb-1 text-sm",
+                                                className: "font-bold text-sm",
                                                 children: "Disclaimer"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
@@ -502,7 +493,7 @@ function AcknowledgementLetterContent({ applicationData }) {
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "leading-snug text-xs",
-                                                children: "This acknowledgement does not validate the authenticity of the documents. All submissions are subject to verification. This letter must be presented when collecting the Development Permit. Please notify us of any change of contact address."
+                                                children: "This acknowledgement does not in any way validate the authenticity of the documents described above. All documents are subject to further verification for authenticity. This acknowledgement must be presented at the time of collection of the Development Permit. Please notify us of any change of contact address or any other vital information contained in your original application. Contact us directly at:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
                                                 lineNumber: 158,
@@ -515,7 +506,7 @@ function AcknowledgementLetterContent({ applicationData }) {
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "text-center text-[10px] font-semibold text-gray-600 leading-snug pt-2 border-t",
+                                        className: "text-center text-[10px] font-semibold text-black leading-snug pt-2 border-t mt-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: "KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY, P.M.B. 2142 KADUNA STATE, NIGERIA"
@@ -546,13 +537,13 @@ function AcknowledgementLetterContent({ applicationData }) {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                        lineNumber: 100,
+                        lineNumber: 103,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/AcknowledgementLetterContent.tsx",
-                lineNumber: 94,
+                lineNumber: 97,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$acknowledgement$2f5b$id$5d2f$AcknowledgementActions$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
