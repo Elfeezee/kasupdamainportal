@@ -4,8 +4,11 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
-import AcknowledgementActions from './AcknowledgementActions';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
+import { Button } from '@/components/ui/button';
+import { Printer, ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useReactToPrint } from 'react-to-print';
 
 
 // A mapping of database field names to user-friendly document labels
@@ -79,6 +82,23 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
 
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const letterRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+    
+    const handlePrint = useReactToPrint({
+        content: () => letterRef.current,
+        documentTitle: `KASUPDA_Acknowledgement_${applicationData.id}`,
+        pageStyle: `
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+            -webkit-print-color-adjust: exact;
+            }
+        }
+        `
+    });
     
     const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
@@ -159,9 +179,16 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </footer>
                 </div>
             </div>
-            <AcknowledgementActions letterRef={letterRef} />
+             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 print:hidden">
+                <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to My Applications
+                </Button>
+                <Button onClick={handlePrint}>
+                    <Printer className="mr-2 h-4 w-4" />
+                    Print or Save as PDF
+                </Button>
+            </div>
         </>
     );
 }
-
-    

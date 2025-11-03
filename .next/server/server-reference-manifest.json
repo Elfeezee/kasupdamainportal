@@ -58,6 +58,10 @@
           "moduleId": "[project]/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/news/page": {
+          "moduleId": "[project]/.next-internal/server/app/news/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -78,6 +82,7 @@
         "app/dashboard/page": "action-browser",
         "app/dashboard/profile/page": "action-browser",
         "app/login/page": "action-browser",
+        "app/news/page": "action-browser",
         "app/page": "action-browser"
       }
     },
