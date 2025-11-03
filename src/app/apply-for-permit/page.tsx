@@ -93,8 +93,7 @@ export default function ApplyForPermitPage() {
             phone: phone,
           },
           // Supabase redirects to this URL with a token if email confirmation is on.
-          // Since we turned it off, this is less critical but good practice to have.
-          emailRedirectTo: `${location.origin}/dashboard`,
+          emailRedirectTo: `${location.origin}/auth/callback`,
         },
       });
 
@@ -133,7 +132,7 @@ export default function ApplyForPermitPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${location.origin}/dashboard`
+          redirectTo: `${location.origin}/auth/callback`
         }
       });
       if (error) throw error;

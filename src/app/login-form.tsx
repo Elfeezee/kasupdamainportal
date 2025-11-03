@@ -31,6 +31,18 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
 
   const redirectTo = searchParams.get('redirectTo') || '/dashboard';
+  const paramError = searchParams.get('error');
+
+  useEffect(() => {
+    if (paramError) {
+      toast({
+        title: 'Authentication Error',
+        description: paramError,
+        variant: 'destructive',
+      });
+    }
+  }, [paramError, toast]);
+
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -91,7 +103,7 @@ export default function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${location.origin}/dashboard`
+          redirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`
         }
       });
       if (error) throw error;
