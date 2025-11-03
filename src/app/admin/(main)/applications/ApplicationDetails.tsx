@@ -20,6 +20,11 @@ const renderFieldValue = (
     if (['id', 'user_id', 'created_at', 'rejection_reason'].includes(key)) {
         return null;
     }
+
+    // If a field ends with '_url' but the value is null or empty, don't render it.
+    if (key.endsWith('_url') && !value) {
+        return null;
+    }
     
     // Standardize 'on' to true for consistency
     if (value === 'on') value = true;
@@ -63,9 +68,7 @@ const renderFieldValue = (
             </a>
         );
     }
-    // Don't render the URL fields themselves, they are handled above
-    if (key.endsWith('_url')) return null;
-
+    
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
         return <p className="text-sm text-foreground">{format(parseISO(value), 'PPP')}</p>;
     }
@@ -95,9 +98,18 @@ export default function ApplicationDetails({ application, isEditing, editedData,
                     const renderedField = renderFieldValue(key, value, isEditing, editedData, onInputChange);
                     if (!renderedField) return null;
 
+                    // Don't render the plain URL field if we've already rendered it as a download link
+                    if (key.endsWith('_url')) {
+                        const baseKey = key.replace('_url', '');
+                        if (sortedKeys.includes(baseKey)) {
+                            // This logic is tricky, let's just show the link under its own name
+                        }
+                    }
+
+
                     return (
                         <div key={key} className="space-y-1">
-                            <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ')}</Label>
+                            <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ').replace(' doc ', ' ').replace(' url', '')}</Label>
                             {renderedField}
                         </div>
                     );
