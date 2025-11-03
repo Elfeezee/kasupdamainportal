@@ -569,7 +569,7 @@ function AcknowledgementLoadingSkeleton() {
                 className: "h-16 w-full mb-8"
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 36,
+                lineNumber: 35,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -579,34 +579,34 @@ function AcknowledgementLoadingSkeleton() {
                         className: "h-4 w-3/4"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                        lineNumber: 38,
+                        lineNumber: 37,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-4 w-1/2"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                        lineNumber: 39,
+                        lineNumber: 38,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-4 w-2/3"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                        lineNumber: 40,
+                        lineNumber: 39,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 37,
+                lineNumber: 36,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex-grow"
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 42,
+                lineNumber: 41,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -616,54 +616,54 @@ function AcknowledgementLoadingSkeleton() {
                         className: "h-4 w-full"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                        lineNumber: 44,
+                        lineNumber: 43,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-4 w-full"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                        lineNumber: 45,
+                        lineNumber: 44,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 43,
+                lineNumber: 42,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-        lineNumber: 35,
+        lineNumber: 34,
         columnNumber: 9
     }, this);
 }
 async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ AcknowledgementPage({ params }) {
     const applicationData = await getApplicationData(params.id);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "container mx-auto px-2 sm:px-4 py-8 bg-gray-200 dark:bg-gray-900 print:bg-white",
+        className: "container mx-auto px-2 sm:px-4 py-8 bg-gray-200 dark:bg-gray-900 print:bg-white print-container",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Suspense"], {
             fallback: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(AcknowledgementLoadingSkeleton, {}, void 0, false, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 56,
+                lineNumber: 55,
                 columnNumber: 34
             }, void 0),
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$dashboard$2f$acknowledgement$2f5b$id$5d2f$AcknowledgementLetterContent$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
                 applicationData: applicationData
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-                lineNumber: 57,
+                lineNumber: 56,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-            lineNumber: 56,
+            lineNumber: 55,
             columnNumber: 14
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/dashboard/acknowledgement/[id]/page.tsx",
-        lineNumber: 55,
+        lineNumber: 54,
         columnNumber: 9
     }, this);
 }

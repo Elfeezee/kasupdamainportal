@@ -114,7 +114,7 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
 
     return (
         <>
-            <div ref={letterRef} className="bg-white dark:bg-card print:bg-white shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 print-content">
+            <div ref={letterRef} className="bg-white dark:bg-card print:bg-white shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 print-content relative z-10">
                 {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
@@ -179,7 +179,7 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </footer>
                 </div>
             </div>
-             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 print:hidden">
+             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 print:hidden relative z-20">
                 <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to My Applications
