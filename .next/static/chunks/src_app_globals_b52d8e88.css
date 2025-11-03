@@ -2649,21 +2649,30 @@ body {
 
 @media print {
   body {
-    background-color: #fff !important;
+    background: #fff !important;
   }
 
-  .print-container {
-    padding: 0;
-    margin: 0;
+  .no-print, header, footer, [data-sidebar="sidebar"], aside {
+    display: none !important;
   }
 
-  .print-content {
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #letter-to-print {
     box-shadow: none !important;
     border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    min-height: auto !important;
   }
 
-  .no-print {
-    display: none !important;
+  @page {
+    size: A4;
+    margin: 2cm;
   }
 }
 
@@ -4013,10 +4022,6 @@ body {
 @media print {
   .print\:block {
     display: block;
-  }
-
-  .print\:hidden {
-    display: none;
   }
 
   .print\:bg-white {

@@ -2,14 +2,14 @@
   "pages": {
     "/dashboard/profile/page": [
       "static/chunks/[root of the server]__b07dbc43._.css",
-      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_3f0b80cf._.js",
-      "static/chunks/src_27844b5d._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_bf813c37._.js",
+      "static/chunks/src_883ecf78._.js",
       "static/chunks/node_modules_28f0f0f0._.js",
       "static/chunks/src_app_layout_tsx_f0e4c1a2._.js",
-      "static/chunks/node_modules_@supabase_node-fetch_browser_3ae92900.js",
+      "static/chunks/node_modules_@supabase_node-fetch_browser_385fb741.js",
       "static/chunks/node_modules_7f9440a0._.js",
       "static/chunks/src_c53279ed._.js",
-      "static/chunks/src_app_dashboard_layout_tsx_366e0b4b._.js",
+      "static/chunks/src_app_dashboard_layout_tsx_4e14ece1._.js",
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_49a6ea35._.js",
       "static/chunks/node_modules_next_dist_compiled_2ce9398a._.js",
       "static/chunks/node_modules_next_dist_client_43e3ffb8._.js",

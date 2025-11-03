@@ -22,7 +22,7 @@
         "app/dashboard/stage-approval/page": "action-browser"
       }
     },
-    "703a62abd91b8fb96e37dd5ce4a1e0958215e38256": {
+    "703c8e965250efc42d12325b86de80956fb7b5329f": {
       "workers": {
         "app/dashboard/stage-approval/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

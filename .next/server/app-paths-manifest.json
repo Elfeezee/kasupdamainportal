@@ -1,3 +1,12 @@
 {
+  "/apply-for-permit/page": "app/apply-for-permit/page.js",
+  "/dashboard/acknowledgement/[id]/page": "app/dashboard/acknowledgement/[id]/page.js",
+  "/dashboard/apply/page": "app/dashboard/apply/page.js",
+  "/dashboard/my-applications/page": "app/dashboard/my-applications/page.js",
+  "/dashboard/my-dins/page": "app/dashboard/my-dins/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js",
+  "/dashboard/stage-approval/page": "app/dashboard/stage-approval/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }
