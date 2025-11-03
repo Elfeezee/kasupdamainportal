@@ -3092,6 +3092,10 @@ body {
   opacity: 1;
 }
 
+.aria-selected\:opacity-30[aria-selected="true"] {
+  opacity: .3;
+}
+
 .data-\[disabled\]\:pointer-events-none[data-disabled] {
   pointer-events: none;
 }
