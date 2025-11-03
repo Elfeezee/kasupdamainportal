@@ -70,8 +70,9 @@ const documentChecklistMap: Record<string, string> = {
 
 
 const DetailItem = ({ label, value }: { label: string; value: string | null | undefined; }) => (
-    <div>
-        <p className="text-sm"><span className="font-semibold">{label}:</span> {value || 'N/A'}</p>
+    <div className="flex">
+        <p className="w-36 shrink-0 font-semibold">{label}:</p> 
+        <p>{value || 'N/A'}</p>
     </div>
 );
 
@@ -79,10 +80,12 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const letterRef = useRef<HTMLDivElement>(null);
     
-    const applicationId = applicationData.original_permit_id || applicationData.din || applicationData.id;
+    const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
-    const submissionDate = applicationData.created_at ? format(parseISO(applicationData.created_at), 'MMMM d, yyyy') : 'N/A';
+    const submissionDate = applicationData.created_at ? format(parseISO(applicationData.created_at), 'dd-MMM-yyyy') : 'N/A';
     const representativeName = [applicationData.rep_first_name, applicationData.rep_middle_name, applicationData.rep_surname].filter(Boolean).join(' ');
+    const applicantAddress = [applicationData.appHouseNo, applicationData.appStreetName, applicationData.appDistrict, applicationData.appCityTown, applicationData.appState].filter(Boolean).join(', ');
+    const developmentDescription = applicationData.type?.replace(/ permit/i, '').replace(/\(.*\)/i, '').trim();
 
     const receivedDocuments = Object.keys(applicationData)
         .filter(key => key.endsWith('_url') && applicationData[key] && documentChecklistMap[key])
@@ -98,66 +101,63 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                 </div>
                 
                 <div className="relative z-10 flex flex-col flex-grow">
-                     <header className="pb-4 mb-4 border-b-4 border-primary">
+                     <header className="pb-4 mb-4">
                         <div className="flex items-center justify-between gap-4">
-                            <Image src="/image/logo.png" alt="KASUPDA Logo" width={64} height={64} className="h-16 w-16" />
-                            <div className="text-right">
-                                <h2 className="text-2xl font-bold text-primary tracking-wide">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
-                                <p className="text-sm text-gray-600">No 4 Bida Road, Business District Area, Kaduna State</p>
-                                <p className="text-sm text-gray-600">Hotline: 09037236253</p>
+                            <div className="text-left">
+                                <h1 className="text-xl font-bold text-black tracking-wide">KADUNA STATE GOVERNMENT</h1>
                             </div>
+                            <Image src="/image/logo.png" alt="KASUPDA Logo" width={64} height={64} className="h-16 w-16" />
                         </div>
+                         <h2 className="text-center text-lg font-bold text-black tracking-wide mt-2">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
+                         <h3 className="text-center text-md font-bold text-black tracking-wide">ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT</h3>
                     </header>
                     
                     <main className="flex-grow">
                         <div className="space-y-1 text-sm my-6">
-                            <DetailItem label="Application ID" value={applicationId} />
+                            <DetailItem label="File Number" value={applicationId} />
                             <DetailItem label="Applicant Name" value={applicantName} />
+                            <DetailItem label="Applicant Address" value={applicantAddress} />
                             {representativeName && <DetailItem label="Representative Name" value={representativeName} />}
                             <DetailItem label="Application Date" value={submissionDate} />
                         </div>
 
-                        <div className="text-center my-6">
-                            <h2 className="text-xl font-bold underline tracking-wider">ACKNOWLEDGEMENT OF APPLICATION</h2>
-                        </div>
-                        
-                        <div className="space-y-4 text-base leading-relaxed">
-                             <p>Dear {applicantName || 'Applicant'},</p>
-                            <p>This letter confirms we have received your application for a <strong>{applicationData.type}</strong>. Your unique Application ID is <strong>{applicationId}</strong>. Our team will now review your submission and you will be notified of any updates via your dashboard. Please use your Application ID for all future correspondence.</p>
+                        <div className="space-y-2 text-sm leading-relaxed">
+                             <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {applicationData.plotDistrict || '[District not provided]'} in LGA {applicationData.plotLGA || '[LGA not provided]'} more accurately described as {applicationData.plotDescriptionAddress}.</p>
+                             <p>Description of the development is: {developmentDescription}</p>
                         </div>
 
                         {receivedDocuments.length > 0 && (
-                            <div className="pt-6 mt-6 border-t">
-                                <h3 className="text-base font-semibold mb-3">The following documents were received:</h3>
-                                <ul className="space-y-1.5 list-disc list-inside text-sm">
+                            <div className="pt-6 mt-6">
+                                <h3 className="text-sm font-semibold mb-3">The following documents were received:</h3>
+                                <div className="space-y-2 text-sm max-w-md">
                                     {receivedDocuments.map(docName => (
-                                        <li key={docName}>
+                                        <div key={docName} className="border-b border-black pb-1">
                                             <span>{docName}</span>
-                                        </li>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         )}
                     </main>
 
-                     <footer className="text-xs text-gray-700 space-y-4 pt-6 mt-auto border-t">
-                        <div className="flex justify-between items-start gap-8">
+                     <footer className="text-xs text-gray-700 space-y-4 pt-6 mt-auto">
+                        <div className="flex justify-between items-start gap-8 pt-12">
                             <div className="w-1/2">
-                                <div className="border-t-2 border-gray-400 pt-2">
+                                <div className="border-t-2 border-black pt-2">
                                     <p className="font-semibold">for: Director General KASUPDA</p>
                                 </div>
                             </div>
                             <div className="w-1/2">
-                                <div className="border-t-2 border-gray-400 pt-2">
+                                <div className="border-t-2 border-black pt-2">
                                     <p className="font-semibold">Signature (Applicant/Representative)</p>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <h4 className="font-bold mb-1 text-sm">Disclaimer</h4>
-                            <p className="leading-snug text-xs">This acknowledgement does not validate the authenticity of the documents. All submissions are subject to verification. This letter must be presented when collecting the Development Permit. Please notify us of any change of contact address.</p>
+                        <div className="pt-4">
+                            <h4 className="font-bold text-sm">Disclaimer</h4>
+                            <p className="leading-snug text-xs">This acknowledgement does not in any way validate the authenticity of the documents described above. All documents are subject to further verification for authenticity. This acknowledgement must be presented at the time of collection of the Development Permit. Please notify us of any change of contact address or any other vital information contained in your original application. Contact us directly at:</p>
                         </div>
-                         <div className="text-center text-[10px] font-semibold text-gray-600 leading-snug pt-2 border-t">
+                         <div className="text-center text-[10px] font-semibold text-black leading-snug pt-2 border-t mt-4">
                             <p>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY, P.M.B. 2142 KADUNA STATE, NIGERIA</p>
                             <p>KASUPDA SERVICE CENTRE NO. 4 BIDA ROAD, SABON GARI, KADUNA TEL 08132389638, info@kasupda.org</p>
                         </div>
@@ -168,3 +168,5 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
         </>
     );
 }
+
+    

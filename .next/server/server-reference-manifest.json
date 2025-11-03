@@ -2,6 +2,22 @@
   "node": {
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
+        "app/dashboard/acknowledgement/[id]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/acknowledgement/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/acknowledgement/[id]/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/my-applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/my-dins/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -16,9 +32,46 @@
         }
       },
       "layer": {
+        "app/dashboard/acknowledgement/[id]/page": "action-browser",
+        "app/dashboard/apply/din-application/page": "action-browser",
+        "app/dashboard/my-applications/page": "action-browser",
+        "app/dashboard/my-dins/page": "action-browser",
         "app/dashboard/page": "action-browser",
         "app/login/page": "action-browser",
         "app/page": "action-browser"
+      }
+    },
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
+      "workers": {
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/din-application/page": "action-browser"
+      }
+    },
+    "703c8e965250efc42d12325b86de80956fb7b5329f": {
+      "workers": {
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/din-application/page": "action-browser"
+      }
+    },
+    "4081fd91622a849f47bcf67e38d28f370261acee68": {
+      "workers": {
+        "app/dashboard/acknowledgement/[id]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/acknowledgement/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/acknowledgement/[id]/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/acknowledgement/[id]/page": "rsc"
       }
     }
   },
