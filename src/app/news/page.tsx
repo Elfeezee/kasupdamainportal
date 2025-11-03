@@ -16,22 +16,22 @@ const newsItems = [
     title: "KASUPDA Announces New Urban Renewal Initiative",
     date: "October 26, 2023",
     summary: "A new initiative aimed at revitalizing key urban areas in Kaduna State has been launched...",
-    imageUrl: "https://placehold.co/600x400.png",
-    hint: "cityscape urban"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
   {
     title: "Guidelines for Building Permit Applications Updated",
     date: "October 15, 2023",
     summary: "KASUPDA has released updated guidelines for building permit applications to streamline the process...",
-    imageUrl: "https://placehold.co/600x400.png",
-    hint: "document blueprint"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
   {
     title: "Public Consultation on New Zoning Regulations",
     date: "September 30, 2023",
     summary: "The public is invited to provide feedback on the proposed new zoning regulations for Kaduna metropolis...",
-    imageUrl: "https://placehold.co/600x400.png",
-    hint: "community meeting"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
 ];
 
@@ -41,24 +41,24 @@ const publications = [
     type: "Master Plan",
     summary: "The comprehensive master plan guiding urban development in Kaduna State for the next decade.",
     downloadUrl: "#", // Placeholder
-    imageUrl: "https://placehold.co/400x300.png",
-    hint: "map document"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
   {
     title: "Annual Report 2022",
     type: "Report",
     summary: "KASUPDA's annual report detailing activities, achievements, and financial statements for 2022.",
     downloadUrl: "#", // Placeholder
-    imageUrl: "https://placehold.co/400x300.png",
-    hint: "report chart"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
   {
     title: "Building Code and Regulations Handbook",
     type: "Handbook",
     summary: "A complete guide to building codes, standards, and regulations enforced by KASUPDA.",
     downloadUrl: "#", // Placeholder
-    imageUrl: "https://placehold.co/400x300.png",
-    hint: "book rules"
+    imageUrl: "/image/logo.png",
+    hint: "logo"
   },
 ];
 
@@ -91,7 +91,7 @@ export default function NewsAndPublicationsPage() {
                       data-ai-hint={item.hint}
                       width={600}
                       height={400}
-                      className="w-full h-48 object-cover rounded-t-lg"
+                      className="w-full h-48 object-contain rounded-t-lg bg-muted/20 p-4"
                     />
                   </CardHeader>
                   <CardContent className="p-6 flex-grow">
@@ -126,7 +126,7 @@ export default function NewsAndPublicationsPage() {
                         data-ai-hint={item.hint}
                         width={400}
                         height={300}
-                        className="w-full h-48 object-cover rounded-t-lg"
+                        className="w-full h-48 object-contain rounded-t-lg bg-muted/20 p-4"
                     />
                   </CardHeader>
                   <CardContent className="p-6 flex-grow">
