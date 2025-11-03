@@ -1,4 +1,3 @@
-
 'use server';
 
 import React, { Suspense } from 'react';
@@ -52,7 +51,7 @@ export default async function AcknowledgementPage({ params }: { params: { id: st
     const applicationData = await getApplicationData(params.id);
     
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8 bg-gray-200 dark:bg-gray-900 print:bg-white">
+        <div className="container mx-auto px-2 sm:px-4 py-8 bg-gray-200 dark:bg-gray-900 print:bg-white print-container">
              <Suspense fallback={<AcknowledgementLoadingSkeleton />}>
                 <AcknowledgementLetterContent applicationData={applicationData} />
             </Suspense>

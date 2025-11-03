@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -16,6 +15,18 @@ export default function AcknowledgementActions({ letterRef }: AcknowledgementAct
 
   const handlePrint = useReactToPrint({
     content: () => letterRef.current,
+    documentTitle: 'KASUPDA_Acknowledgement_Letter',
+    pageStyle: `
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    `
   });
 
   return (

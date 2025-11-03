@@ -91,3 +91,20 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  body {
+    background-color: white !important;
+  }
+  .print-container {
+    padding: 0;
+    margin: 0;
+  }
+  .print-content {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
