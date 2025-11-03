@@ -2,6 +2,30 @@
   "node": {
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
+        "app/admin/(main)/applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/(main)/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/(main)/din-applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/din-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/(main)/permit-applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/permit-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/(main)/stage-approvals/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/stage-approvals/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/login/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/apply-for-permit/page": {
           "moduleId": "[project]/.next-internal/server/app/apply-for-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -40,6 +64,12 @@
         }
       },
       "layer": {
+        "app/admin/(main)/applications/page": "action-browser",
+        "app/admin/(main)/dashboard/page": "action-browser",
+        "app/admin/(main)/din-applications/page": "action-browser",
+        "app/admin/(main)/permit-applications/page": "action-browser",
+        "app/admin/(main)/stage-approvals/page": "action-browser",
+        "app/admin/login/page": "action-browser",
         "app/apply-for-permit/page": "action-browser",
         "app/dashboard/acknowledgement/[id]/page": "action-browser",
         "app/dashboard/apply/din-application/page": "action-browser",
