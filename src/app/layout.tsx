@@ -4,9 +4,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import AppClientLayoutWrapper from '@/components/layout/app-client-layout-wrapper';
-import { headers } from 'next/headers';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,13 +30,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = headers();
-  const pathname = headersList.get('x-next-pathname') || '';
-
-  const isDashboardPage = pathname.startsWith('/dashboard');
-  const isAdminPage = pathname.startsWith('/admin');
-  const showMainLayoutElements = !isDashboardPage && !isAdminPage;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -49,10 +39,8 @@ export default function RootLayout({
           'antialiased min-h-screen flex flex-col'
         )}
       >
-        <AppClientLayoutWrapper showChatBot={showMainLayoutElements}>
-            {showMainLayoutElements && <Header />}
-            <main className="flex-grow">{children}</main>
-            {showMainLayoutElements && <Footer />}
+        <AppClientLayoutWrapper>
+          {children}
         </AppClientLayoutWrapper>
       </body>
     </html>

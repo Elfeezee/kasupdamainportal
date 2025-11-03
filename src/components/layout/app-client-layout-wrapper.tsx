@@ -10,24 +10,32 @@ import ChatBot from '@/components/ai/chat-bot';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
+import { usePathname } from 'next/navigation';
 
 export default function AppClientLayoutWrapper({
   children,
-  showChatBot
 }: Readonly<{
   children: React.ReactNode;
-  showChatBot: boolean;
 }>) {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isDashboardPage = pathname.startsWith('/dashboard');
+  const isAdminPage = pathname.startsWith('/admin');
+  const showMainLayoutElements = !isDashboardPage && !isAdminPage;
 
   return (
     <ThemeProvider>
       <ToastProvider>
-        {children}
+        {showMainLayoutElements && <Header />}
+        <main className="flex-grow">{children}</main>
+        {showMainLayoutElements && <Footer />}
         <Toaster />
         <ScrollToTopButton />
 
-        {showChatBot && (
+        {showMainLayoutElements && (
           <>
             <div className={cn(
               "fixed bottom-[2.5rem] right-[2.5rem] z-[100] transition-transform duration-300 ease-in-out",
