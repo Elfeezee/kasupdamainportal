@@ -61,42 +61,46 @@ async function processAndSaveData(
 
         const dbKey = toSnakeCase(key);
 
-        if (value instanceof File && value.size > 0) {
-            // Handle file upload to Supabase Storage
-            const filePath = `${userId}/${uuidv4()}-${value.name}`;
-            const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-            
-            if (uploadError) {
-                console.error(`Storage error for ${key}:`, uploadError);
-                return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
+        if (value instanceof File) {
+            // Only process the file if it has content
+            if (value.size > 0) {
+                const filePath = `${userId}/${uuidv4()}-${value.name}`;
+                const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
+                
+                if (uploadError) {
+                    console.error(`Storage error for ${key}:`, uploadError);
+                    return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
+                }
+                
+                const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                if (!publicUrlData.publicUrl) {
+                    return { success: false, error: `Could not get public URL for the file associated with ${key}.`};
+                }
+                
+                submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
-            
-            // Get the public URL of the uploaded file
-            const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-            if (!publicUrlData.publicUrl) {
-                return { success: false, error: `Could not get public URL for the file associated with ${key}.`};
-            }
-            
-            // Store the public URL in a field ending with '_url'
-            submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
-
         } else if (typeof value === 'string') {
-            // Handle different string values
             if (value === 'on') {
-                submissionPayload[dbKey] = true; // Convert checkbox 'on' to boolean true
+                submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                submissionPayload[dbKey] = new Date(value).toISOString(); // Handle ISO date strings
-            } else if (value) { // Ensure value is not an empty string
-                submissionPayload[dbKey] = value; // Handle all other non-empty strings
+                submissionPayload[dbKey] = new Date(value).toISOString();
+            } else if (value) {
+                submissionPayload[dbKey] = value;
             }
         }
     }
+    
+    // 3. Clean the payload of any null or undefined values before insertion
+    const cleanedPayload = Object.fromEntries(
+      Object.entries(submissionPayload).filter(([_, v]) => v != null)
+    );
 
-    // 3. Insert the fully constructed payload into the 'applications' table
+
+    // 4. Insert the fully constructed payload into the 'applications' table
     try {
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
-            .insert(submissionPayload)
+            .insert(cleanedPayload)
             .select('id')
             .single();
 
@@ -161,12 +165,17 @@ export async function generateAndSaveDin(
             }
         }
     }
+    
+    // Clean the payload
+    const cleanedPayload = Object.fromEntries(
+      Object.entries(submissionPayload).filter(([_, v]) => v != null)
+    );
 
     // 3. Insert record to get an ID for DIN generation
     try {
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
-            .insert(submissionPayload)
+            .insert(cleanedPayload)
             .select('id')
             .single();
 
@@ -221,3 +230,5 @@ export async function saveApplication(
         return { success: false, error: result.error };
     }
 }
+
+    
