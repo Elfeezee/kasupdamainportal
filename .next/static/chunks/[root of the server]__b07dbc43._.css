@@ -1958,6 +1958,10 @@ body {
   background-color: hsl(var(--muted));
 }
 
+.bg-muted\/20 {
+  background-color: hsl(var(--muted) / .2);
+}
+
 .bg-muted\/30 {
   background-color: hsl(var(--muted) / .3);
 }
@@ -2005,10 +2009,6 @@ body {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-
-.bg-muted\/20 {
-  background-color: hsl(var(--muted) / .2);
 }
 
 .fill-current {
