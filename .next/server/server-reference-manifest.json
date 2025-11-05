@@ -2,13 +2,49 @@
   "node": {
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
+        "app/apply-for-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/apply-for-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/acknowledgement/[id]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/acknowledgement/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/acknowledgement/[id]/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/my-applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/login/page": {
+          "moduleId": "[project]/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         }
       },
       "layer": {
+        "app/apply-for-permit/page": "action-browser",
+        "app/dashboard/acknowledgement/[id]/page": "action-browser",
+        "app/dashboard/my-applications/page": "action-browser",
+        "app/dashboard/page": "action-browser",
+        "app/login/page": "action-browser",
         "app/page": "action-browser"
+      }
+    },
+    "4081fd91622a849f47bcf67e38d28f370261acee68": {
+      "workers": {
+        "app/dashboard/acknowledgement/[id]/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/acknowledgement/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/acknowledgement/[id]/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/acknowledgement/[id]/page": "rsc"
       }
     }
   },
