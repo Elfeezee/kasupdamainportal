@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 import { Button } from '@/components/ui/button';
-import { Printer, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // A mapping of database field names to user-friendly document labels
@@ -94,8 +94,8 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
 
 
     return (
-        <>
-            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12">
+        <div className="relative">
+            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative z-10">
                 {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
@@ -160,16 +160,12 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </footer>
                 </div>
             </div>
-             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 no-print">
+             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 no-print relative z-20">
                 <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to My Applications
                 </Button>
-                <Button onClick={() => window.print()}>
-                    <Printer className="mr-2 h-4 w-4" />
-                    Print or Save as PDF
-                </Button>
             </div>
-        </>
+        </div>
     );
 }
