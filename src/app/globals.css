@@ -93,41 +93,49 @@ body {
   }
 }
 
+/* This is the new, robust print styling section */
 @media print {
   body {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  
-  body > * {
-    display: none !important;
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
   }
 
-  body > .print-container,
-  body > .print-container #letter-to-print {
-    display: block !important;
+  /* Show only the print container and its contents */
+  .print-container, .print-container * {
+    visibility: visible;
   }
   
-  #letter-to-print {
-    position: absolute !important;
+  /* Position the print container to take up the whole page */
+  .print-container {
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: auto;
     margin: 0 !important;
     padding: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    min-height: auto !important;
   }
 
+  /* Ensure the letter itself has no extra shadows or borders */
+  #letter-to-print {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Force the watermark to be printed */
+  .print-watermark {
+      display: block !important;
+      opacity: 0.05 !important;
+  }
+
+  /* Ensure no buttons or other interactive elements are printed */
   .no-print {
     display: none !important;
-  }
-  
-  .print-watermark {
-    display: block !important;
-    opacity: 0.05 !important;
   }
 
   @page {

@@ -7,6 +7,7 @@ import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useReactToPrint } from 'react-to-print';
 
 // A mapping of database field names to user-friendly document labels
 const documentChecklistMap: Record<string, string> = {
@@ -79,6 +80,13 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
 
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const router = useRouter();
+    const letterRef = useRef<HTMLDivElement>(null);
+
+    const handlePrint = useReactToPrint({
+      content: () => letterRef.current,
+      documentTitle: `KASUPDA-Acknowledgement-${applicationData.id}`,
+      onAfterPrint: () => console.log('Printed successfully!'),
+    });
 
     const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
@@ -93,16 +101,11 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
         
     return (
         <div className="bg-background">
-            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
+            {/* The ref is attached to the direct parent of the content we want to print */}
+            <div ref={letterRef} className="bg-white dark:bg-card shadow-2xl max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12">
                 
-                <div className="absolute top-4 right-4 z-20 no-print">
-                    <Button onClick={() => window.print()} variant="outline" size="sm">
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                    </Button>
-                </div>
-
-                <div className="absolute inset-0 flex items-center justify-center z-0 print-watermark print:block">
+                {/* Watermark will be printed because it's part of the referenced component */}
+                <div className="absolute inset-0 flex items-center justify-center z-0">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
                 </div>
                 
@@ -165,7 +168,12 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </footer>
                 </div>
             </div>
-             <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center gap-4 no-print relative z-20">
+
+            <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center items-center gap-4 relative z-20">
+                 <Button onClick={handlePrint} variant="outline" size="sm">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download PDF
+                </Button>
                 <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to My Applications

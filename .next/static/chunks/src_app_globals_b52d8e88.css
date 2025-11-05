@@ -2648,34 +2648,36 @@ body {
     print-color-adjust: exact !important;
   }
 
-  body > * {
-    display: none !important;
+  body * {
+    visibility: hidden;
   }
 
-  body > .print-container, body > .print-container #letter-to-print {
-    display: block !important;
+  .print-container, .print-container * {
+    visibility: visible;
   }
 
-  #letter-to-print {
+  .print-container {
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: auto;
-    position: absolute !important;
     margin: 0 !important;
     padding: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    min-height: auto !important;
   }
 
-  .no-print {
-    display: none !important;
+  #letter-to-print {
+    box-shadow: none !important;
+    border: none !important;
   }
 
   .print-watermark {
     display: block !important;
     opacity: .05 !important;
+  }
+
+  .no-print {
+    display: none !important;
   }
 
   @page {
@@ -4019,18 +4021,6 @@ body {
   .xl\:text-xl\/relaxed {
     font-size: 1.25rem;
     line-height: 1.625;
-  }
-}
-
-@media print {
-  .print\:block {
-    display: block;
-  }
-
-  .print\:shadow-none {
-    --tw-shadow: 0 0 #0000;
-    --tw-shadow-colored: 0 0 #0000;
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 }
 
