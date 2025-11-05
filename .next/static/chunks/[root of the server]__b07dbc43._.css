@@ -922,6 +922,10 @@ body {
   display: inline-block;
 }
 
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -2762,37 +2766,24 @@ body {
     print-color-adjust: exact !important;
   }
 
-  .no-print, header, footer, aside, [data-sidebar="sidebar"], main > .flex.min-h-\[calc\(100vh-var\(--header-height\,60px\)-var\(--footer-height\,60px\)\)\] {
+  .no-print, header, footer, [data-sidebar="sidebar"], .print-container > div:not(#letter-to-print) {
     display: none !important;
   }
 
-  .print-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+  .print-container, .print-container #letter-to-print {
     display: block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  main {
-    display: none !important;
-  }
-
-  #letter-to-print {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
     box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
     min-height: auto !important;
   }
 
-  .print\:block {
-    display: block !important;
+  main {
+    display: none !important;
   }
 
   .print-watermark {
@@ -4144,10 +4135,6 @@ body {
 }
 
 @media print {
-  .print\:block {
-    display: block;
-  }
-
   .print\:shadow-none {
     --tw-shadow: 0 0 #0000;
     --tw-shadow-colored: 0 0 #0000;

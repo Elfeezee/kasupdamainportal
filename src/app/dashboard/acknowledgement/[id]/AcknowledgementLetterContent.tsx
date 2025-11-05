@@ -94,7 +94,64 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
         .map(key => documentChecklistMap[key]);
         
     const handlePrint = () => {
-        window.print();
+        const printWindow = window.open('', '_blank');
+        if (printWindow && letterRef.current) {
+            const letterHtml = letterRef.current.innerHTML;
+
+            // Gather all style sheets from the current document
+            const styleSheets = Array.from(document.styleSheets)
+                .map(sheet => {
+                    try {
+                        // For inline <style> tags
+                        if (sheet.ownerNode && sheet.ownerNode.tagName === 'STYLE') {
+                            return `<style>${(sheet.ownerNode as HTMLStyleElement).innerHTML}</style>`;
+                        }
+                        // For linked <link> stylesheets
+                        if (sheet.href) {
+                            return `<link rel="stylesheet" href="${sheet.href}">`;
+                        }
+                    } catch (e) {
+                        console.warn("Could not read stylesheet due to CORS:", sheet.href, e);
+                    }
+                    return '';
+                })
+                .join('');
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Acknowledgement</title>
+                        ${styleSheets}
+                        <style>
+                            /* Additional print-specific styles */
+                            @media print {
+                                body { 
+                                    -webkit-print-color-adjust: exact; 
+                                    print-color-adjust: exact; 
+                                    margin: 0;
+                                }
+                                .no-print { display: none !important; }
+                                .print-watermark { opacity: 0.05 !important; }
+                            }
+                            body {
+                                font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${letterHtml}
+                    </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            // Use a timeout to ensure all styles and images have loaded
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            }, 500); // 500ms delay might be adjusted
+        }
     };
 
     return (
@@ -108,8 +165,8 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </Button>
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
-                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none print-watermark" />
+                <div className="absolute inset-0 flex items-center justify-center z-0 print-watermark">
+                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
                 </div>
                 
                 <div className="relative z-10 flex flex-col flex-grow">
