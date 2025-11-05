@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useRef } from 'react';
@@ -80,7 +79,6 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
 
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const router = useRouter();
-    const letterRef = useRef<HTMLDivElement>(null);
 
     const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
@@ -93,79 +91,18 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
         .filter(key => key.endsWith('_url') && applicationData[key] && documentChecklistMap[key])
         .map(key => documentChecklistMap[key]);
         
-    const handlePrint = () => {
-        const printWindow = window.open('', '_blank');
-        if (printWindow && letterRef.current) {
-            const letterHtml = letterRef.current.innerHTML;
-
-            // Gather all style sheets from the current document
-            const styleSheets = Array.from(document.styleSheets)
-                .map(sheet => {
-                    try {
-                        // For inline <style> tags
-                        if (sheet.ownerNode && sheet.ownerNode.tagName === 'STYLE') {
-                            return `<style>${(sheet.ownerNode as HTMLStyleElement).innerHTML}</style>`;
-                        }
-                        // For linked <link> stylesheets
-                        if (sheet.href) {
-                            return `<link rel="stylesheet" href="${sheet.href}">`;
-                        }
-                    } catch (e) {
-                        console.warn("Could not read stylesheet due to CORS:", sheet.href, e);
-                    }
-                    return '';
-                })
-                .join('');
-            
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Acknowledgement</title>
-                        ${styleSheets}
-                        <style>
-                            /* Additional print-specific styles */
-                            @media print {
-                                body { 
-                                    -webkit-print-color-adjust: exact; 
-                                    print-color-adjust: exact; 
-                                    margin: 0;
-                                }
-                                .no-print { display: none !important; }
-                                .print-watermark { opacity: 0.05 !important; }
-                            }
-                            body {
-                                font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        ${letterHtml}
-                    </body>
-                </html>
-            `);
-
-            printWindow.document.close();
-            // Use a timeout to ensure all styles and images have loaded
-            setTimeout(() => {
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
-            }, 500); // 500ms delay might be adjusted
-        }
-    };
-
     return (
-        <div>
-            <div id="letter-to-print" ref={letterRef} className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
+        <div className="bg-background">
+            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
                 
                 <div className="absolute top-4 right-4 z-20 no-print">
-                    <Button onClick={handlePrint} variant="outline" size="sm">
+                    <Button onClick={() => window.print()} variant="outline" size="sm">
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
                     </Button>
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center z-0 print-watermark">
+                <div className="absolute inset-0 flex items-center justify-center z-0 print-watermark print:block">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
                 </div>
                 
