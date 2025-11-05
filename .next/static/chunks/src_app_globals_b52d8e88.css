@@ -2654,13 +2654,22 @@ body {
     print-color-adjust: exact !important;
   }
 
-  .no-print, header, footer, [data-sidebar="sidebar"], aside {
+  .no-print, header, footer, aside, [data-sidebar="sidebar"] {
     display: none !important;
   }
 
   main {
     padding: 0 !important;
     margin: 0 !important;
+    display: none !important;
+  }
+
+  .print-container {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   #letter-to-print {
@@ -2670,6 +2679,14 @@ body {
     margin: 0 !important;
     max-width: 100% !important;
     min-height: auto !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+
+  .print-watermark {
+    opacity: .05 !important;
   }
 
   @page {

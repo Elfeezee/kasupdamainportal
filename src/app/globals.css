@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -99,19 +100,28 @@ body {
     print-color-adjust: exact !important;
   }
   
-  .no-print, 
-  header, 
-  footer, 
-  [data-sidebar="sidebar"],
-  aside {
+  .no-print,
+  header,
+  footer,
+  aside,
+  [data-sidebar="sidebar"] { /* This hides the sidebar itself */
     display: none !important;
   }
 
   main {
     padding: 0 !important;
     margin: 0 !important;
+    display: none !important; /* Hide the default main content area */
   }
-
+  
+  .print-container {
+    display: block !important; /* Only show the print container */
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
   #letter-to-print {
     box-shadow: none !important;
     border: none !important;
@@ -119,6 +129,14 @@ body {
     margin: 0 !important;
     max-width: 100% !important;
     min-height: auto !important;
+  }
+  
+  .print\:block {
+    display: block !important;
+  }
+  
+  .print-watermark {
+    opacity: 0.05 !important; /* Make sure watermark is not too strong */
   }
 
   @page {

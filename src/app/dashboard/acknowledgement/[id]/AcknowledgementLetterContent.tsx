@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
@@ -80,6 +80,7 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
 
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const router = useRouter();
+    const letterRef = useRef<HTMLDivElement>(null);
 
     const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
@@ -91,16 +92,15 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
     const receivedDocuments = Object.keys(applicationData)
         .filter(key => key.endsWith('_url') && applicationData[key] && documentChecklistMap[key])
         .map(key => documentChecklistMap[key]);
-
+        
     const handlePrint = () => {
         window.print();
     };
 
     return (
-        <div className="relative">
-            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
+        <div>
+            <div id="letter-to-print" ref={letterRef} className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
                 
-                {/* Download Button */}
                 <div className="absolute top-4 right-4 z-20 no-print">
                     <Button onClick={handlePrint} variant="outline" size="sm">
                         <Download className="mr-2 h-4 w-4" />
@@ -108,9 +108,8 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     </Button>
                 </div>
 
-                {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
-                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
+                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none print-watermark" />
                 </div>
                 
                 <div className="relative z-10 flex flex-col flex-grow">
