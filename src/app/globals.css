@@ -93,23 +93,31 @@ body {
   }
 }
 
-/* This is the new, robust print styling section */
 @media print {
+  /* Force background graphics and colors to print */
   body {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color: black !important;
   }
 
-  /* Hide everything by default */
+  /* Hide all elements by default */
   body * {
     visibility: hidden;
   }
 
-  /* Show only the print container and its contents */
-  .print-container, .print-container * {
+  /* Only show the print container and its contents */
+  .print-container,
+  .print-container * {
     visibility: visible;
   }
   
+  /* Hide elements that should not be printed */
+  .no-print, .no-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
   /* Position the print container to take up the whole page */
   .print-container {
     position: absolute;
@@ -120,26 +128,23 @@ body {
     margin: 0 !important;
     padding: 0 !important;
   }
-
-  /* Ensure the letter itself has no extra shadows or borders */
+  
+  /* Ensure the letter itself has no extra shadows or borders from the container */
   #letter-to-print {
     box-shadow: none !important;
     border: none !important;
+    margin: 0;
+    width: 100%;
   }
 
-  /* Force the watermark to be printed */
-  .print-watermark {
-      display: block !important;
-      opacity: 0.05 !important;
-  }
-
-  /* Ensure no buttons or other interactive elements are printed */
-  .no-print {
-    display: none !important;
+  /* Ensure the watermark image is visible when printing */
+  .print-watermark, .print-watermark * {
+    visibility: visible !important;
+    display: block !important;
   }
 
   @page {
     size: A4;
-    margin: 1cm;
+    margin: 0.5cm;
   }
 }
