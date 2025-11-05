@@ -96,30 +96,33 @@ body {
 @media print {
   body {
     background: white !important;
+    color: black !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  
+
   .no-print,
   header,
   footer,
   aside,
-  [data-sidebar="sidebar"] { /* This hides the sidebar itself */
+  [data-sidebar="sidebar"], /* Hide dashboard sidebar */
+  main > .flex.min-h-\[calc\(100vh-var\(--header-height\,60px\)-var\(--footer-height\,60px\)\)\] { /* Hide dashboard container */
     display: none !important;
-  }
-
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-    display: none !important; /* Hide the default main content area */
   }
   
   .print-container {
-    display: block !important; /* Only show the print container */
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     padding: 0 !important;
     margin: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
+  }
+
+  main {
+    display: none !important;
   }
   
   #letter-to-print {
@@ -127,6 +130,7 @@ body {
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
     max-width: 100% !important;
     min-height: auto !important;
   }
@@ -136,11 +140,11 @@ body {
   }
   
   .print-watermark {
-    opacity: 0.05 !important; /* Make sure watermark is not too strong */
+    opacity: 0.05 !important;
   }
 
   @page {
     size: A4;
-    margin: 2cm;
+    margin: 1.5cm;
   }
 }
