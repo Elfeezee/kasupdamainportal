@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // A mapping of database field names to user-friendly document labels
@@ -92,10 +92,22 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
         .filter(key => key.endsWith('_url') && applicationData[key] && documentChecklistMap[key])
         .map(key => documentChecklistMap[key]);
 
+    const handlePrint = () => {
+        window.print();
+    };
 
     return (
         <div className="relative">
-            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative z-10">
+            <div id="letter-to-print" className="bg-white dark:bg-card shadow-2xl print:shadow-none max-w-4xl mx-auto font-serif text-black flex flex-col min-h-[1122px] p-12 relative">
+                
+                {/* Download Button */}
+                <div className="absolute top-4 right-4 z-20 no-print">
+                    <Button onClick={handlePrint} variant="outline" size="sm">
+                        <Download className="mr-2 h-4 w-4" />
+                        Download PDF
+                    </Button>
+                </div>
+
                 {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
