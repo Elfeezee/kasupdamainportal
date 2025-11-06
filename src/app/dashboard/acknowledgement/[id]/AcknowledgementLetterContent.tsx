@@ -1,14 +1,13 @@
 
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useReactToPrint } from 'react-to-print';
 
 // A mapping of database field names to user-friendly document labels
 const documentChecklistMap: Record<string, string> = {
@@ -78,8 +77,6 @@ const DetailItem = ({ label, value }: { label: string; value: string | null | un
     </div>
 );
 
-
-// This is the component that will be printed
 const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: StoredApplication }>(({ applicationData }, ref) => {
     const applicationId = applicationData.original_permit_id || applicationData.din || `KSP${String(applicationData.id).padStart(3, '0')}`;
     const applicantName = applicationData.applicant_name;
@@ -95,7 +92,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
     return (
          <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1122px] p-12 relative">
             
-            <div className="absolute inset-0 flex items-center justify-center z-0">
+            <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
                 <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
             </div>
             
@@ -165,17 +162,15 @@ LetterToPrint.displayName = "LetterToPrint";
 
 export default function AcknowledgementLetterContent({ applicationData }: { applicationData: StoredApplication }) {
     const router = useRouter();
-    const componentRef = useRef<HTMLDivElement>(null);
 
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-        documentTitle: `KASUPDA-Acknowledgement-${applicationData.id}`,
-    });
+    const handlePrint = () => {
+        window.print();
+    };
 
     return (
-        <div className="bg-background">
-            {/* Action Buttons */}
-            <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center items-center gap-4 relative z-20">
+        <>
+            {/* Action Buttons are outside the main content wrapper */}
+            <div className="bg-muted/30 p-6 flex flex-col sm:flex-row justify-center items-center gap-4 no-print">
                 <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to My Applications
@@ -188,13 +183,8 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
             
             {/* The component that will be printed */}
             <div className="shadow-2xl max-w-4xl mx-auto">
-                 <LetterToPrint ref={componentRef} applicationData={applicationData} />
+                 <LetterToPrint applicationData={applicationData} />
             </div>
-
-            {/* A hidden copy for printing purposes, if direct ref causes issues (can be removed if direct ref works well) */}
-            <div style={{ display: 'none' }}>
-                <LetterToPrint ref={componentRef} applicationData={applicationData} />
-            </div>
-        </div>
+        </>
     );
 }

@@ -653,10 +653,6 @@ body {
   right: 1.5rem;
 }
 
-.right-8 {
-  right: 2rem;
-}
-
 .right-\[2\.5rem\] {
   right: 2.5rem;
 }
@@ -683,10 +679,6 @@ body {
 
 .top-4 {
   top: 1rem;
-}
-
-.top-8 {
-  top: 2rem;
 }
 
 .top-\[50\%\] {
@@ -2760,54 +2752,6 @@ body {
 
 body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-}
-
-@media print {
-  body {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color: #000 !important;
-  }
-
-  body * {
-    visibility: hidden;
-  }
-
-  .print-container, .print-container * {
-    visibility: visible;
-  }
-
-  .no-print, .no-print * {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  .print-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: auto;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  #letter-to-print {
-    margin: 0;
-    width: 100%;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  .print-watermark, .print-watermark * {
-    visibility: visible !important;
-    display: block !important;
-  }
-
-  @page {
-    size: A4;
-    margin: .5cm;
-  }
 }
 
 .file\:mr-4::file-selector-button {

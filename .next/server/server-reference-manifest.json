@@ -6,10 +6,6 @@
           "moduleId": "[project]/.next-internal/server/app/dashboard/acknowledgement/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/acknowledgement/[id]/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
-        "app/dashboard/my-applications/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -17,7 +13,6 @@
       },
       "layer": {
         "app/dashboard/acknowledgement/[id]/page": "action-browser",
-        "app/dashboard/my-applications/page": "action-browser",
         "app/page": "action-browser"
       }
     },
