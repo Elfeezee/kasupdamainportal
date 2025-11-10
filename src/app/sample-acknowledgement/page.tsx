@@ -9,7 +9,7 @@ const sampleApplicationData: StoredApplication = {
   created_at: new Date().toISOString(),
   user_id: 'user-123',
   type: 'Building Permit (Individual)',
-  applicant_name: 'John Doe',
+  applicant_name: 'Muhammad Kabiru Rabiu',
   status: 'Inprogress',
   original_permit_id: 'KSP999',
   din: 'DIN123',
