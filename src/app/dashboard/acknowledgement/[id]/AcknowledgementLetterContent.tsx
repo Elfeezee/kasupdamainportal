@@ -14,6 +14,8 @@ const documentChecklistMap: Record<string, string> = {
     // Standard application docs
     'doc_application_form_url': 'Application Form', // Assuming one might exist
     'doc_receipt_url': 'Receipt',
+    'doc_utility_bill_url': 'Utility Receipt/Bill',
+
 
     // Identification
     'doc_applicant_id_url': "Applicant's Identification (Voter's Card, etc.)",
@@ -71,8 +73,8 @@ const documentChecklistMap: Record<string, string> = {
 
 
 const DetailItem = ({ label, value }: { label: string; value: string | null | undefined; }) => (
-    <div className="flex text-sm">
-        <p className="w-32 shrink-0 font-semibold">{label}:</p> 
+    <div className="flex text-xs">
+        <p className="w-28 shrink-0 font-semibold">{label}:</p> 
         <p>{value || 'N/A'}</p>
     </div>
 );
@@ -98,13 +100,13 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
             
             <div className="relative z-10 flex flex-col flex-grow">
                 <header className="pb-2 mb-2 text-center">
-                    <Image src="/image/logo.png" alt="KASUPDA Logo" width={60} height={60} className="h-16 w-16 mx-auto mb-2" />
-                    <h2 className="text-base font-bold text-black tracking-wide">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
-                    <h3 className="text-sm font-bold text-black tracking-wide mt-1">ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT</h3>
+                    <Image src="/image/logo.png" alt="KASUPDA Logo" width={50} height={50} className="h-14 w-14 mx-auto mb-2" />
+                    <h2 className="text-sm font-bold text-black tracking-wide">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
+                    <h3 className="text-xs font-bold text-black tracking-wide mt-1">ACKNOWLEDGEMENT OF APPLICATION FOR BUILDING PERMIT</h3>
                 </header>
                 
                 <main className="flex-grow">
-                    <div className="space-y-1 text-sm my-4">
+                    <div className="space-y-1 text-xs my-4">
                         <DetailItem label="File Number" value={applicationId} />
                         <DetailItem label="Applicant Name" value={applicantName} />
                         <DetailItem label="Applicant Address" value={applicantAddress} />
@@ -112,15 +114,15 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                         <DetailItem label="Application Date" value={submissionDate} />
                     </div>
 
-                    <div className="space-y-1 text-xs leading-relaxed">
+                    <div className="space-y-1 text-[11px] leading-relaxed">
                         <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {applicationData.plotDistrict || '[District not provided]'} in LGA {applicationData.plotLGA || '[LGA not provided]'} more accurately described as {applicationData.plotDescriptionAddress}.</p>
                         <p>Description of the development is: {developmentDescription}</p>
                     </div>
 
                     {receivedDocuments.length > 0 && (
                         <div className="pt-4 mt-4">
-                            <h3 className="text-xs font-semibold mb-2">The following documents were received:</h3>
-                            <div className="space-y-1 text-xs max-w-md">
+                            <h3 className="text-[11px] font-semibold mb-2">The following documents were received:</h3>
+                            <div className="space-y-1 text-[11px] max-w-md">
                                 {receivedDocuments.map(docName => (
                                     <div key={docName} className="border-b border-black pb-1">
                                         <span>{docName}</span>
@@ -131,24 +133,24 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     )}
                 </main>
 
-                <footer className="text-[10px] text-gray-700 space-y-3 pt-4 mt-auto">
+                 <footer className="text-[9px] text-gray-700 space-y-2 pt-4 mt-auto">
                     <div className="flex justify-between items-start gap-8 pt-8">
                         <div className="w-1/2">
                             <div className="border-t-2 border-black pt-1">
-                                <p className="font-semibold">for: Director General KASUPDA</p>
+                                <p className="font-semibold text-[10px]">for: Director General KASUPDA</p>
                             </div>
                         </div>
                         <div className="w-1/2">
                             <div className="border-t-2 border-black pt-1">
-                                <p className="font-semibold">Signature (Applicant/Representative)</p>
+                                <p className="font-semibold text-[10px]">Signature (Applicant/Representative)</p>
                             </div>
                         </div>
                     </div>
-                    <div className="pt-2">
-                        <h4 className="font-bold text-xs">Disclaimer</h4>
-                        <p className="leading-snug text-[9px]">This acknowledgement does not in any way validate the authenticity of the documents described above. All documents are subject to further verification for authenticity. This acknowledgement must be presented at the time of collection of the Development Permit. Please notify us of any change of contact address or any other vital information contained in your original application. Contact us directly at:</p>
+                    <div className="pt-4">
+                        <h4 className="font-bold text-[10px]">Disclaimer</h4>
+                        <p className="leading-snug text-[8px]">This acknowledgement does not in any way validate the authenticity of the documents described above. All documents are subject to further verification for authenticity. This acknowledgement must be presented at the time of collection of the Development Permit. Please notify us of any change of contact address or any other vital information contained in your original application. Contact us directly at:</p>
                     </div>
-                    <div className="text-center text-[9px] font-semibold text-black leading-snug pt-1 border-t mt-2">
+                    <div className="text-center text-[8px] font-semibold text-black leading-snug pt-1 border-t mt-2">
                         <p>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY, P.M.B. 2142 KADUNA STATE, NIGERIA</p>
                         <p>KASUPDA SERVICE CENTRE NO. 4 BIDA ROAD, SABON GARI, KADUNA TEL 08132389638, info@kasupda.org</p>
                     </div>
