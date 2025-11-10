@@ -7,27 +7,33 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * A robust function to convert form data keys to snake_case for the database.
  * This handles nested objects and file uploads correctly.
+ * Example: 'identificationType.nationalIdCard' becomes 'id_type_national_id_card'
  * Example: 'ceoIdentificationType.nationalIdCard' becomes 'ceo_id_type_national_id_card'
- * Example: 'docLandTitle' becomes 'doc_land_title_url' for files.
  * @param key The form field key.
  * @returns The snake_cased key.
  */
 function toSnakeCase(key: string): string {
-  // Specific replacements for structured data like identification types
-  let snakeKey = key
-    .replace(/^identificationType\./, 'id_type_')
-    .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
-    .replace(/^repIdentificationType\./, 'rep_id_type_')
-    .replace(/^outdoorActivity\./, 'outdoor_activity_');
-  
-  // Convert camelCase to snake_case and replace any remaining dots
-  snakeKey = snakeKey
-    .replace(/\./g, '_')
-    .replace(/([A-Z])/g, '_$1')
-    .toLowerCase();
+    // Specific prefixes for nested object fields from the forms.
+    // This is more explicit and reliable than complex regex.
+    let snakeKey = key
+        .replace(/^identificationType\./, 'id_type_')
+        .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
+        .replace(/^repIdentificationType\./, 'rep_id_type_')
+        .replace(/^outdoorActivity\./, 'outdoor_activity_')
+        .replace(/^boardInstallations\./, 'board_installations_');
 
-  return snakeKey;
+    // Generic conversion for camelCase to snake_case and replaces any remaining dots.
+    snakeKey = snakeKey
+        .replace(/\./g, '_')
+        .replace(/([A-Z])/g, '_$1')
+        .toLowerCase();
+        
+    // Clean up any potential double underscores from combined logic.
+    snakeKey = snakeKey.replace(/__+/g, '_');
+
+    return snakeKey;
 }
+
 
 /**
  * Processes form data and saves it to the 'applications' table in Supabase.
@@ -59,7 +65,7 @@ async function processAndSaveData(
         }
 
         const dbKey = toSnakeCase(key);
-
+        
         if (value instanceof File) {
             // Only process the file if it has content
             if (value.size > 0) {
@@ -72,11 +78,11 @@ async function processAndSaveData(
                 }
                 
                 const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                // Append '_url' to the key for file fields to match the database schema
+                // The DB expects file URLs to have '_url' suffix.
                 submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
         } else if (typeof value === 'string') {
-            // Handle specific string values
+            // Handle specific string values that represent booleans or dates
             if (value === 'on') {
                 submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
