@@ -1,16 +1,15 @@
 
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google'; // Changed to Inter
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import AppClientLayoutWrapper from '@/components/layout/app-client-layout-wrapper';
 
-// Configure the Inter font
+// Correctly configure the Inter font
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans', // Use a standard variable name
+  variable: '--font-sans',
 });
-
 
 export const metadata: Metadata = {
   title: {
@@ -34,7 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased", // Use the font variable
+          "min-h-screen bg-background font-sans antialiased",
           inter.variable
         )}
       >

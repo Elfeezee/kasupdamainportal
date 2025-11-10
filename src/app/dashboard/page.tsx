@@ -56,14 +56,24 @@ const DashboardPage: React.FC = () => {
         setCurrentTime(now.toLocaleTimeString());
     };
 
-    updateDateTime(); // Set the initial time on the client
-    const timer = setInterval(updateDateTime, 1000); // Update every second
+    // Set initial date/time and then update every second
+    updateDateTime();
+    const timer = setInterval(updateDateTime, 1000);
     
     return () => clearInterval(timer); // Cleanup on unmount
   }, []);
   
   if (loading) {
-    return <div className="text-center p-8">Loading dashboard...</div>;
+    return (
+        <div className="space-y-8">
+            <Skeleton className="h-12 w-1/2" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Skeleton className="h-28 w-full" />
+                <Skeleton className="h-28 w-full" />
+            </div>
+            <Skeleton className="h-40 w-full" />
+        </div>
+    );
   }
   
   if (!user) {
