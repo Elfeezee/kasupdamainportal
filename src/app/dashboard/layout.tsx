@@ -30,6 +30,9 @@ export default function DashboardLayout({
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
 
+  // Check if the current page is an acknowledgement letter page
+  const isAcknowledgementPage = pathname.startsWith('/dashboard/acknowledgement/');
+
   useEffect(() => {
     // Whenever the path changes, we assume navigation has started,
     // so we turn off the loading state. This will be re-evaluated
@@ -86,6 +89,11 @@ export default function DashboardLayout({
       authListener.subscription.unsubscribe();
     };
   }, []);
+
+  // If it's the acknowledgement page, render children directly without the sidebar layout
+  if (isAcknowledgementPage) {
+    return <div className="bg-muted/30">{children}</div>;
+  }
 
   return (
     <SidebarProvider>

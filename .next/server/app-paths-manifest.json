@@ -1,4 +1,12 @@
 {
+  "/apply-for-permit/page": "app/apply-for-permit/page.js",
+  "/dashboard/acknowledgement/[id]/page": "app/dashboard/acknowledgement/[id]/page.js",
+  "/dashboard/apply/building-permit/page": "app/dashboard/apply/building-permit/page.js",
+  "/dashboard/apply/page": "app/dashboard/apply/page.js",
+  "/dashboard/apply/residential-building-permit/page": "app/dashboard/apply/residential-building-permit/page.js",
+  "/dashboard/my-applications/page": "app/dashboard/my-applications/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
   "/sample-acknowledgement/page": "app/sample-acknowledgement/page.js"
 }
