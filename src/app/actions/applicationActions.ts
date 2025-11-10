@@ -7,22 +7,23 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Converts a camelCase or dot.notation string to snake_case.
  * This is the critical function for mapping form names to database columns.
+ * Handles complex nesting and preserves known patterns.
  * @param key The form field key (e.g., 'ceoIdentificationType.nationalIdCard').
  * @returns The snake_cased key for the database (e.g., 'ceo_id_type_national_id_card').
  */
 function toSnakeCase(key: string): string {
-    // First, replace dot notation with an underscore to handle nested objects
-    let snakeKey = key.replace(/\./g, '_');
-    
-    // Then, convert camelCase parts to snake_case
-    snakeKey = snakeKey.replace(/([A-Z])/g, '_$1').toLowerCase();
+    // First, handle specific nested structures with dot notation to create a clean base
+    let snakeKey = key
+        .replace(/^identificationType\./, 'id_type_')
+        .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
+        .replace(/^repIdentificationType\./, 'rep_id_type_')
+        .replace(/^outdoorActivity\./, 'outdoor_activity_');
 
-    // Perform specific replacements for known nested structures to match the database schema more accurately
-    snakeKey = snakeKey
-        .replace('identification_type_', 'id_type_')
-        .replace('ceo_identification_type_', 'ceo_id_type_')
-        .replace('rep_identification_type_', 'rep_id_type_')
-        .replace('outdoor_activity_', 'outdoor_activity_');
+    // Next, replace any remaining dots with underscores
+    snakeKey = snakeKey.replace(/\./g, '_');
+    
+    // Finally, convert camelCase parts to snake_case for the entire string
+    snakeKey = snakeKey.replace(/([A-Z])/g, '_$1').toLowerCase();
         
     return snakeKey;
 }
@@ -230,5 +231,3 @@ export async function saveApplication(
         return { success: false, error: result.error };
     }
 }
-
-    
