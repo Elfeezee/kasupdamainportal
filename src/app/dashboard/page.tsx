@@ -11,6 +11,7 @@ import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboardPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -101,9 +102,11 @@ const DashboardPage: React.FC = () => {
             <CalendarDays className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {currentDate || 'Loading date...'}
-            </div>
+            {currentDate ? (
+              <div className="text-2xl font-bold">{currentDate}</div>
+            ) : (
+              <Skeleton className="h-8 w-48" />
+            )}
             <p className="text-xs text-muted-foreground">
               Kaduna local date.
             </p>
@@ -115,9 +118,11 @@ const DashboardPage: React.FC = () => {
             <Clock className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {currentTime || 'Loading time...'}
-            </div>
+            {currentTime ? (
+              <div className="text-2xl font-bold">{currentTime}</div>
+            ) : (
+              <Skeleton className="h-8 w-32" />
+            )}
              <p className="text-xs text-muted-foreground">
               Kaduna local time.
             </p>

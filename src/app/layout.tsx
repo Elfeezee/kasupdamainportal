@@ -1,19 +1,16 @@
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google'; // Changed to Inter
 import './globals.css';
 import { cn } from '@/lib/utils';
 import AppClientLayoutWrapper from '@/components/layout/app-client-layout-wrapper';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+// Configure the Inter font
+const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-sans', // Use a standard variable name
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -37,9 +34,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          geistSans.variable,
-          geistMono.variable,
-          'antialiased min-h-screen flex flex-col'
+          "min-h-screen bg-background font-sans antialiased", // Use the font variable
+          inter.variable
         )}
       >
         <AppClientLayoutWrapper>
