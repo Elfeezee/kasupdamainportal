@@ -5,30 +5,33 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Converts a camelCase or dot.notation string to snake_case.
- * Handles specific nested structures and preserves known patterns.
- * @param key The form field key (e.g., 'ceoIdentificationType.nationalIdCard').
- * @returns The snake_cased key for the database (e.g., 'ceo_id_type_national_id_card').
+ * A robust function to convert form data keys to snake_case for the database.
+ * This handles nested objects and file uploads correctly.
+ * Example: 'ceoIdentificationType.nationalIdCard' becomes 'ceo_id_type_national_id_card'
+ * Example: 'docLandTitle' becomes 'doc_land_title_url' for files.
+ * @param key The form field key.
+ * @returns The snake_cased key.
  */
 function toSnakeCase(key: string): string {
-    // First, handle specific prefixes for nested identification types
-    let snakeKey = key
-        .replace(/^identificationType\./, 'id_type_')
-        .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
-        .replace(/^repIdentificationType\./, 'rep_id_type_')
-        .replace(/^outdoorActivity\./, 'outdoor_activity_');
-        
-    // Then, replace any remaining dots with underscores
-    snakeKey = snakeKey.replace(/\./g, '_');
-    
-    // Finally, convert camelCase parts to snake_case for the entire string
-    snakeKey = snakeKey.replace(/([A-Z])/g, '_$1').toLowerCase();
-        
-    return snakeKey;
+  // Specific replacements for structured data like identification types
+  let snakeKey = key
+    .replace(/^identificationType\./, 'id_type_')
+    .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
+    .replace(/^repIdentificationType\./, 'rep_id_type_')
+    .replace(/^outdoorActivity\./, 'outdoor_activity_');
+  
+  // Convert camelCase to snake_case and replace any remaining dots
+  snakeKey = snakeKey
+    .replace(/\./g, '_')
+    .replace(/([A-Z])/g, '_$1')
+    .toLowerCase();
+
+  return snakeKey;
 }
 
 /**
  * Processes form data and saves it to the 'applications' table in Supabase.
+ * This function is now robust and handles all application types.
  * @param formData The FormData object from the form submission.
  * @param userId The ID of the user submitting the form.
  * @param type The type of application being submitted.
@@ -58,6 +61,7 @@ async function processAndSaveData(
         const dbKey = toSnakeCase(key);
 
         if (value instanceof File) {
+            // Only process the file if it has content
             if (value.size > 0) {
                 const filePath = `${userId}/${uuidv4()}-${value.name}`;
                 const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
@@ -68,20 +72,24 @@ async function processAndSaveData(
                 }
                 
                 const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                // Append '_url' to the key for file fields to match the database schema
                 submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
         } else if (typeof value === 'string') {
+            // Handle specific string values
             if (value === 'on') {
                 submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
+                // Ensure date strings are in ISO format for the database
                 submissionPayload[dbKey] = new Date(value).toISOString();
             } else if (value) {
+                // For all other non-empty strings
                 submissionPayload[dbKey] = value;
             }
         }
     }
     
-    // Clean the payload of any null or undefined values before insertion
+    // Final check to remove any keys that may have resulted in null or undefined values
     const cleanedPayload = Object.fromEntries(
       Object.entries(submissionPayload).filter(([_, v]) => v != null)
     );
@@ -101,6 +109,7 @@ async function processAndSaveData(
             throw new Error("Failed to get ID from inserted application record.");
         }
 
+        // Generate and apply the final formatted application ID
         const finalApplicationId = `KSP${String(insertedData.id).padStart(3, '0')}`;
         await supabase
             .from('applications')
@@ -131,7 +140,7 @@ export async function generateAndSaveDin(
     submissionPayload.type = 'DIN Application';
     submissionPayload.applicant_name = applicantName;
     submissionPayload.user_id = userId;
-    submissionPayload.status = 'Approved'; 
+    submissionPayload.status = 'Approved'; // DINs are auto-approved
 
     for (const [key, value] of formData.entries()) {
         if (key === 'declaration') continue;
@@ -169,6 +178,7 @@ export async function generateAndSaveDin(
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         
         await supabase.from('applications').update({ din: finalDin }).eq('id', newId);
+        // Also update the user's profile with their new DIN
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
 
         return { success: true, din: finalDin };
@@ -182,7 +192,7 @@ export async function generateAndSaveDin(
 
 
 /**
- * Saves a generic application form to the database.
+ * Saves a generic application form to the database. This is the main entry point for form submissions.
  */
 export async function saveApplication(
     formData: FormData
@@ -192,11 +202,12 @@ export async function saveApplication(
     const userId = formData.get('userId') as string;
 
     if (!type || !applicantName || !userId) {
-        return { success: false, error: 'Missing required application metadata.' };
+        return { success: false, error: 'Missing required application metadata (type, applicantName, or userId).' };
     }
     
+    // DIN applications have a separate, dedicated flow.
     if (type === 'DIN Application') {
-        return { success: false, error: 'DIN Applications must use generateAndSaveDin action.' };
+        return { success: false, error: 'DIN Applications must use the generateAndSaveDin action.' };
     }
     
     const result = await processAndSaveData(formData, userId, type, applicantName);
