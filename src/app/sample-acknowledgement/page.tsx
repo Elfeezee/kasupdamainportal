@@ -32,7 +32,7 @@ const sampleApplicationData: StoredApplication = {
 
 export default function SampleAcknowledgementPage() {
   return (
-    <div>
+    <div className="bg-gray-100">
       <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 text-center my-4 no-print">
         <p className="font-bold">Sample Document</p>
         <p>This is a sample acknowledgement letter for review purposes. Use your browser's "Print" function (Ctrl+P or Cmd+P) to save this page as a PDF.</p>

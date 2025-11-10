@@ -92,7 +92,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
         .map(key => documentChecklistMap[key]);
 
     return (
-         <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1050px] p-8 relative print:min-h-0">
+         <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1050px] p-8 relative print:min-h-full">
             
             <div className="absolute inset-0 flex items-center justify-center z-0 print:block">
                 <Image src="/image/logo.png" alt="KASUPDA Watermark" width={300} height={300} className="w-2/3 h-2/3 object-contain opacity-5 pointer-events-none" />
