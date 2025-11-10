@@ -1028,6 +1028,10 @@ body {
   min-height: 100svh;
 }
 
+.min-h-\[1050px\] {
+  min-height: 1050px;
+}
+
 .w-0 {
   width: 0;
 }
@@ -2134,6 +2138,10 @@ body {
   padding-top: 1.5rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2208,6 +2216,10 @@ body {
 .text-xs {
   font-size: .75rem;
   line-height: 1rem;
+}
+
+.text-\[9px\] {
+  font-size: 9px;
 }
 
 .font-bold {
@@ -4044,6 +4056,16 @@ body {
 @media print {
   .print\:block {
     display: block;
+  }
+
+  .print\:min-h-0 {
+    min-height: 0;
+  }
+
+  .print\:shadow-none {
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 }
 
