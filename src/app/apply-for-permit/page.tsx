@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -126,28 +124,6 @@ export default function ApplyForPermitPage() {
     }
   };
 
-
-  const handleGoogleSignUp = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${location.origin}/auth/callback`
-        }
-      });
-      if (error) throw error;
-      // The user will be redirected to Google, and then back to the app.
-      // The onAuthStateChange listener will handle the session.
-    } catch (error) {
-       console.error("Google Sign-Up Error:", error);
-       toast({
-        title: 'Google Sign-Up Error',
-        description: 'Could not sign up with Google. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-var(--header-height,100px)-var(--footer-height,100px))]">
       <Card className="w-full max-w-md shadow-xl">
@@ -191,22 +167,6 @@ export default function ApplyForPermitPage() {
                 </Link>
             </p>
           </div>
-          
-          <div className="flex items-center justify-center space-x-4 my-6">
-            <Separator className="flex-grow" />
-            <span className="text-xs text-muted-foreground uppercase shrink-0">OR</span>
-            <Separator className="flex-grow" />
-          </div>
-          
-          <Button 
-            className="w-full flex items-center justify-center space-x-2 py-3 text-base" 
-            variant="outline" 
-            type="button" 
-            onClick={handleGoogleSignUp}
-          >
-            <FcGoogle className="text-2xl" />
-            <span>Sign Up with Google</span>
-          </Button>
         </CardContent>
       </Card>
     </div>

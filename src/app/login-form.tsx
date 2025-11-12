@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -98,31 +96,6 @@ export default function LoginForm() {
     }
   };
   
-  const handleGoogleSignIn = async () => {
-    try {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      if (!siteUrl) {
-          throw new Error("NEXT_PUBLIC_SITE_URL is not defined in your environment variables.");
-      }
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(redirectTo)}`
-        }
-      });
-      if (error) throw error;
-      // The user will be redirected to Google and then back to the app.
-
-    } catch (error) {
-       console.error("Google Sign-In Error:", error);
-       toast({
-        title: 'Google Sign-In Error',
-        description: 'Could not sign in with Google. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-var(--header-height,100px)-var(--footer-height,100px))]">
@@ -153,21 +126,6 @@ export default function LoginForm() {
             </Link>
           </div>
 
-          <div className="flex items-center justify-center space-x-4 my-8">
-            <Separator className="flex-grow" />
-            <span className="text-xs text-muted-foreground uppercase">OR</span>
-            <Separator className="flex-grow" />
-          </div>
-          
-          <Button 
-            className="w-full flex items-center justify-center space-x-2 py-3 text-base" 
-            variant="outline" 
-            type="button" 
-            onClick={handleGoogleSignIn}
-          >
-            <FcGoogle className="text-2xl" />
-            <span>Login with Google</span>
-          </Button>
         </CardContent>
         <CardFooter className="justify-center mt-2 pb-6">
           <p className="text-sm text-muted-foreground">
