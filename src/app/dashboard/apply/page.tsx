@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -22,14 +21,6 @@ const permitTypes = [
     icon: Tent,
     href: '/dashboard/apply/temporary-permit',
     actionText: 'Select Category',
-    disabled: false,
-  },
-  {
-    title: 'Certificate of Fitness',
-    description: 'Apply for a certificate of fitness and habitation upon project completion.',
-    icon: Award,
-    href: '/dashboard/apply/certificate-of-fitness',
-    actionText: 'Start Application',
     disabled: false,
   },
   {
