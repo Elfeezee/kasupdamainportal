@@ -2,7 +2,7 @@
 import React, { Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ListChecks, Clock, CheckCircle2, XCircle, AlertTriangle, FileSpreadsheet } from 'lucide-react';
+import { ListChecks, Clock, CheckCircle2, XCircle, AlertTriangle, FileSpreadsheet, Award } from 'lucide-react';
 import type { VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
@@ -120,13 +120,21 @@ async function MyApplicationsPageComponent() {
                     </div>
                 )}
               </CardContent>
-               <CardFooter className="border-t pt-4">
+              <CardFooter className="border-t pt-4 flex flex-col sm:flex-row gap-2">
                   <Button asChild variant="secondary" className="w-full">
                       <Link href={`/dashboard/acknowledgement/${app.id}`}>
                           <FileSpreadsheet className="mr-2 h-4 w-4" />
                           View Acknowledgement
                       </Link>
                   </Button>
+                  {app.type === 'Certificate of Fitness' && app.status === 'Approved' && (
+                    <Button asChild variant="default" className="w-full">
+                        <Link href={`/dashboard/certificate-of-fitness/${app.id}`}>
+                            <Award className="mr-2 h-4 w-4" />
+                            View Certificate
+                        </Link>
+                    </Button>
+                  )}
               </CardFooter>
             </Card>
           ))}

@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, ChevronDown, Sun, Moon, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon } from "lucide-react";
+import { Menu, ChevronDown, Sun, Moon, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon, Award } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -104,8 +104,8 @@ export default function Header() {
       label: "Building Control",
       isSubTrigger: true,
       subLinks: [
-        { href: "/dashboard/apply/stage-approval", label: "Apply for Stage approval" },
-        { href: "#", label: "Certificate of Fitness and Habitation" },
+        { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
+        { href: "/dashboard/apply/certificate-of-fitness", label: "Certificate of Fitness and Habitation" },
       ],
     },
     {
@@ -137,7 +137,7 @@ export default function Header() {
     { href: "/apply-for-permit", label: "Apply for permit" },
     { href: "/dashboard/apply/din-application", label: "Apply for DIN" },
     { href: "https://permit.kasupda.kdsg.gov.ng/", label: "Renew permit", external: true },
-    { href: "/dashboard/apply/stage-approval", label: "Apply for Stage approval" },
+    { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
   ];
   
   const mainNavLinks = [

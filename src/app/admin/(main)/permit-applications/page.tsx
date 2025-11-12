@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
@@ -56,6 +55,7 @@ const PERMIT_TYPES = [
     "Outdoor Structure Permit",
     "Temporary Shop Owners Permit",
     "Street Naming Permit",
+    "Certificate of Fitness",
 ];
 
 export default function PermitApplicationsPage() {
