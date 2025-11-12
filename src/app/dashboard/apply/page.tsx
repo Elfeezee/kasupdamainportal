@@ -4,7 +4,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Tent, UserCheck, MessageSquareWarning, ArrowRight, FilePlus2, Building, Fingerprint } from 'lucide-react';
+import { FileText, Tent, UserCheck, MessageSquareWarning, ArrowRight, FilePlus2, Building, Fingerprint, Award } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,6 +22,14 @@ const permitTypes = [
     icon: Tent,
     href: '/dashboard/apply/temporary-permit',
     actionText: 'Select Category',
+    disabled: false,
+  },
+  {
+    title: 'Certificate of Fitness',
+    description: 'Apply for a certificate of fitness and habitation upon project completion.',
+    icon: Award,
+    href: '/dashboard/apply/certificate-of-fitness',
+    actionText: 'Start Application',
     disabled: false,
   },
   {

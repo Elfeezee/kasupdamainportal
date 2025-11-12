@@ -2,6 +2,18 @@
   "node": {
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
+        "app/dashboard/apply/certificate-of-fitness/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/certificate-of-fitness/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/my-dins/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/login/page": {
+          "moduleId": "[project]/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -12,8 +24,33 @@
         }
       },
       "layer": {
+        "app/dashboard/apply/certificate-of-fitness/page": "action-browser",
+        "app/dashboard/my-dins/page": "action-browser",
+        "app/login/page": "action-browser",
         "app/page": "action-browser",
         "app/sample-acknowledgement/page": "action-browser"
+      }
+    },
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
+      "workers": {
+        "app/dashboard/apply/certificate-of-fitness/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/certificate-of-fitness/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/certificate-of-fitness/page": "action-browser"
+      }
+    },
+    "703c8e965250efc42d12325b86de80956fb7b5329f": {
+      "workers": {
+        "app/dashboard/apply/certificate-of-fitness/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/certificate-of-fitness/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/certificate-of-fitness/page": "action-browser"
       }
     }
   },
