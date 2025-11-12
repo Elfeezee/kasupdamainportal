@@ -6,6 +6,10 @@
           "moduleId": "[project]/.next-internal/server/app/dashboard/apply/certificate-of-fitness/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/dashboard/apply/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/dashboard/my-dins/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
@@ -25,6 +29,7 @@
       },
       "layer": {
         "app/dashboard/apply/certificate-of-fitness/page": "action-browser",
+        "app/dashboard/apply/page": "action-browser",
         "app/dashboard/my-dins/page": "action-browser",
         "app/login/page": "action-browser",
         "app/page": "action-browser",

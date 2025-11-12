@@ -25,6 +25,7 @@ import {
   Fingerprint,
   ClipboardCheck, 
   BookUser,
+  Award,
 } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -52,6 +53,7 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
     { href: '/dashboard/my-dins', label: 'My DINs', icon: BookUser },
     { href: '/dashboard/apply', label: 'Apply for Permit', icon: FilePlus2, disabled: false },
     { href: '/dashboard/stage-approval', label: 'Apply for Stage Approval', icon: ClipboardCheck, disabled: false },
+    { href: '/dashboard/apply/certificate-of-fitness', label: 'Apply for Certificate of Fitness', icon: Award, disabled: false },
     { href: '/dashboard/my-applications', label: 'My Applications', icon: ListChecks },
     { href: '/dashboard/profile', label: 'My Profile', icon: UserCircle2, disabled: false },
     { href: '/dashboard/payments', label: 'Payment History', icon: ReceiptText, disabled: true },
