@@ -107,11 +107,12 @@ export default function CertificateOfFitnessPage() {
     formData.append('applicantName', data.applicantName);
     formData.append('userId', user.id);
     
+    // Correctly name the fields for the server action
     if (data.docBuildingPermit[0]) {
-      formData.append('doc_building_permit_url', data.docBuildingPermit[0]);
+      formData.append('doc_building_permit', data.docBuildingPermit[0]);
     }
     if (data.docCO[0]) {
-      formData.append('doc_co_url', data.docCO[0]);
+      formData.append('doc_co', data.docCO[0]);
     }
 
     try {
