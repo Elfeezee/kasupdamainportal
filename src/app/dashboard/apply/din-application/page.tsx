@@ -327,15 +327,16 @@ export default function DinApplicationPage() {
 
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     
-    // Create a new FormData object to pass to the server action
     const formData = new FormData();
+
+    // Append all form values to FormData
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (typeof value === 'boolean') {
         if (value) formData.append(key, 'on');
       } else if (value instanceof FileList) {
-        if (value.length > 0) formData.append(key, value[0]);
+        if (value.length > 0 && value[0].size > 0) formData.append(key, value[0]);
       } else if (typeof value === 'object' && value !== null) {
         // Handle nested objects like 'identificationType'
         Object.entries(value).forEach(([nestedKey, nestedValue]) => {
@@ -349,11 +350,9 @@ export default function DinApplicationPage() {
     });
     
     try {
-        // Call the new, dedicated server action
         const result = await generateAndSaveDin(user.id, applicantName, formData);
 
         if (result.success && result.din) {
-            // Redirect to the success page with the guaranteed correct DIN
             router.push(`/dashboard/apply/din-application/success?din=${result.din}`);
         } else {
             throw new Error(result.error || "An unknown error occurred during submission.");
@@ -377,4 +376,3 @@ export default function DinApplicationPage() {
     </div>
   );
 }
-

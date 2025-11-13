@@ -478,22 +478,151 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 /**
- * Converts a camelCase or dot.notation string to snake_case.
- * This is the critical function for mapping form names to database columns.
- * @param key The form field key (e.g., 'ceoIdentificationType.nationalIdCard').
- * @returns The snake_cased key for the database (e.g., 'ceo_id_type_national_id_card').
- */ function toSnakeCase(key) {
-    // First, replace dot notation with an underscore to handle nested objects
-    let snakeKey = key.replace(/\./g, '_');
-    // Then, convert camelCase parts to snake_case
-    snakeKey = snakeKey.replace(/([A-Z])/g, '_$1').toLowerCase();
-    // Perform specific replacements for known nested structures to match the database schema more accurately
-    snakeKey = snakeKey.replace('identification_type_', 'id_type_').replace('ceo_identification_type_', 'ceo_id_type_').replace('rep_identification_type_', 'rep_id_type_').replace('outdoor_activity_', 'outdoor_activity_');
-    return snakeKey;
+ * A robust function to convert form data keys from form-friendly names
+ * to snake_case for the database. This handles nested objects correctly.
+ * This is a highly explicit mapping to prevent errors.
+ *
+ * @param key The form field key from FormData.
+ * @returns The snake_cased key for the database.
+ */ function mapKeyToDbField(key) {
+    const mappings = {
+        // General
+        'type': 'type',
+        'applicantName': 'applicant_name',
+        'userId': 'user_id',
+        'declaration': 'declaration',
+        'kbpNumber': 'kbp_number',
+        'kdlNumber': 'kdl_number',
+        'kopNumber': 'kop_number',
+        // Applicant Info (BPI & Others)
+        'title': 'title',
+        'firstName': 'first_name',
+        'middleName': 'middle_name',
+        'surname': 'surname',
+        'gender': 'gender',
+        'dateOfBirth': 'date_of_birth',
+        'occupation': 'occupation',
+        'nationality': 'nationality',
+        'stateOfOrigin': 'state_of_origin',
+        'localGov': 'local_gov',
+        'phone1': 'phone1',
+        'phone2': 'phone2',
+        'phone3': 'phone3',
+        'email': 'email',
+        'idNumber': 'id_number',
+        // Applicant Address
+        'appHouseNo': 'app_house_no',
+        'appStreetName': 'app_street_name',
+        'appDistrict': 'app_district',
+        'appCityTown': 'app_city_town',
+        'appState': 'app_state',
+        'appCountry': 'app_country',
+        'appPOBox': 'app_po_box',
+        'appCO': 'app_co',
+        'appAdditionalAddressInfo': 'app_additional_address_info',
+        // Organization Info
+        'orgName': 'org_name',
+        'cacNumber': 'cac_number',
+        'dateOfRegistration': 'date_of_registration',
+        'orgTaxIdNumber': 'org_tax_id_number',
+        'orgPhone': 'org_phone',
+        'orgEmail': 'org_email',
+        'orgHouseNo': 'org_house_no',
+        'orgStreetName': 'org_street_name',
+        'orgDistrict': 'org_district',
+        'orgCityTown': 'org_city_town',
+        'orgState': 'org_state',
+        'orgCountry': 'org_country',
+        'orgPOBox': 'org_po_box',
+        'orgCO': 'org_co',
+        'orgAdditionalAddressInfo': 'org_additional_address_info',
+        'orgTin': 'org_tin',
+        // CEO Info
+        'ceoTitle': 'ceo_title',
+        'ceoFirstName': 'ceo_first_name',
+        'ceoMiddleName': 'ceo_middle_name',
+        'ceoSurname': 'ceo_surname',
+        'ceoDesignation': 'ceo_designation',
+        'ceoPhone': 'ceo_phone',
+        'ceoEmail': 'ceo_email',
+        'ceoIdNumber': 'ceo_id_number',
+        // Representative Info
+        'repFirstName': 'rep_first_name',
+        'repMiddleName': 'rep_middle_name',
+        'repSurname': 'rep_surname',
+        'repPhone1': 'rep_phone1',
+        'repPhone2': 'rep_phone2',
+        'repEmail': 'rep_email',
+        'repIdNumber': 'rep_id_number',
+        'repHouseNo': 'rep_house_no',
+        'repStreetName': 'rep_street_name',
+        'repDistrict': 'rep_district',
+        'repCityTown': 'rep_city_town',
+        'repState': 'rep_state',
+        'repCountry': 'rep_country',
+        'repPOBox': 'rep_po_box',
+        'repCO': 'rep_co',
+        'repAdditionalAddressInfo': 'rep_additional_address_info',
+        // Plot / Site Info
+        'landUse': 'land_use',
+        'purpose': 'purpose',
+        'plotDistrict': 'plot_district',
+        'plotLGA': 'plot_lga',
+        'plotDescriptionAddress': 'plot_description_address',
+        'siteStreetName': 'site_street_name',
+        'siteCityTown': 'site_city_town',
+        'siteLGA': 'site_lga',
+        'siteState': 'site_state',
+        'siteCoordLong': 'site_coord_long',
+        'siteCoordLat': 'site_coord_lat',
+        'siteTypeOfLand': 'site_type_of_land',
+        'siteProofOfOwnership': 'site_proof_of_ownership',
+        'siteAddInfo': 'site_add_info',
+        // Permit-Specific Fields
+        'din': 'din',
+        'originalPermitId': 'original_permit_id',
+        'kasupdaLicenseNo': 'kasupda_license_no',
+        'apconRegNo': 'apcon_reg_no',
+        'typeOfDevelopment': 'type_of_development',
+        'categoryOfBusiness': 'category_of_business',
+        'plotAddressDescription': 'plot_address_description',
+        'children': 'children',
+        'maritalStatus': 'marital_status',
+        'educationLevel': 'education_level',
+        'otherEducation': 'other_education',
+        'tin': 'tin',
+        'typeOfRoad': 'type_of_road',
+        'roadLength': 'road_length',
+        'coordinates': 'coordinates',
+        'locationOfSite': 'location_of_site',
+        'mastType': 'mast_type',
+        'mastTypeOther': 'mast_type_other',
+        'mastDuration': 'mast_duration',
+        'mastCommencementDate': 'mast_commencement_date',
+        'mastCoordinates': 'mast_coordinates',
+        'mastLocationOfShield': 'mast_location_of_shield',
+        'applicantCompanyNameIndividual': 'applicant_company_name_individual',
+        'applicantFullNameContact': 'applicant_full_name_contact',
+        'outdoorActivitySignboardSize': 'outdoor_activity_signboard_size',
+        'outdoorActivityOthersSpecify': 'outdoor_activity_others_specify',
+        'companyName': 'company_name',
+        'boardInstallationOthersText': 'board_installation_others_text',
+        'phoneNo': 'phone_no',
+        'emailAddress': 'email_address',
+        'ceoNameContact': 'ceo_name_contact'
+    };
+    // Handle nested checkbox objects (e.g., identificationType.nationalIdCard)
+    if (key.includes('.')) {
+        const [parent, child] = key.split('.');
+        const snakeParent = parent.replace(/([A-Z])/g, '_$1').toLowerCase();
+        const snakeChild = child.replace(/([A-Z])/g, '_$1').toLowerCase();
+        return `${snakeParent}_${snakeChild}`;
+    }
+    return mappings[key] || key;
 }
 /**
- * Processes form data from FormData and saves it to the 'applications' table in Supabase.
- * This function is designed to be robust and handle various data types including files.
+ * Processes form data and saves it to the 'applications' table in Supabase.
+ * This is the new, robust function for all application types.
  * @param formData The FormData object from the form submission.
  * @param userId The ID of the user submitting the form.
  * @param type The type of application being submitted.
@@ -502,71 +631,59 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
  */ async function processAndSaveData(formData, userId, type, applicantName) {
     const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const submissionPayload = {};
-    // 1. Manually add the core metadata required for every application
     submissionPayload.type = type;
     submissionPayload.applicant_name = applicantName;
     submissionPayload.user_id = userId;
     submissionPayload.status = 'Inprogress';
-    // 2. Iterate through all FormData entries to build the submission payload
+    // Process all entries from FormData
     for (const [key, value] of formData.entries()){
-        // Skip metadata fields that are handled manually above or are not part of the database record
         if ([
             'type',
             'userId',
-            'applicantName',
-            'declaration'
+            'applicantName'
         ].includes(key)) {
             continue;
         }
-        const dbKey = toSnakeCase(key);
-        if (value instanceof File && value.size > 0) {
-            // Handle file upload to Supabase Storage
-            const filePath = `${userId}/${(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$uuid$2f$dist$2f$esm$2d$node$2f$v4$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__v4$3e$__["v4"])()}-${value.name}`;
-            const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-            if (uploadError) {
-                console.error(`Storage error for ${key}:`, uploadError);
-                return {
-                    success: false,
-                    error: `Storage error for ${key}: ${uploadError.message}`
-                };
+        const dbKey = mapKeyToDbField(key);
+        if (value instanceof File) {
+            if (value.size > 0) {
+                const filePath = `${userId}/${(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$uuid$2f$dist$2f$esm$2d$node$2f$v4$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__v4$3e$__["v4"])()}-${value.name}`;
+                const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
+                if (uploadError) {
+                    console.error(`Storage error for ${key}:`, uploadError);
+                    return {
+                        success: false,
+                        error: `Storage error for ${key}: ${uploadError.message}`
+                    };
+                }
+                const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                // Important: DB expects file URLs to have '_url' suffix.
+                submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
-            // Get the public URL of the uploaded file
-            const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-            if (!publicUrlData.publicUrl) {
-                return {
-                    success: false,
-                    error: `Could not get public URL for the file associated with ${key}.`
-                };
-            }
-            // Store the public URL in a field ending with '_url'
-            submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
         } else if (typeof value === 'string') {
-            // Handle different string values
             if (value === 'on') {
-                submissionPayload[dbKey] = true; // Convert checkbox 'on' to boolean true
+                submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                submissionPayload[dbKey] = new Date(value).toISOString(); // Handle ISO date strings
+                submissionPayload[dbKey] = new Date(value).toISOString();
             } else if (value) {
-                submissionPayload[dbKey] = value; // Handle all other non-empty strings
+                submissionPayload[dbKey] = value;
             }
         }
     }
-    // 3. Insert the fully constructed payload into the 'applications' table
+    const cleanedPayload = Object.fromEntries(Object.entries(submissionPayload).filter(([_, v])=>v != null));
     try {
-        const { data: insertedData, error: dbError } = await supabase.from('applications').insert(submissionPayload).select('id').single();
-        if (dbError || !insertedData) {
+        const { data: insertedData, error: dbError } = await supabase.from('applications').insert(cleanedPayload).select('id').single();
+        if (dbError) {
             console.error('Supabase insert error:', dbError);
-            throw dbError || new Error("Failed to insert application record into the database.");
+            throw dbError;
         }
-        // Generate and update the custom application ID (e.g., KSP001)
+        if (!insertedData) {
+            throw new Error("Failed to get ID from inserted application record.");
+        }
         const finalApplicationId = `KSP${String(insertedData.id).padStart(3, '0')}`;
-        const { error: updateError } = await supabase.from('applications').update({
+        await supabase.from('applications').update({
             original_permit_id: finalApplicationId
         }).eq('id', insertedData.id);
-        if (updateError) {
-            console.error('Supabase ID update error:', updateError);
-        // Proceed even if this fails, as the core record is saved.
-        }
         return {
             success: true,
             applicationId: insertedData.id
@@ -583,15 +700,13 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ generateAndSaveDin(userId, applicantName, formData) {
     const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const submissionPayload = {};
-    // 1. Manually add core metadata for DIN
     submissionPayload.type = 'DIN Application';
     submissionPayload.applicant_name = applicantName;
     submissionPayload.user_id = userId;
-    submissionPayload.status = 'Approved'; // DINs are auto-approved
-    // 2. Process the rest of the form data
+    submissionPayload.status = 'Approved';
     for (const [key, value] of formData.entries()){
-        if (key === 'declaration') continue; // Ignore declaration checkbox
-        const dbKey = toSnakeCase(key);
+        if (key === 'declaration') continue;
+        const dbKey = mapKeyToDbField(key);
         if (typeof value === 'string') {
             if (value === 'on') {
                 submissionPayload[dbKey] = true;
@@ -602,14 +717,13 @@ async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ generateAndSaveDin(user
             }
         }
     }
-    // 3. Insert record to get an ID for DIN generation
+    const cleanedPayload = Object.fromEntries(Object.entries(submissionPayload).filter(([_, v])=>v != null));
     try {
-        const { data: insertedData, error: dbError } = await supabase.from('applications').insert(submissionPayload).select('id').single();
+        const { data: insertedData, error: dbError } = await supabase.from('applications').insert(cleanedPayload).select('id').single();
         if (dbError || !insertedData) {
             console.error('Supabase DIN insert error:', dbError);
-            throw dbError || new Error("Failed to insert application record for DIN generation.");
+            throw dbError || new Error("Failed to insert record for DIN generation.");
         }
-        // 4. Generate DIN and update both the application and user profile
         const newId = insertedData.id;
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         await supabase.from('applications').update({
@@ -623,7 +737,7 @@ async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ generateAndSaveDin(user
             din: finalDin
         };
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred during DIN generation.';
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred during DIN generation.';
         console.error('DIN Generation Error:', errorMessage);
         return {
             success: false,
@@ -635,21 +749,18 @@ async function /*#__TURBOPACK_DISABLE_EXPORT_MERGING__*/ saveApplication(formDat
     const type = formData.get('type');
     const applicantName = formData.get('applicantName');
     const userId = formData.get('userId');
-    // Basic validation for required metadata
     if (!type || !applicantName || !userId) {
         return {
             success: false,
             error: 'Missing required application metadata (type, applicantName, or userId).'
         };
     }
-    // Ensure this generic action is not used for DINs
     if (type === 'DIN Application') {
         return {
             success: false,
-            error: 'DIN Applications must use the dedicated `generateAndSaveDin` action.'
+            error: 'DIN Applications must use the generateAndSaveDin action.'
         };
     }
-    // Call the unified and robust processing and saving function
     const result = await processAndSaveData(formData, userId, type, applicantName);
     if (result.success) {
         return {

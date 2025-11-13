@@ -113,16 +113,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$b
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/input.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/label.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/card.tsx [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/separator.tsx [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fc$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-icons/fc/index.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/hooks/use-toast.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabase/client.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/zod/lib/index.mjs [app-ssr] (ecmascript)");
 "use client";
-;
-;
 ;
 ;
 ;
@@ -158,7 +154,7 @@ function SubmitButton({ isSubmitting }) {
         children: isSubmitting ? 'Creating Profile...' : 'Create Profile'
     }, void 0, false, {
         fileName: "[project]/src/app/apply-for-permit/page.tsx",
-        lineNumber: 26,
+        lineNumber: 24,
         columnNumber: 5
     }, this);
 }
@@ -253,26 +249,6 @@ function ApplyForPermitPage() {
             setIsSubmitting(false);
         }
     };
-    const handleGoogleSignUp = async ()=>{
-        try {
-            const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: `${location.origin}/auth/callback`
-                }
-            });
-            if (error) throw error;
-        // The user will be redirected to Google, and then back to the app.
-        // The onAuthStateChange listener will handle the session.
-        } catch (error) {
-            console.error("Google Sign-Up Error:", error);
-            toast({
-                title: 'Google Sign-Up Error',
-                description: 'Could not sign up with Google. Please try again.',
-                variant: 'destructive'
-            });
-        }
-    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-var(--header-height,100px)-var(--footer-height,100px))]",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -286,20 +262,20 @@ function ApplyForPermitPage() {
                             children: "Create Your Profile"
                         }, void 0, false, {
                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 155,
+                            lineNumber: 131,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                             children: "Apply for permits and manage your applications."
                         }, void 0, false, {
                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 156,
+                            lineNumber: 132,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                    lineNumber: 154,
+                    lineNumber: 130,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -316,7 +292,7 @@ function ApplyForPermitPage() {
                                             children: "Applicant Name"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 137,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -328,7 +304,7 @@ function ApplyForPermitPage() {
                                             onChange: handleInputChange
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 138,
                                             columnNumber: 15
                                         }, this),
                                         errors.applicantName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -336,13 +312,13 @@ function ApplyForPermitPage() {
                                             children: errors.applicantName
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 163,
+                                            lineNumber: 139,
                                             columnNumber: 40
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 160,
+                                    lineNumber: 136,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -353,7 +329,7 @@ function ApplyForPermitPage() {
                                             children: "Email Address"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 166,
+                                            lineNumber: 142,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -366,7 +342,7 @@ function ApplyForPermitPage() {
                                             onChange: handleInputChange
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 167,
+                                            lineNumber: 143,
                                             columnNumber: 15
                                         }, this),
                                         errors.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -374,13 +350,13 @@ function ApplyForPermitPage() {
                                             children: errors.email
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 168,
+                                            lineNumber: 144,
                                             columnNumber: 32
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 165,
+                                    lineNumber: 141,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -391,7 +367,7 @@ function ApplyForPermitPage() {
                                             children: "Phone Number"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 171,
+                                            lineNumber: 147,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -404,7 +380,7 @@ function ApplyForPermitPage() {
                                             onChange: handleInputChange
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 172,
+                                            lineNumber: 148,
                                             columnNumber: 15
                                         }, this),
                                         errors.phone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -412,13 +388,13 @@ function ApplyForPermitPage() {
                                             children: errors.phone
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 149,
                                             columnNumber: 32
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 170,
+                                    lineNumber: 146,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -429,7 +405,7 @@ function ApplyForPermitPage() {
                                             children: "Password"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 176,
+                                            lineNumber: 152,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -442,7 +418,7 @@ function ApplyForPermitPage() {
                                             onChange: handleInputChange
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 177,
+                                            lineNumber: 153,
                                             columnNumber: 15
                                         }, this),
                                         errors.password && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -450,13 +426,13 @@ function ApplyForPermitPage() {
                                             children: errors.password
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                            lineNumber: 178,
+                                            lineNumber: 154,
                                             columnNumber: 35
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 175,
+                                    lineNumber: 151,
                                     columnNumber: 13
                                 }, this),
                                 errors.general && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -464,20 +440,20 @@ function ApplyForPermitPage() {
                                     children: errors.general
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 181,
+                                    lineNumber: 157,
                                     columnNumber: 32
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SubmitButton, {
                                     isSubmitting: isSubmitting
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 183,
+                                    lineNumber: 159,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 159,
+                            lineNumber: 135,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -493,92 +469,35 @@ function ApplyForPermitPage() {
                                         children: "Login"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                        lineNumber: 189,
+                                        lineNumber: 165,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                lineNumber: 187,
+                                lineNumber: 163,
                                 columnNumber: 14
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 186,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center justify-center space-x-4 my-6",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Separator"], {
-                                    className: "flex-grow"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 196,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "text-xs text-muted-foreground uppercase shrink-0",
-                                    children: "OR"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 197,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Separator"], {
-                                    className: "flex-grow"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 198,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 195,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                            className: "w-full flex items-center justify-center space-x-2 py-3 text-base",
-                            variant: "outline",
-                            type: "button",
-                            onClick: handleGoogleSignUp,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fc$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FcGoogle"], {
-                                    className: "text-2xl"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 207,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    children: "Sign Up with Google"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                                    lineNumber: 208,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                            lineNumber: 201,
+                            lineNumber: 162,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/apply-for-permit/page.tsx",
-                    lineNumber: 158,
+                    lineNumber: 134,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/apply-for-permit/page.tsx",
-            lineNumber: 153,
+            lineNumber: 129,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/apply-for-permit/page.tsx",
-        lineNumber: 152,
+        lineNumber: 128,
         columnNumber: 5
     }, this);
 }
