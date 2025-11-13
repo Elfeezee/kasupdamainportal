@@ -1357,15 +1357,15 @@ function DinApplicationPage() {
             data.middleName,
             data.surname
         ].filter(Boolean).join(' ');
-        // Create a new FormData object to pass to the server action
         const formData = new FormData();
+        // Append all form values to FormData
         Object.entries(data).forEach(([key, value])=>{
             if (value instanceof Date) {
                 formData.append(key, value.toISOString());
             } else if (typeof value === 'boolean') {
                 if (value) formData.append(key, 'on');
             } else if (value instanceof FileList) {
-                if (value.length > 0) formData.append(key, value[0]);
+                if (value.length > 0 && value[0].size > 0) formData.append(key, value[0]);
             } else if (typeof value === 'object' && value !== null) {
                 // Handle nested objects like 'identificationType'
                 Object.entries(value).forEach(([nestedKey, nestedValue])=>{
@@ -1378,10 +1378,8 @@ function DinApplicationPage() {
             }
         });
         try {
-            // Call the new, dedicated server action
             const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["generateAndSaveDin"])(user.id, applicantName, formData);
             if (result.success && result.din) {
-                // Redirect to the success page with the guaranteed correct DIN
                 router.push(`/dashboard/apply/din-application/success?din=${result.din}`);
             } else {
                 throw new Error(result.error || "An unknown error occurred during submission.");
@@ -1403,7 +1401,7 @@ function DinApplicationPage() {
         children: [
             loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(LoadingCard, {}, void 0, false, {
                 fileName: "[project]/src/app/dashboard/apply/din-application/page.tsx",
-                lineNumber: 373,
+                lineNumber: 372,
                 columnNumber: 19
             }, this),
             !loading && user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DinApplicationForm, {
@@ -1412,13 +1410,13 @@ function DinApplicationPage() {
                 isSubmitting: isSubmitting
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/apply/din-application/page.tsx",
-                lineNumber: 375,
+                lineNumber: 374,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/apply/din-application/page.tsx",
-        lineNumber: 372,
+        lineNumber: 371,
         columnNumber: 5
     }, this);
 }
