@@ -22,14 +22,14 @@ const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "imag
 
 const fitnessCertificateSchema = z.object({
   applicantName: z.string().min(2, "Applicant name is required"),
-  docBuildingPermit: z.any()
+  doc_building_permit: z.any()
     .refine((files) => files?.length == 1, "Building Permit is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
     ),
-  docCO: z.any()
+  doc_co: z.any()
     .refine((files) => files?.length == 1, "Certificate of Occupancy is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
@@ -108,11 +108,11 @@ export default function CertificateOfFitnessPage() {
     formData.append('userId', user.id);
     
     // Correctly name the fields for the server action
-    if (data.docBuildingPermit[0]) {
-      formData.append('doc_building_permit', data.docBuildingPermit[0]);
+    if (data.doc_building_permit[0]) {
+      formData.append('doc_building_permit', data.doc_building_permit[0]);
     }
-    if (data.docCO[0]) {
-      formData.append('doc_co', data.docCO[0]);
+    if (data.doc_co[0]) {
+      formData.append('doc_co', data.doc_co[0]);
     }
 
     try {
@@ -167,14 +167,14 @@ export default function CertificateOfFitnessPage() {
               {errors.applicantName && <p className="text-destructive text-xs mt-1">{errors.applicantName.message}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="docBuildingPermit">Upload Original Building Permit*</Label>
-              <Input id="docBuildingPermit" type="file" {...register("docBuildingPermit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-              {errors.docBuildingPermit && <p className="text-destructive text-xs mt-1">{errors.docBuildingPermit.message as string}</p>}
+              <Label htmlFor="doc_building_permit">Upload Original Building Permit*</Label>
+              <Input id="doc_building_permit" type="file" {...register("doc_building_permit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+              {errors.doc_building_permit && <p className="text-destructive text-xs mt-1">{errors.doc_building_permit.message as string}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="docCO">Upload Certificate of Occupancy (C of O)*</Label>
-              <Input id="docCO" type="file" {...register("docCO")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-              {errors.docCO && <p className="text-destructive text-xs mt-1">{errors.docCO.message as string}</p>}
+              <Label htmlFor="doc_co">Upload Certificate of Occupancy (C of O)*</Label>
+              <Input id="doc_co" type="file" {...register("doc_co")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+              {errors.doc_co && <p className="text-destructive text-xs mt-1">{errors.doc_co.message as string}</p>}
             </div>
           </CardContent>
           <CardFooter>
@@ -187,3 +187,5 @@ export default function CertificateOfFitnessPage() {
     </div>
   );
 }
+
+    

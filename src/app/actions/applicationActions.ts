@@ -5,39 +5,162 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * A robust function to convert form data keys to snake_case for the database.
- * This handles nested objects and file uploads correctly.
- * Example: 'identificationType.nationalIdCard' becomes 'id_type_national_id_card'
- * Example: 'ceoIdentificationType.nationalIdCard' becomes 'ceo_id_type_national_id_card'
- * @param key The form field key.
- * @returns The snake_cased key.
+ * A robust function to convert form data keys from form-friendly names
+ * to snake_case for the database. This handles nested objects correctly.
+ * This is a highly explicit mapping to prevent errors.
+ *
+ * @param key The form field key from FormData.
+ * @returns The snake_cased key for the database.
  */
-function toSnakeCase(key: string): string {
-    // Specific prefixes for nested object fields from the forms.
-    // This is more explicit and reliable than complex regex.
-    let snakeKey = key
-        .replace(/^identificationType\./, 'id_type_')
-        .replace(/^ceoIdentificationType\./, 'ceo_id_type_')
-        .replace(/^repIdentificationType\./, 'rep_id_type_')
-        .replace(/^outdoorActivity\./, 'outdoor_activity_')
-        .replace(/^boardInstallations\./, 'board_installations_');
+function mapKeyToDbField(key: string): string {
+    const mappings: { [key: string]: string } = {
+        // General
+        'type': 'type',
+        'applicantName': 'applicant_name',
+        'userId': 'user_id',
+        'declaration': 'declaration',
+        'kbpNumber': 'kbp_number',
+        'kdlNumber': 'kdl_number',
+        'kopNumber': 'kop_number',
 
-    // Generic conversion for camelCase to snake_case and replaces any remaining dots.
-    snakeKey = snakeKey
-        .replace(/\./g, '_')
-        .replace(/([A-Z])/g, '_$1')
-        .toLowerCase();
+        // Applicant Info (BPI & Others)
+        'title': 'title',
+        'firstName': 'first_name',
+        'middleName': 'middle_name',
+        'surname': 'surname',
+        'gender': 'gender',
+        'dateOfBirth': 'date_of_birth',
+        'occupation': 'occupation',
+        'nationality': 'nationality',
+        'stateOfOrigin': 'state_of_origin',
+        'localGov': 'local_gov',
+        'phone1': 'phone1',
+        'phone2': 'phone2',
+        'phone3': 'phone3',
+        'email': 'email',
+        'idNumber': 'id_number',
+
+        // Applicant Address
+        'appHouseNo': 'app_house_no',
+        'appStreetName': 'app_street_name',
+        'appDistrict': 'app_district',
+        'appCityTown': 'app_city_town',
+        'appState': 'app_state',
+        'appCountry': 'app_country',
+        'appPOBox': 'app_po_box',
+        'appCO': 'app_co',
+        'appAdditionalAddressInfo': 'app_additional_address_info',
+
+        // Organization Info
+        'orgName': 'org_name',
+        'cacNumber': 'cac_number',
+        'dateOfRegistration': 'date_of_registration',
+        'orgTaxIdNumber': 'org_tax_id_number',
+        'orgPhone': 'org_phone',
+        'orgEmail': 'org_email',
+        'orgHouseNo': 'org_house_no',
+        'orgStreetName': 'org_street_name',
+        'orgDistrict': 'org_district',
+        'orgCityTown': 'org_city_town',
+        'orgState': 'org_state',
+        'orgCountry': 'org_country',
+        'orgPOBox': 'org_po_box',
+        'orgCO': 'org_co',
+        'orgAdditionalAddressInfo': 'org_additional_address_info',
+        'orgTin': 'org_tin',
+
+        // CEO Info
+        'ceoTitle': 'ceo_title',
+        'ceoFirstName': 'ceo_first_name',
+        'ceoMiddleName': 'ceo_middle_name',
+        'ceoSurname': 'ceo_surname',
+        'ceoDesignation': 'ceo_designation',
+        'ceoPhone': 'ceo_phone',
+        'ceoEmail': 'ceo_email',
+        'ceoIdNumber': 'ceo_id_number',
         
-    // Clean up any potential double underscores from combined logic.
-    snakeKey = snakeKey.replace(/__+/g, '_');
+        // Representative Info
+        'repFirstName': 'rep_first_name',
+        'repMiddleName': 'rep_middle_name',
+        'repSurname': 'rep_surname',
+        'repPhone1': 'rep_phone1',
+        'repPhone2': 'rep_phone2',
+        'repEmail': 'rep_email',
+        'repIdNumber': 'rep_id_number',
+        'repHouseNo': 'rep_house_no',
+        'repStreetName': 'rep_street_name',
+        'repDistrict': 'rep_district',
+        'repCityTown': 'rep_city_town',
+        'repState': 'rep_state',
+        'repCountry': 'rep_country',
+        'repPOBox': 'rep_po_box',
+        'repCO': 'rep_co',
+        'repAdditionalAddressInfo': 'rep_additional_address_info',
 
-    return snakeKey;
+        // Plot / Site Info
+        'landUse': 'land_use',
+        'purpose': 'purpose',
+        'plotDistrict': 'plot_district',
+        'plotLGA': 'plot_lga',
+        'plotDescriptionAddress': 'plot_description_address',
+        'siteStreetName': 'site_street_name',
+        'siteCityTown': 'site_city_town',
+        'siteLGA': 'site_lga',
+        'siteState': 'site_state',
+        'siteCoordLong': 'site_coord_long',
+        'siteCoordLat': 'site_coord_lat',
+        'siteTypeOfLand': 'site_type_of_land',
+        'siteProofOfOwnership': 'site_proof_of_ownership',
+        'siteAddInfo': 'site_add_info',
+
+        // Permit-Specific Fields
+        'din': 'din',
+        'originalPermitId': 'original_permit_id',
+        'kasupdaLicenseNo': 'kasupda_license_no',
+        'apconRegNo': 'apcon_reg_no',
+        'typeOfDevelopment': 'type_of_development',
+        'categoryOfBusiness': 'category_of_business',
+        'plotAddressDescription': 'plot_address_description',
+        'children': 'children',
+        'maritalStatus': 'marital_status',
+        'educationLevel': 'education_level',
+        'otherEducation': 'other_education',
+        'tin': 'tin',
+        'typeOfRoad': 'type_of_road',
+        'roadLength': 'road_length',
+        'coordinates': 'coordinates',
+        'locationOfSite': 'location_of_site',
+        'mastType': 'mast_type',
+        'mastTypeOther': 'mast_type_other',
+        'mastDuration': 'mast_duration',
+        'mastCommencementDate': 'mast_commencement_date',
+        'mastCoordinates': 'mast_coordinates',
+        'mastLocationOfShield': 'mast_location_of_shield',
+        'applicantCompanyNameIndividual': 'applicant_company_name_individual',
+        'applicantFullNameContact': 'applicant_full_name_contact',
+        'outdoorActivitySignboardSize': 'outdoor_activity_signboard_size',
+        'outdoorActivityOthersSpecify': 'outdoor_activity_others_specify',
+        'companyName': 'company_name',
+        'boardInstallationOthersText': 'board_installation_others_text',
+        'phoneNo': 'phone_no',
+        'emailAddress': 'email_address',
+        'ceoNameContact': 'ceo_name_contact',
+    };
+    
+    // Handle nested checkbox objects (e.g., identificationType.nationalIdCard)
+    if (key.includes('.')) {
+        const [parent, child] = key.split('.');
+        const snakeParent = parent.replace(/([A-Z])/g, '_$1').toLowerCase();
+        const snakeChild = child.replace(/([A-Z])/g, '_$1').toLowerCase();
+        return `${snakeParent}_${snakeChild}`;
+    }
+
+    return mappings[key] || key;
 }
-
 
 /**
  * Processes form data and saves it to the 'applications' table in Supabase.
- * This function is now robust and handles all application types.
+ * This is the new, robust function for all application types.
  * @param formData The FormData object from the form submission.
  * @param userId The ID of the user submitting the form.
  * @param type The type of application being submitted.
@@ -60,14 +183,13 @@ async function processAndSaveData(
 
     // Process all entries from FormData
     for (const [key, value] of formData.entries()) {
-        if (['type', 'userId', 'applicantName', 'declaration'].includes(key)) {
+        if (['type', 'userId', 'applicantName'].includes(key)) {
             continue;
         }
-
-        const dbKey = toSnakeCase(key);
+        
+        const dbKey = mapKeyToDbField(key);
         
         if (value instanceof File) {
-            // Only process the file if it has content
             if (value.size > 0) {
                 const filePath = `${userId}/${uuidv4()}-${value.name}`;
                 const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
@@ -78,24 +200,20 @@ async function processAndSaveData(
                 }
                 
                 const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                // The DB expects file URLs to have '_url' suffix.
+                // Important: DB expects file URLs to have '_url' suffix.
                 submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
         } else if (typeof value === 'string') {
-            // Handle specific string values that represent booleans or dates
             if (value === 'on') {
                 submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                // Ensure date strings are in ISO format for the database
                 submissionPayload[dbKey] = new Date(value).toISOString();
             } else if (value) {
-                // For all other non-empty strings
                 submissionPayload[dbKey] = value;
             }
         }
     }
     
-    // Final check to remove any keys that may have resulted in null or undefined values
     const cleanedPayload = Object.fromEntries(
       Object.entries(submissionPayload).filter(([_, v]) => v != null)
     );
@@ -115,7 +233,6 @@ async function processAndSaveData(
             throw new Error("Failed to get ID from inserted application record.");
         }
 
-        // Generate and apply the final formatted application ID
         const finalApplicationId = `KSP${String(insertedData.id).padStart(3, '0')}`;
         await supabase
             .from('applications')
@@ -146,12 +263,12 @@ export async function generateAndSaveDin(
     submissionPayload.type = 'DIN Application';
     submissionPayload.applicant_name = applicantName;
     submissionPayload.user_id = userId;
-    submissionPayload.status = 'Approved'; // DINs are auto-approved
+    submissionPayload.status = 'Approved';
 
     for (const [key, value] of formData.entries()) {
         if (key === 'declaration') continue;
 
-        const dbKey = toSnakeCase(key);
+        const dbKey = mapKeyToDbField(key);
 
         if (typeof value === 'string') {
             if (value === 'on') {
@@ -184,7 +301,6 @@ export async function generateAndSaveDin(
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         
         await supabase.from('applications').update({ din: finalDin }).eq('id', newId);
-        // Also update the user's profile with their new DIN
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
 
         return { success: true, din: finalDin };
@@ -211,7 +327,6 @@ export async function saveApplication(
         return { success: false, error: 'Missing required application metadata (type, applicantName, or userId).' };
     }
     
-    // DIN applications have a separate, dedicated flow.
     if (type === 'DIN Application') {
         return { success: false, error: 'DIN Applications must use the generateAndSaveDin action.' };
     }
@@ -224,3 +339,5 @@ export async function saveApplication(
         return { success: false, error: result.error };
     }
 }
+
+    
