@@ -1331,7 +1331,7 @@ function DinApplicationPage() {
             if (result.success && result.din) {
                 router.push(`/dashboard/apply/din-application/success?din=${result.din}`);
             } else {
-                throw new Error(result.error || "An unknown error occurred during submission.");
+                throw new Error(result.error || "An unknown error occurred during DIN generation.");
             }
         } catch (error) {
             console.error("DIN Application failed:", error);
