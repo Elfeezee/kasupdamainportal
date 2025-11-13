@@ -260,47 +260,68 @@ export async function generateAndSaveDin(
     const supabase = createSupabaseServerClient();
     const submissionPayload: Record<string, any> = {};
 
-    submissionPayload.type = 'DIN Application';
-    submissionPayload.applicant_name = applicantName;
-    submissionPayload.user_id = userId;
-    submissionPayload.status = 'Approved';
-
-    for (const [key, value] of formData.entries()) {
-        if (key === 'declaration') continue;
-
-        const dbKey = mapKeyToDbField(key);
-
-        if (typeof value === 'string') {
-            if (value === 'on') {
-                submissionPayload[dbKey] = true;
-            } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                submissionPayload[dbKey] = new Date(value).toISOString();
-            } else if (value) {
-                submissionPayload[dbKey] = value;
-            }
-        }
-    }
-    
-    const cleanedPayload = Object.fromEntries(
-      Object.entries(submissionPayload).filter(([_, v]) => v != null)
-    );
-
     try {
+        // --- Manually and Explicitly Build the Payload ---
+        submissionPayload.type = 'DIN Application';
+        submissionPayload.applicant_name = applicantName;
+        submissionPayload.user_id = userId;
+        submissionPayload.status = 'Approved';
+
+        // Direct mapping from form to payload
+        submissionPayload.title = formData.get('title') || null;
+        submissionPayload.first_name = formData.get('firstName');
+        submissionPayload.middle_name = formData.get('middleName') || null;
+        submissionPayload.surname = formData.get('surname');
+        submissionPayload.gender = formData.get('gender');
+        const dob = formData.get('dateOfBirth');
+        if (dob) {
+            submissionPayload.date_of_birth = new Date(dob as string).toISOString();
+        }
+        submissionPayload.occupation = formData.get('occupation') || null;
+        submissionPayload.nationality = formData.get('nationality') || null;
+        submissionPayload.state_of_origin = formData.get('stateOfOrigin') || null;
+        submissionPayload.local_gov = formData.get('localGov') || null;
+        submissionPayload.phone1 = formData.get('phone1');
+        submissionPayload.phone2 = formData.get('phone2') || null;
+        submissionPayload.phone3 = formData.get('phone3') || null;
+        submissionPayload.email = formData.get('email') || null;
+        submissionPayload.id_number = formData.get('idNumber') || null;
+
+        // Correctly handle checkboxes
+        submissionPayload.identification_type_international_passport = formData.get('identificationType.internationalPassport') === 'on';
+        submissionPayload.identification_type_tax_id_card = formData.get('identificationType.taxIdCard') === 'on';
+        submissionPayload.identification_type_national_id_card = formData.get('identificationType.nationalIdCard') === 'on';
+        submissionPayload.identification_type_voter_reg_card = formData.get('identificationType.voterRegCard') === 'on';
+        submissionPayload.identification_type_drivers_license = formData.get('identificationType.driversLicense') === 'on';
+
+        // Filter out null/undefined values before insertion
+        const cleanedPayload = Object.fromEntries(
+            Object.entries(submissionPayload).filter(([_, v]) => v != null)
+        );
+        
+        // --- Database Insertion ---
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
             .insert(cleanedPayload)
             .select('id')
             .single();
 
-        if (dbError || !insertedData) {
+        if (dbError) {
             console.error('Supabase DIN insert error:', dbError);
-            throw dbError || new Error("Failed to insert record for DIN generation.");
+            throw dbError;
+        }
+
+        if (!insertedData) {
+            throw new Error("Failed to get ID from inserted record for DIN generation.");
         }
 
         const newId = insertedData.id;
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         
+        // Update the new application record with the generated DIN
         await supabase.from('applications').update({ din: finalDin }).eq('id', newId);
+        
+        // Also update the user's profile in the 'users' table with their new DIN
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
 
         return { success: true, din: finalDin };
