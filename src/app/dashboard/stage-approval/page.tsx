@@ -25,7 +25,6 @@ const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "imag
 
 const stageApprovalSchema = z.object({
   // Box 1: Applicant Details
-  din: z.string().min(1, "DIN is required"),
   originalPermitId: z.string().min(1, "Original Permit ID is required"),
   
   // Box 2: Project Details
@@ -53,7 +52,7 @@ const stageApprovalSchema = z.object({
 type StageApprovalFormValues = z.infer<typeof stageApprovalSchema>;
 
 const steps = [
-  { id: 1, name: "Project Details", fields: ['din', 'originalPermitId'] as FieldName<StageApprovalFormValues>[] },
+  { id: 1, name: "Project Details", fields: ['originalPermitId'] as FieldName<StageApprovalFormValues>[] },
   { id: 2, name: "Documents", fields: [] as FieldName<StageApprovalFormValues>[] },
   { id: 3, name: "Declaration", fields: ['declaration'] as FieldName<StageApprovalFormValues>[] },
 ];
@@ -106,7 +105,6 @@ export default function StageApprovalPage() {
   useEffect(() => {
     if (user) {
         reset({
-            din: "",
             originalPermitId: "",
             kbpNumber: "",
             kdlNumber: "",
@@ -244,11 +242,7 @@ export default function StageApprovalPage() {
                 <section>
                     <h3 className="text-lg font-semibold text-primary border-b pb-2 mb-4">Box 1: Project Details</h3>
                     <div className="space-y-4">
-                       <div>
-                            <Label htmlFor="din">Your Development Identification Number (DIN)*</Label>
-                            <Input id="din" {...register("din")} placeholder="Enter your DIN" />
-                            {errors.din && <p className="text-destructive text-xs mt-1">{errors.din.message}</p>}
-                        </div>
+                       
                         <div>
                             <Label htmlFor="originalPermitId">Original Building Permit ID*</Label>
                             <Input id="originalPermitId" {...register("originalPermitId")} placeholder="Enter the ID of your approved building permit" />
@@ -373,5 +367,3 @@ function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    

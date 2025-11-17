@@ -1,3 +1,4 @@
 {
+  "/certificate-of-fitness/page": "app/certificate-of-fitness/page.js",
   "/page": "app/page.js"
 }
