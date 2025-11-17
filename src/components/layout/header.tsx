@@ -105,7 +105,7 @@ export default function Header() {
       isSubTrigger: true,
       subLinks: [
         { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
-        { href: "/dashboard/apply/certificate-of-fitness", label: "Certificate of Fitness and Habitation" },
+        { href: "/certificate-of-fitness", label: "Certificate of Fitness and Habitation" },
       ],
     },
     {
@@ -138,6 +138,7 @@ export default function Header() {
     { href: "/dashboard/apply/din-application", label: "Apply for DIN" },
     { href: "https://permit.kasupda.kdsg.gov.ng/", label: "Renew permit", external: true },
     { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
+    { href: "/dashboard/apply/certificate-of-fitness", label: "Apply for Certificate of Fitness" },
   ];
   
   const mainNavLinks = [
