@@ -269,7 +269,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Image
                 src="/image/dg.jpg"
-                alt="Photo of the Director General, Dr. Abdrrahman Yahya"
+                alt="Photo of the Director General, Bldr. Abdurrahman Yahya"
                 data-ai-hint="person portrait"
                 width={400}
                 height={400}
@@ -278,10 +278,10 @@ export default function Home() {
             </div>
             <div className="flex flex-col justify-center space-y-4 text-left">
               <h3 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Dr. Abdrrahman Yahya
+                Bldr. Abdurrahman Yahya
               </h3>
               <p className="text-muted-foreground md:text-lg">
-                Our Director General, Dr. Abdrrahman Yahya, is a visionary leader, deeply committed to the advancement and modernization of KASUPDA. With a steadfast dedication to progress, he champions innovative strategies and fosters a culture of excellence within the authority. His tireless efforts are geared towards transforming Kaduna State into a model of sustainable urban development, ensuring a brighter future for all its citizens.
+                Our Director General, Bldr. Abdurrahman Yahya, is a visionary leader, deeply committed to the advancement and modernization of KASUPDA. With a steadfast dedication to progress, he champions innovative strategies and fosters a culture of excellence within the authority. His tireless efforts are geared towards transforming Kaduna State into a model of sustainable urban development, ensuring a brighter future for all its citizens.
               </p>
               <p className="text-muted-foreground md:text-lg">
                 Under his astute guidance, KASUPDA has embraced cutting-edge technologies and community-centric approaches to urban planning. Dr. Yahya's unwavering commitment to transparency, efficiency, and public service continues to drive the authority towards achieving new heights in urban governance and development, significantly bettering the lives of the people and the operational capacity of the authority.
