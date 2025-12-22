@@ -27,6 +27,7 @@ import {
   Package,
   Mail,
   Server,
+  Landmark,
 } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -42,6 +43,7 @@ const adminNavItems = [
   { href: '/admin/stage-approvals', label: 'Stage Approvals', icon: ClipboardCheck },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
+  { href: '/admin/finance', label: 'Finance', icon: Landmark },
   { href: '/admin/status', label: 'System Status', icon: Server },
   { href: '/admin/settings', label: 'Settings', icon: Settings, disabled: true },
 ];
