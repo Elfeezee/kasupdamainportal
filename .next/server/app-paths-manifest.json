@@ -4,5 +4,7 @@
   "/admin/(main)/finance/page": "app/admin/(main)/finance/page.js",
   "/admin/finance/dashboard/page": "app/admin/finance/dashboard/page.js",
   "/admin/login/page": "app/admin/login/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/page": "app/page.js"
 }
