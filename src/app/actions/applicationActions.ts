@@ -288,7 +288,12 @@ export async function generateAndSaveDin(
                     submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
                 }
             } else if (typeof value === 'string' && value) {
-                submissionPayload[dbKey] = value;
+                // handle "on" for checkboxes
+                if (value === 'on') {
+                     submissionPayload[dbKey] = true;
+                } else {
+                    submissionPayload[dbKey] = value;
+                }
             }
         }
         

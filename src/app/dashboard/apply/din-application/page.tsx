@@ -29,14 +29,15 @@ const dinApplicationSchema = z.object({
   applicantAddress: z.string().min(1, "Applicant Address is required"),
   plotAddress: z.string().min(1, "Plot Address is required"),
   kbpNumber: z.string().min(1, "KBP Number is required"),
-  docPermit: z.any()
+  kdlNumber: z.string().min(1, "KDL Number is required"),
+  doc_permit_url: z.any()
     .refine((files) => files?.length == 1, "Permit document is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
     ),
-  docCO: z.any()
+  doc_co_url: z.any()
     .refine((files) => files?.length == 1, "C/O document is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
@@ -61,8 +62,9 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
       applicantAddress: "",
       plotAddress: "",
       kbpNumber: "",
-      docPermit: undefined,
-      docCO: undefined,
+      kdlNumber: "",
+      doc_permit_url: undefined,
+      doc_co_url: undefined,
       declaration: false,
     }
   });
@@ -108,23 +110,30 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
                 <Textarea id="plotAddress" {...register("plotAddress")} />
                 {errors.plotAddress && <p className="text-destructive text-xs mt-1">{errors.plotAddress.message}</p>}
             </div>
-
-            <div>
-                <Label htmlFor="kbpNumber">KBP Number*</Label>
-                <Input id="kbpNumber" {...register("kbpNumber")} />
-                {errors.kbpNumber && <p className="text-destructive text-xs mt-1">{errors.kbpNumber.message}</p>}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                  <Label htmlFor="kbpNumber">KBP Number*</Label>
+                  <Input id="kbpNumber" {...register("kbpNumber")} />
+                  {errors.kbpNumber && <p className="text-destructive text-xs mt-1">{errors.kbpNumber.message}</p>}
+              </div>
+               <div>
+                  <Label htmlFor="kdlNumber">KDL Number*</Label>
+                  <Input id="kdlNumber" {...register("kdlNumber")} />
+                  {errors.kdlNumber && <p className="text-destructive text-xs mt-1">{errors.kdlNumber.message}</p>}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                    <Label htmlFor="docPermit">Upload Permit*</Label>
-                    <Input id="docPermit" type="file" {...register("docPermit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.docPermit && <p className="text-destructive text-xs mt-1">{errors.docPermit.message as string}</p>}
+                    <Label htmlFor="doc_permit_url">Upload Permit*</Label>
+                    <Input id="doc_permit_url" type="file" {...register("doc_permit_url")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                    {errors.doc_permit_url && <p className="text-destructive text-xs mt-1">{errors.doc_permit_url.message as string}</p>}
                 </div>
                 <div className="space-y-1.5">
-                    <Label htmlFor="docCO">Upload C/O (Certificate of Occupancy)*</Label>
-                    <Input id="docCO" type="file" {...register("docCO")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.docCO && <p className="text-destructive text-xs mt-1">{errors.docCO.message as string}</p>}
+                    <Label htmlFor="doc_co_url">Upload C/O (Certificate of Occupancy)*</Label>
+                    <Input id="doc_co_url" type="file" {...register("doc_co_url")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                    {errors.doc_co_url && <p className="text-destructive text-xs mt-1">{errors.doc_co_url.message as string}</p>}
                 </div>
             </div>
 
