@@ -26,6 +26,7 @@ import { supabase } from '@/lib/supabase/client';
 
 // Define Zod schema based on the form
 const permitApplicationSchema = z.object({
+  kdlNumber: z.string().optional(),
   // Box 1: Applicant
   title: z.string().optional(),
   firstName: z.string().min(1, "First name is required"),
@@ -166,6 +167,7 @@ export default function ResidentialBuildingPermitPage() {
     resolver: zodResolver(permitApplicationSchema),
     mode: "onChange", 
     defaultValues: { 
+      kdlNumber: "",
       title: "",
       firstName: "",
       middleName: "",
@@ -353,6 +355,13 @@ export default function ResidentialBuildingPermitPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 px-1">
+          <div>
+            <Label htmlFor="kdlNumber">KDL / KADGIS FILE NUMBER</Label>
+            <Input id="kdlNumber" {...register("kdlNumber")} />
+          </div>
+        </div>
         
         {currentStep === 1 && (
           <Card>
