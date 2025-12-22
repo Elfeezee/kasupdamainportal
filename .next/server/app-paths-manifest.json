@@ -1,3 +1,6 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/(main)/finance/page": "app/admin/(main)/finance/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
   "/page": "app/page.js"
 }
