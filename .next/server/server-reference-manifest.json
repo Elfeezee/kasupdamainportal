@@ -6,8 +6,16 @@
           "moduleId": "[project]/.next-internal/server/app/_not-found/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/admin/(main)/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/admin/(main)/finance/page": {
           "moduleId": "[project]/.next-internal/server/app/admin/(main)/finance/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/admin/finance/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/finance/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/admin/login/page": {
@@ -21,7 +29,9 @@
       },
       "layer": {
         "app/_not-found/page": "action-browser",
+        "app/admin/(main)/dashboard/page": "action-browser",
         "app/admin/(main)/finance/page": "action-browser",
+        "app/admin/finance/dashboard/page": "action-browser",
         "app/admin/login/page": "action-browser",
         "app/page": "action-browser"
       }
