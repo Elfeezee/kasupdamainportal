@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, 'react';
 import { useForm, Controller, type FieldName } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -40,7 +40,6 @@ const permitApplicationSchema = z.object({
   localGov: z.string().optional(),
   phone1: z.string().min(1, "Phone 1 is required").regex(/^\+?[0-9\s-()]+$/, "Invalid phone number format"),
   phone2: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
-  phone3: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   identificationType: z.object({
     internationalPassport: z.boolean().optional(),
@@ -147,11 +146,11 @@ const steps = [
 export default function ResidentialBuildingPermitPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [currentStep, setCurrentStep] = React.useState(1);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [user, setUser] = React.useState<User | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const checkSession = async () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
@@ -178,7 +177,6 @@ export default function ResidentialBuildingPermitPage() {
       localGov: "",
       phone1: "",
       phone2: "",
-      phone3: "",
       email: "",
       identificationType: {},
       idNumber: "",
@@ -454,7 +452,7 @@ export default function ResidentialBuildingPermitPage() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="phone1">Phone 1*</Label>
                   <Input id="phone1" type="tel" {...register("phone1")} />
@@ -464,11 +462,6 @@ export default function ResidentialBuildingPermitPage() {
                   <Label htmlFor="phone2">Phone 2</Label>
                   <Input id="phone2" type="tel" {...register("phone2")} />
                   {errors.phone2 && <p className="text-destructive text-xs mt-1">{errors.phone2.message}</p>}
-                </div>
-                <div>
-                  <Label htmlFor="phone3">Phone 3</Label>
-                  <Input id="phone3" type="tel" {...register("phone3")} />
-                   {errors.phone3 && <p className="text-destructive text-xs mt-1">{errors.phone3.message}</p>}
                 </div>
               </div>
 

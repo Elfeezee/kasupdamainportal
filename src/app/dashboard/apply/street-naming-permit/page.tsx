@@ -47,7 +47,6 @@ const streetNamingPermitSchema = z.object({
   otherEducation: z.string().optional(),
   phone1: z.string().min(1, "Phone 1 is required").regex(phoneRegex, "Invalid phone number format"),
   phone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
-  phone3: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   tin: z.string().optional(),
   identificationType: z.object({
@@ -175,7 +174,6 @@ export default function StreetNamingPermitPage() {
       otherEducation: "",
       phone1: "",
       phone2: "",
-      phone3: "",
       email: "",
       tin: "",
       identificationType: {},
@@ -415,10 +413,9 @@ export default function StreetNamingPermitPage() {
                   </div>
                 )}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div><Label htmlFor="phone1">Phone 1*</Label><Input id="phone1" type="tel" {...register("phone1")} />{errors.phone1 && <p className="text-destructive text-xs mt-1">{errors.phone1.message}</p>}</div>
                 <div><Label htmlFor="phone2">Phone 2</Label><Input id="phone2" type="tel" {...register("phone2")} />{errors.phone2 && <p className="text-destructive text-xs mt-1">{errors.phone2.message}</p>}</div>
-                <div><Label htmlFor="phone3">Phone 3</Label><Input id="phone3" type="tel" {...register("phone3")} />{errors.phone3 && <p className="text-destructive text-xs mt-1">{errors.phone3.message}</p>}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div><Label htmlFor="email">Email</Label><Input id="email" type="email" {...register("email")} />{errors.email && <p className="text-destructive text-xs mt-1">{errors.email.message}</p>}</div>
