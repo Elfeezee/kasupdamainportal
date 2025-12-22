@@ -100,7 +100,6 @@ const permitApplicationSchema = z.object({
   docSar: z.any().optional(),
   docWorkingDrawings: z.any().optional(),
   docStructuralInfo: z.any().optional(),
-  docBuildersDoc: z.any().optional(),
   docSoilTest: z.any().optional(),
   docPdfDrawings: z.any().optional(),
   docApplicantId: z.any().optional(),
@@ -127,7 +126,6 @@ const residentialDocs = [
     { id: "docSar" as const, label: "Site Analysis Report (SAR)" },
     { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)" },
     { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings." },
-    { id: "docBuildersDoc" as const, label: "Builder’s Document to be produced by Registered Builder for commercial Residential" },
     { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors." },
     { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD" },
     { id: "docApplicantId" as const, label: "Means of ID of applicant" },
@@ -821,7 +819,7 @@ function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
-      viewBox="0 0 24 24"
+      viewBox="0 0 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
