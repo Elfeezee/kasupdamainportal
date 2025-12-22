@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -43,7 +43,6 @@ const adminNavItems = [
   { href: '/admin/stage-approvals', label: 'Stage Approvals', icon: ClipboardCheck },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
-  { href: '/admin/finance/dashboard', label: 'Finance Panel', icon: Landmark },
   { href: '/admin/status', label: 'System Status', icon: Server },
   { href: '/admin/settings', label: 'Settings', icon: Settings, disabled: true },
 ];
