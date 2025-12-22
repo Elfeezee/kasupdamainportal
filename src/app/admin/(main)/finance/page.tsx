@@ -78,7 +78,7 @@ export default function FinancePage() {
               <Landmark className="h-6 w-6 text-primary" />
               <div>
                 <CardTitle>Finance Transactions</CardTitle>
-                <CardDescription>Review and manage all financial transactions. Access to this panel requires admin credentials.</CardDescription>
+                <CardDescription>Review and manage all financial transactions. Access to this panel requires finance or admin credentials.</CardDescription>
               </div>
             </div>
           </div>

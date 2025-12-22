@@ -29,7 +29,9 @@ export default function AdminLoginPage() {
                 .eq('uid', user.id)
                 .single();
             if (userProfile?.role === 'Admin') {
-                router.replace('/admin/dashboard'); // Use replace to avoid back-button issues
+                router.replace('/admin/dashboard');
+            } else if (userProfile?.role === 'Finance') {
+                router.replace('/admin/finance/dashboard');
             }
         }
     };
@@ -52,7 +54,6 @@ export default function AdminLoginPage() {
       }
       
       if (authData.user) {
-        // Now, check the user's role from the public 'users' table
         const { data: userProfile, error: profileError } = await supabase
             .from('users')
             .select('role')
@@ -68,12 +69,16 @@ export default function AdminLoginPage() {
                 title: 'Admin Login Successful!',
                 description: 'Redirecting to the admin dashboard...',
             });
-            // Replace the current history entry, so the user can't go "back" to the login page
             router.replace('/admin/dashboard');
+        } else if (userProfile && userProfile.role === 'Finance') {
+            toast({
+                title: 'Finance Login Successful!',
+                description: 'Redirecting to the finance dashboard...',
+            });
+            router.replace('/admin/finance/dashboard');
         } else {
-            // Log them out if they are not an admin
             await supabase.auth.signOut();
-            throw new Error("Access Denied. You do not have admin privileges.");
+            throw new Error("Access Denied. You do not have sufficient privileges.");
         }
       }
 
@@ -100,8 +105,8 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
             <ShieldAlert className="mx-auto h-10 w-10 text-primary" />
-          <CardTitle className="text-3xl font-bold text-primary">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the admin dashboard.</CardDescription>
+          <CardTitle className="text-3xl font-bold text-primary">Restricted Access</CardTitle>
+          <CardDescription>Enter your credentials to access the KASUPDA admin panels.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAdminLogin} className="grid grid-cols-1 gap-6">

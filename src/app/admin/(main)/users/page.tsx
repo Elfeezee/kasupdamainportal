@@ -30,7 +30,7 @@ interface AppUser {
   name: string | null;
   email: string | null;
   phone: string | null;
-  role: 'Applicant' | 'Admin';
+  role: 'Applicant' | 'Admin' | 'Finance';
   created_at: string;
   din: string | null; // Add DIN property
 }
@@ -71,7 +71,7 @@ export default function ManageUsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleRoleChange = async (uid: string, newRole: 'Admin' | 'Applicant') => {
+  const handleRoleChange = async (uid: string, newRole: 'Admin' | 'Applicant' | 'Finance') => {
     try {
         const { error } = await supabase
             .from('users')
@@ -190,7 +190,11 @@ export default function ManageUsersPage() {
                         <TableCell>{user.email || 'N/A'}</TableCell>
                         <TableCell className="font-mono text-xs">{user.din || 'N/A'}</TableCell>
                         <TableCell>
-                        <Badge variant={user.role === 'Admin' ? 'destructive' : 'secondary'}>{user.role}</Badge>
+                          <Badge variant={
+                              user.role === 'Admin' ? 'destructive' :
+                              user.role === 'Finance' ? 'default' :
+                              'secondary'
+                            }>{user.role}</Badge>
                         </TableCell>
                         <TableCell>{user.created_at ? format(parseISO(user.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
                         <TableCell className="text-right">
@@ -211,6 +215,9 @@ export default function ManageUsersPage() {
                                 <DropdownMenuSubContent>
                                     <DropdownMenuItem onClick={() => handleRoleChange(user.uid, 'Admin')} disabled={user.role === 'Admin'}>
                                         Make Admin
+                                    </DropdownMenuItem>
+                                     <DropdownMenuItem onClick={() => handleRoleChange(user.uid, 'Finance')} disabled={user.role === 'Finance'}>
+                                        Make Finance
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => handleRoleChange(user.uid, 'Applicant')} disabled={user.role === 'Applicant'}>
                                         Make Applicant
