@@ -22,6 +22,9 @@ function mapKeyToDbField(key: string): string {
         'kbpNumber': 'kbp_number',
         'kdlNumber': 'kdl_number',
         'kopNumber': 'kop_number',
+        'applicantAddress': 'applicant_address',
+        'plotAddress': 'plot_address',
+
 
         // Applicant Info (BPI & Others)
         'title': 'title',
@@ -261,39 +264,34 @@ export async function generateAndSaveDin(
     const submissionPayload: Record<string, any> = {};
 
     try {
-        // --- Manually and Explicitly Build the Payload ---
         submissionPayload.type = 'DIN Application';
         submissionPayload.applicant_name = applicantName;
         submissionPayload.user_id = userId;
-        submissionPayload.status = 'Approved';
+        submissionPayload.status = 'Approved'; // DINs are auto-approved
 
         // Direct mapping from form to payload
-        submissionPayload.title = formData.get('title') || null;
-        submissionPayload.first_name = formData.get('firstName');
-        submissionPayload.middle_name = formData.get('middleName') || null;
-        submissionPayload.surname = formData.get('surname');
-        submissionPayload.gender = formData.get('gender');
-        const dob = formData.get('dateOfBirth');
-        if (dob) {
-            submissionPayload.date_of_birth = new Date(dob as string).toISOString();
+        for (const [key, value] of formData.entries()) {
+            // Skip metadata fields already handled
+            if (['type', 'userId', 'applicantName'].includes(key)) continue;
+
+            const dbKey = mapKeyToDbField(key);
+
+            if (value instanceof File) {
+                 if (value.size > 0) {
+                    const filePath = `${userId}/din_docs/${uuidv4()}-${value.name}`;
+                    const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
+                    if (uploadError) {
+                        console.error(`Storage error for ${key}:`, uploadError);
+                        return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
+                    }
+                    const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                    submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
+                }
+            } else if (typeof value === 'string' && value) {
+                submissionPayload[dbKey] = value;
+            }
         }
-        submissionPayload.occupation = formData.get('occupation') || null;
-        submissionPayload.nationality = formData.get('nationality') || null;
-        submissionPayload.state_of_origin = formData.get('stateOfOrigin') || null;
-        submissionPayload.local_gov = formData.get('localGov') || null;
-        submissionPayload.phone1 = formData.get('phone1');
-        submissionPayload.phone2 = formData.get('phone2') || null;
-        submissionPayload.phone3 = formData.get('phone3') || null;
-        submissionPayload.email = formData.get('email') || null;
-        submissionPayload.id_number = formData.get('idNumber') || null;
-
-        // Correctly handle checkboxes
-        submissionPayload.identification_type_international_passport = formData.get('identificationType.internationalPassport') === 'on';
-        submissionPayload.identification_type_tax_id_card = formData.get('identificationType.taxIdCard') === 'on';
-        submissionPayload.identification_type_national_id_card = formData.get('identificationType.nationalIdCard') === 'on';
-        submissionPayload.identification_type_voter_reg_card = formData.get('identificationType.voterRegCard') === 'on';
-        submissionPayload.identification_type_drivers_license = formData.get('identificationType.driversLicense') === 'on';
-
+        
         // Filter out null/undefined values before insertion
         const cleanedPayload = Object.fromEntries(
             Object.entries(submissionPayload).filter(([_, v]) => v != null)

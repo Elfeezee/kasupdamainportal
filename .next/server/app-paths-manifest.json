@@ -5,6 +5,8 @@
   "/admin/finance/dashboard/page": "app/admin/finance/dashboard/page.js",
   "/admin/login/page": "app/admin/login/page.js",
   "/admin/page": "app/admin/page.js",
+  "/dashboard/apply/din-application/page": "app/dashboard/apply/din-application/page.js",
+  "/dashboard/my-dins/page": "app/dashboard/my-dins/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/page": "app/page.js"
 }
