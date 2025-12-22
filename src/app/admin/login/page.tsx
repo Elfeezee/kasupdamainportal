@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShieldAlert } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ShieldAlert, Loader2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/lib/supabase/client';
@@ -38,7 +39,7 @@ export default function AdminLoginPage() {
     checkUser();
   }, [router]);
 
-  const handleAdminLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>, role: 'Admin' | 'Finance') => {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
@@ -49,9 +50,7 @@ export default function AdminLoginPage() {
         password,
       });
 
-      if (authError) {
-        throw authError;
-      }
+      if (authError) throw authError;
       
       if (authData.user) {
         const { data: userProfile, error: profileError } = await supabase
@@ -60,25 +59,19 @@ export default function AdminLoginPage() {
             .eq('uid', authData.user.id)
             .single();
 
-        if (profileError) {
-            throw new Error("Could not verify user role.");
-        }
-
-        if (userProfile && userProfile.role === 'Admin') {
-            toast({
-                title: 'Admin Login Successful!',
-                description: 'Redirecting to the admin dashboard...',
-            });
+        if (profileError) throw new Error("Could not verify user role.");
+        
+        const userRole = userProfile?.role;
+        
+        if (role === 'Admin' && userRole === 'Admin') {
+            toast({ title: 'Admin Login Successful!', description: 'Redirecting to the admin dashboard...' });
             router.replace('/admin/dashboard');
-        } else if (userProfile && userProfile.role === 'Finance') {
-            toast({
-                title: 'Finance Login Successful!',
-                description: 'Redirecting to the finance dashboard...',
-            });
+        } else if (role === 'Finance' && (userRole === 'Finance' || userRole === 'Admin')) {
+            toast({ title: 'Finance Login Successful!', description: 'Redirecting to the finance dashboard...' });
             router.replace('/admin/finance/dashboard');
         } else {
             await supabase.auth.signOut();
-            throw new Error("Access Denied. You do not have sufficient privileges.");
+            throw new Error(`Access Denied. Your account does not have ${role} privileges.`);
         }
       }
 
@@ -90,11 +83,7 @@ export default function AdminLoginPage() {
         errorMessage = error.message;
       }
       setError(errorMessage);
-      toast({
-        title: 'Login Error',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      toast({ title: 'Login Error', description: errorMessage, variant: 'destructive' });
     } finally {
       setIsSubmitting(false);
     }
@@ -106,25 +95,47 @@ export default function AdminLoginPage() {
         <CardHeader className="text-center">
             <ShieldAlert className="mx-auto h-10 w-10 text-primary" />
           <CardTitle className="text-3xl font-bold text-primary">Restricted Access</CardTitle>
-          <CardDescription>Enter your credentials to access the KASUPDA admin panels.</CardDescription>
+          <CardDescription>Select your role to access the KASUPDA admin panels.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleAdminLogin} className="grid grid-cols-1 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" name="email" type="email" placeholder="admin@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" placeholder="••••••••" required value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-
-            {error && <p className="text-destructive text-sm text-center font-medium">{error}</p>}
-            
-            <Button type="submit" className="w-full text-lg py-3" disabled={isSubmitting}>
-                {isSubmitting ? 'Authenticating...' : 'Login'}
-            </Button>
-          </form>
+          <Tabs defaultValue="admin" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="admin">Admin Login</TabsTrigger>
+              <TabsTrigger value="finance">Finance Login</TabsTrigger>
+            </TabsList>
+            <TabsContent value="admin">
+              <form onSubmit={(e) => handleLogin(e, 'Admin')} className="grid grid-cols-1 gap-6 pt-6">
+                <div className="space-y-2">
+                  <Label htmlFor="admin-email">Email Address</Label>
+                  <Input id="admin-email" name="email" type="email" placeholder="admin@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="admin-password">Password</Label>
+                  <Input id="admin-password" name="password" type="password" placeholder="••••••••" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                {error && <p className="text-destructive text-sm text-center font-medium">{error}</p>}
+                <Button type="submit" className="w-full text-lg py-3" disabled={isSubmitting}>
+                    {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin"/> Authenticating...</> : 'Login as Admin'}
+                </Button>
+              </form>
+            </TabsContent>
+            <TabsContent value="finance">
+              <form onSubmit={(e) => handleLogin(e, 'Finance')} className="grid grid-cols-1 gap-6 pt-6">
+                <div className="space-y-2">
+                  <Label htmlFor="finance-email">Email Address</Label>
+                  <Input id="finance-email" name="email" type="email" placeholder="finance@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="finance-password">Password</Label>
+                  <Input id="finance-password" name="password" type="password" placeholder="••••••••" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+                {error && <p className="text-destructive text-sm text-center font-medium">{error}</p>}
+                <Button type="submit" className="w-full text-lg py-3" disabled={isSubmitting}>
+                     {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin"/> Authenticating...</> : 'Login as Finance'}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>
