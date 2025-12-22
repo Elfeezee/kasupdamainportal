@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, ChevronDown, Sun, Moon, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon, Award } from "lucide-react";
+import { Menu, ChevronDown, Sun, Moon, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon, Award, Beaker } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -139,6 +139,7 @@ export default function Header() {
     { href: "https://permit.kasupda.kdsg.gov.ng/", label: "Renew permit", external: true },
     { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
     { href: "/dashboard/apply/certificate-of-fitness", label: "Apply for Certificate of Fitness" },
+    { href: "#", label: "Lab" },
   ];
   
   const mainNavLinks = [
