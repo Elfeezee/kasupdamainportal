@@ -348,6 +348,10 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
     ].includes(key)) {
         return null;
     }
+    // If a field ends with '_url' but the value is null or empty, don't render it.
+    if (key.endsWith('_url') && !value) {
+        return null;
+    }
     // Standardize 'on' to true for consistency
     if (value === 'on') value = true;
     // --- Edit Mode ---
@@ -360,7 +364,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 onCheckedChange: (checked)=>onInputChange(key, !!checked)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 32,
+                lineNumber: 37,
                 columnNumber: 17
             }, this);
         }
@@ -371,7 +375,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 onChange: (e)=>onInputChange(key, e.target.value)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 41,
+                lineNumber: 46,
                 columnNumber: 18
             }, this);
         }
@@ -381,7 +385,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 children: "[File URL - not editable here]"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 49,
+                lineNumber: 54,
                 columnNumber: 21
             }, this);
         }
@@ -390,7 +394,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             onChange: (e)=>onInputChange(key, e.target.value)
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 51,
+            lineNumber: 56,
             columnNumber: 16
         }, this);
     }
@@ -400,14 +404,14 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             children: "Yes"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 56,
+            lineNumber: 61,
             columnNumber: 24
         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
             variant: "secondary",
             children: "No"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 56,
+            lineNumber: 61,
             columnNumber: 45
         }, this);
     }
@@ -422,26 +426,24 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                    lineNumber: 62,
+                    lineNumber: 67,
                     columnNumber: 17
                 }, this),
                 " Download File"
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 61,
+            lineNumber: 66,
             columnNumber: 13
         }, this);
     }
-    // Don't render the URL fields themselves, they are handled above
-    if (key.endsWith('_url')) return null;
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
             className: "text-sm text-foreground",
             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parseISO"])(value), 'PPP')
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 70,
+            lineNumber: 73,
             columnNumber: 16
         }, this);
     }
@@ -452,12 +454,12 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             children: "Not provided"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 73,
+            lineNumber: 76,
             columnNumber: 61
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-        lineNumber: 73,
+        lineNumber: 76,
         columnNumber: 12
     }, this);
 };
@@ -471,7 +473,7 @@ function ApplicationDetails({ application, isEditing, editedData, onInputChange 
                 children: "Application Data"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 88,
+                lineNumber: 91,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -482,34 +484,41 @@ function ApplicationDetails({ application, isEditing, editedData, onInputChange 
                     if (value === null && !isEditing) return null;
                     const renderedField = renderFieldValue(key, value, isEditing, editedData, onInputChange);
                     if (!renderedField) return null;
+                    // Don't render the plain URL field if we've already rendered it as a download link
+                    if (key.endsWith('_url')) {
+                        const baseKey = key.replace('_url', '');
+                        if (sortedKeys.includes(baseKey)) {
+                        // This logic is tricky, let's just show the link under its own name
+                        }
+                    }
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-1",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
                                 className: "capitalize text-xs text-muted-foreground",
-                                children: key.replace(/_/g, ' ')
+                                children: key.replace(/_/g, ' ').replace(' doc ', ' ').replace(' url', '')
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                                lineNumber: 100,
+                                lineNumber: 112,
                                 columnNumber: 29
                             }, this),
                             renderedField
                         ]
                     }, key, true, {
                         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                        lineNumber: 99,
+                        lineNumber: 111,
                         columnNumber: 25
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 89,
+                lineNumber: 92,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-        lineNumber: 87,
+        lineNumber: 90,
         columnNumber: 9
     }, this);
 }
@@ -579,7 +588,7 @@ const StatusBadge = ({ status, className })=>{
         children: status
     }, void 0, false, {
         fileName: "[project]/src/app/admin/(main)/permit-applications/page.tsx",
-        lineNumber: 48,
+        lineNumber: 47,
         columnNumber: 10
     }, this);
 };
@@ -590,7 +599,8 @@ const PERMIT_TYPES = [
     "Outdoor Advertisement Permit",
     "Outdoor Structure Permit",
     "Temporary Shop Owners Permit",
-    "Street Naming Permit"
+    "Street Naming Permit",
+    "Certificate of Fitness"
 ];
 function PermitApplicationsPage() {
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();

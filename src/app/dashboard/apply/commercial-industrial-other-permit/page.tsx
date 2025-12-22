@@ -23,6 +23,17 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+
+const fileValidation = z.any()
+    .refine((files) => files?.length == 1, "This document is required.")
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine(
+      (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .pdf files are accepted."
+    );
+
 // Define Zod schema based on the form
 const bpoPermitApplicationSchema = z.object({
   kbpNumber: z.string().optional(),
@@ -88,19 +99,19 @@ const bpoPermitApplicationSchema = z.object({
   plotDescriptionAddress: z.string().min(1, "Plot Description/Address is required"),
 
   // Box 5: REQUIRED DOCUMENTS
-  docLandTitle: z.any().optional(),
-  docKadgisAcknowledgement: z.any().optional(),
-  docSar: z.any().optional(),
-  docWorkingDrawings: z.any().optional(),
-  docCalculationSheet: z.any().optional(),
-  docBuildersDoc: z.any().optional(),
-  docSoilTest: z.any().optional(),
-  docPdfDrawings: z.any().optional(),
-  docApplicantId: z.any().optional(),
-  docRepId: z.any().optional(),
-  docUtilityBill: z.any().optional(),
-  docQualityAssurance: z.any().optional(),
-  docKepaEiaCert: z.any().optional(),
+  docLandTitle: fileValidation,
+  docKadgisAcknowledgement: fileValidation,
+  docSar: fileValidation,
+  docWorkingDrawings: fileValidation,
+  docCalculationSheet: fileValidation,
+  docBuildersDoc: fileValidation,
+  docSoilTest: fileValidation, // Made required, but might be contextual in a real app
+  docPdfDrawings: fileValidation,
+  docApplicantId: fileValidation,
+  docRepId: z.any().optional(), // Representative ID is optional
+  docUtilityBill: fileValidation,
+  docQualityAssurance: fileValidation,
+  docKepaEiaCert: z.any().optional(), // Optional as per label
   
   // Box 6: SIGNATURE (as Declaration)
   declaration: z.boolean().refine(val => val === true, {
@@ -645,7 +656,7 @@ export default function CommercialIndustrialOtherPermitPage() {
                 <CardHeader>
                     <CardTitle className="text-lg sm:text-xl">BOX 5: DOCUMENT UPLOAD &amp; DECLARATION</CardTitle>
                     <CardDescription className="text-xs sm:text-sm">
-                        Please upload the required documents.
+                        Please upload the required documents. Documents marked with an asterisk (*) are mandatory.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
@@ -656,7 +667,7 @@ export default function CommercialIndustrialOtherPermitPage() {
                         {orgRequiredDocs.map(doc => (
                             <div key={doc.id} className="space-y-1.5">
                                 <Label htmlFor={doc.id} className="text-sm font-medium">
-                                    {doc.label}
+                                    {doc.label}{!doc.label.includes('(optional)') && !doc.label.includes('(could be submitted') && ' *'}
                                 </Label>
                                 <Input
                                     id={doc.id}
@@ -664,6 +675,7 @@ export default function CommercialIndustrialOtherPermitPage() {
                                     {...register(doc.id)}
                                     className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 />
+                                {errors[doc.id] && <p className="text-destructive text-xs mt-1">{errors[doc.id]?.message as string}</p>}
                             </div>
                         ))}
                         </div>
