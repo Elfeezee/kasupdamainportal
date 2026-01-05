@@ -3,7 +3,29 @@
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
         "app/admin/(main)/applications/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/adminActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/(main)/applications/page": "action-browser"
+      }
+    },
+    "607d08d4ce76d72f65e5584668c7340d2d03715865": {
+      "workers": {
+        "app/admin/(main)/applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/adminActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/(main)/applications/page": "action-browser"
+      }
+    },
+    "70d3faa85b4ed42a7d9c0f90eb9b3497d78369324f": {
+      "workers": {
+        "app/admin/(main)/applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/adminActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         }
       },

@@ -1,10 +1,11 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { DollarSign, Banknote, Landmark } from 'lucide-react';
+import { DollarSign, Banknote, Landmark, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const overviewData = [
   { title: "Total Revenue", value: "₦1,250,000", icon: DollarSign },
@@ -21,6 +22,8 @@ const chartData = [
 ];
 
 export default function FinanceDashboardPage() {
+  const [loading, setLoading] = useState(false); // In a real app, you'd fetch data
+
   return (
     <div className="space-y-8">
       <div>
@@ -36,7 +39,11 @@ export default function FinanceDashboardPage() {
               <card.icon className="h-5 w-5 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{card.value}</div>
+              {loading ? (
+                <Skeleton className="h-8 w-24" />
+              ) : (
+                <div className="text-2xl font-bold">{card.value}</div>
+              )}
             </CardContent>
           </Card>
         ))}
@@ -48,16 +55,22 @@ export default function FinanceDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="h-[350px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₦${value/1000}k`} />
-                <Tooltip formatter={(value: number) => `₦${value.toLocaleString()}`} />
-                <Legend />
-                <Bar dataKey="revenue" fill="hsl(var(--primary))" name="Revenue" />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading ? (
+               <div className="flex items-center justify-center h-full text-muted-foreground">
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading chart data...
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₦${value/1000}k`} />
+                  <Tooltip formatter={(value: number) => `₦${value.toLocaleString()}`} />
+                  <Legend />
+                  <Bar dataKey="revenue" fill="hsl(var(--primary))" name="Revenue" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -72,7 +72,7 @@ export default function Footer() {
         <div className="flex flex-col items-center text-center gap-2 mt-6 pt-6 border-t border-border/20 w-full">
           <Image src="/image/logo.png" alt="KASUPDA Logo" width={32} height={32} className="h-8 w-8 mb-2" />
           <p className="text-xs text-muted-foreground">
-            &copy; {currentYear} KASUPDA. All rights reserved.
+            &copy; {currentYear || new Date().getFullYear()} KASUPDA. All rights reserved.
           </p>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1.5">
             <MapPin className="h-3 w-3 shrink-0" />

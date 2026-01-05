@@ -404,6 +404,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 // Define Zod schema based on the form
 const permitApplicationSchema = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["object"])({
+    kdlNumber: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().optional(),
     // Box 1: Applicant
     title: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().optional(),
     firstName: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().min(1, "First name is required"),
@@ -424,7 +425,6 @@ const permitApplicationSchema = (0, __TURBOPACK__imported__module__$5b$project$5
     localGov: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().optional(),
     phone1: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().min(1, "Phone 1 is required").regex(/^\+?[0-9\s-()]+$/, "Invalid phone number format"),
     phone2: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["literal"])('')),
-    phone3: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["literal"])('')),
     email: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["string"])().email("Invalid email address").optional().or((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["literal"])('')),
     identificationType: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["object"])({
         internationalPassport: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["boolean"])().optional(),
@@ -480,7 +480,6 @@ const permitApplicationSchema = (0, __TURBOPACK__imported__module__$5b$project$5
     docSar: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
     docWorkingDrawings: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
     docStructuralInfo: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
-    docBuildersDoc: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
     docSoilTest: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
     docPdfDrawings: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
     docApplicantId: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["any"])().optional(),
@@ -528,10 +527,6 @@ const residentialDocs = [
     {
         id: "docStructuralInfo",
         label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings."
-    },
-    {
-        id: "docBuildersDoc",
-        label: "Builder’s Document to be produced by Registered Builder for commercial Residential"
     },
     {
         id: "docSoilTest",
@@ -603,10 +598,10 @@ function ResidentialBuildingPermitPage() {
     _s();
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
-    const [currentStep, setCurrentStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1);
-    const [isSubmitting, setIsSubmitting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+    const [currentStep, setCurrentStep] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState(1);
+    const [isSubmitting, setIsSubmitting] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState(false);
+    const [user, setUser] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState(null);
+    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
         "ResidentialBuildingPermitPage.useEffect": ()=>{
             const checkSession = {
                 "ResidentialBuildingPermitPage.useEffect.checkSession": async ()=>{
@@ -627,6 +622,7 @@ function ResidentialBuildingPermitPage() {
         resolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hookform$2f$resolvers$2f$zod$2f$dist$2f$zod$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["zodResolver"])(permitApplicationSchema),
         mode: "onChange",
         defaultValues: {
+            kdlNumber: "",
             title: "",
             firstName: "",
             middleName: "",
@@ -637,7 +633,6 @@ function ResidentialBuildingPermitPage() {
             localGov: "",
             phone1: "",
             phone2: "",
-            phone3: "",
             email: "",
             identificationType: {},
             idNumber: "",
@@ -716,8 +711,8 @@ function ResidentialBuildingPermitPage() {
         });
         try {
             const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$actions$2f$applicationActions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["saveApplication"])(formData);
-            if (result.success && result.applicationId) {
-                router.push(`/dashboard/acknowledgement/${result.applicationId}`);
+            if (result.success) {
+                router.push(`/dashboard/apply/success?id=${result.applicationId}`);
             } else {
                 throw new Error(result.error || "An unknown error occurred.");
             }
@@ -764,30 +759,30 @@ function ResidentialBuildingPermitPage() {
                             children: "Loading..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                            lineNumber: 304,
+                            lineNumber: 302,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                             children: "Verifying user session..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                            lineNumber: 305,
+                            lineNumber: 303,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                    lineNumber: 303,
+                    lineNumber: 301,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                lineNumber: 302,
+                lineNumber: 300,
                 columnNumber: 13
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-            lineNumber: 301,
+            lineNumber: 299,
             columnNumber: 9
         }, this);
     }
@@ -803,7 +798,7 @@ function ResidentialBuildingPermitPage() {
                             children: "Building Permit Application"
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                            lineNumber: 316,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -811,18 +806,18 @@ function ResidentialBuildingPermitPage() {
                             children: "Kaduna State Urban Planning and Development Authority"
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                            lineNumber: 319,
+                            lineNumber: 317,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                    lineNumber: 315,
+                    lineNumber: 313,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                lineNumber: 314,
+                lineNumber: 312,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -843,12 +838,12 @@ function ResidentialBuildingPermitPage() {
                                                 className: "w-3 h-3 sm:w-4 sm:h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 339,
+                                                lineNumber: 337,
                                                 columnNumber: 44
                                             }, this) : step.id
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                            lineNumber: 331,
+                                            lineNumber: 329,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -856,42 +851,73 @@ function ResidentialBuildingPermitPage() {
                                             children: step.name
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                            lineNumber: 341,
+                                            lineNumber: 339,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                    lineNumber: 330,
+                                    lineNumber: 328,
                                     columnNumber: 15
                                 }, this),
                                 index < steps.length - 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex-1 h-0.5 sm:h-1 mt-2.5 sm:mt-3.5 mx-0.5 sm:mx-1 transition-all duration-300", currentStep > step.id ? "bg-primary" : "bg-border")
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                    lineNumber: 347,
+                                    lineNumber: 345,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, step.id, true, {
                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                            lineNumber: 329,
+                            lineNumber: 327,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                    lineNumber: 327,
+                    lineNumber: 325,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                lineNumber: 326,
+                lineNumber: 324,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
                 onSubmit: handleSubmit(onSubmit),
                 className: "space-y-8",
                 children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 px-1",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                    htmlFor: "kdlNumber",
+                                    children: "KDL / KADGIS FILE NUMBER"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                                    lineNumber: 359,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                    id: "kdlNumber",
+                                    ...register("kdlNumber")
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                                    lineNumber: 360,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                            lineNumber: 358,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                        lineNumber: 357,
+                        columnNumber: 9
+                    }, this),
                     currentStep === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
@@ -901,7 +927,7 @@ function ResidentialBuildingPermitPage() {
                                         children: "BOX 1: APPLICANT (Individual)"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 362,
+                                        lineNumber: 367,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -909,13 +935,13 @@ function ResidentialBuildingPermitPage() {
                                         children: "The person whose name would be reflected on the Building Permit. Original identification document must be submitted."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 363,
+                                        lineNumber: 368,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                lineNumber: 361,
+                                lineNumber: 366,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -931,7 +957,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Title"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 368,
+                                                        lineNumber: 373,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -939,13 +965,13 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("title")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 369,
+                                                        lineNumber: 374,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 367,
+                                                lineNumber: 372,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -956,7 +982,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "First Name*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 372,
+                                                        lineNumber: 377,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -964,7 +990,7 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("firstName")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 373,
+                                                        lineNumber: 378,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.firstName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -972,32 +998,8 @@ function ResidentialBuildingPermitPage() {
                                                         children: errors.firstName.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 374,
+                                                        lineNumber: 379,
                                                         columnNumber: 40
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 371,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
-                                                        htmlFor: "middleName",
-                                                        children: "Middle Name"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 377,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                        id: "middleName",
-                                                        ...register("middleName")
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 378,
-                                                        columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
@@ -1008,11 +1010,35 @@ function ResidentialBuildingPermitPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                                        htmlFor: "middleName",
+                                                        children: "Middle Name"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                                                        lineNumber: 382,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                        id: "middleName",
+                                                        ...register("middleName")
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                                                        lineNumber: 383,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
+                                                lineNumber: 381,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
                                                         htmlFor: "surname",
                                                         children: "Surname*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 381,
+                                                        lineNumber: 386,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1020,7 +1046,7 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("surname")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 382,
+                                                        lineNumber: 387,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.surname && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1028,19 +1054,19 @@ function ResidentialBuildingPermitPage() {
                                                         children: errors.surname.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 383,
+                                                        lineNumber: 388,
                                                         columnNumber: 38
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 380,
+                                                lineNumber: 385,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 366,
+                                        lineNumber: 371,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1052,7 +1078,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Gender*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 389,
+                                                        lineNumber: 394,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Controller"], {
@@ -1071,7 +1097,7 @@ function ResidentialBuildingPermitPage() {
                                                                                 id: "male"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                lineNumber: 396,
+                                                                                lineNumber: 401,
                                                                                 columnNumber: 27
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -1080,13 +1106,13 @@ function ResidentialBuildingPermitPage() {
                                                                                 children: "Male"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                lineNumber: 397,
+                                                                                lineNumber: 402,
                                                                                 columnNumber: 27
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                        lineNumber: 395,
+                                                                        lineNumber: 400,
                                                                         columnNumber: 25
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1097,7 +1123,7 @@ function ResidentialBuildingPermitPage() {
                                                                                 id: "female"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                lineNumber: 400,
+                                                                                lineNumber: 405,
                                                                                 columnNumber: 27
                                                                             }, void 0),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -1106,24 +1132,24 @@ function ResidentialBuildingPermitPage() {
                                                                                 children: "Female"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                lineNumber: 401,
+                                                                                lineNumber: 406,
                                                                                 columnNumber: 27
                                                                             }, void 0)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                        lineNumber: 399,
+                                                                        lineNumber: 404,
                                                                         columnNumber: 25
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                lineNumber: 394,
+                                                                lineNumber: 399,
                                                                 columnNumber: 23
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 390,
+                                                        lineNumber: 395,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.gender && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1131,13 +1157,13 @@ function ResidentialBuildingPermitPage() {
                                                         children: errors.gender.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 406,
+                                                        lineNumber: 411,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 388,
+                                                lineNumber: 393,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1147,7 +1173,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Date of Birth*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 409,
+                                                        lineNumber: 414,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Controller"], {
@@ -1165,25 +1191,25 @@ function ResidentialBuildingPermitPage() {
                                                                                     className: "mr-2 h-4 w-4"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                    lineNumber: 417,
+                                                                                    lineNumber: 422,
                                                                                     columnNumber: 29
                                                                                 }, void 0),
                                                                                 field.value ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(field.value, "PPP") : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                     children: "Pick a date"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                                    lineNumber: 418,
+                                                                                    lineNumber: 423,
                                                                                     columnNumber: 73
                                                                                 }, void 0)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                            lineNumber: 416,
+                                                                            lineNumber: 421,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                        lineNumber: 415,
+                                                                        lineNumber: 420,
                                                                         columnNumber: 25
                                                                     }, void 0),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
@@ -1195,23 +1221,23 @@ function ResidentialBuildingPermitPage() {
                                                                             initialFocus: true
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                            lineNumber: 422,
+                                                                            lineNumber: 427,
                                                                             columnNumber: 27
                                                                         }, void 0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                        lineNumber: 421,
+                                                                        lineNumber: 426,
                                                                         columnNumber: 25
                                                                     }, void 0)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                                lineNumber: 414,
+                                                                lineNumber: 419,
                                                                 columnNumber: 23
                                                             }, void 0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 410,
+                                                        lineNumber: 415,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.dateOfBirth && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1219,13 +1245,13 @@ function ResidentialBuildingPermitPage() {
                                                         children: errors.dateOfBirth.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 427,
+                                                        lineNumber: 432,
                                                         columnNumber: 42
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 408,
+                                                lineNumber: 413,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1235,7 +1261,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Occupation"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 430,
+                                                        lineNumber: 435,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1243,19 +1269,19 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("occupation")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 431,
+                                                        lineNumber: 436,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 429,
+                                                lineNumber: 434,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 387,
+                                        lineNumber: 392,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1268,7 +1294,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Nationality"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 437,
+                                                        lineNumber: 442,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1276,13 +1302,13 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("nationality")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 438,
+                                                        lineNumber: 443,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 436,
+                                                lineNumber: 441,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1292,7 +1318,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "State of Origin"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 441,
+                                                        lineNumber: 446,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1300,13 +1326,13 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("stateOfOrigin")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 442,
+                                                        lineNumber: 447,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 440,
+                                                lineNumber: 445,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1316,7 +1342,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Local Gov."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 445,
+                                                        lineNumber: 450,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1324,23 +1350,23 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("localGov")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 446,
+                                                        lineNumber: 451,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 444,
+                                                lineNumber: 449,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 435,
+                                        lineNumber: 440,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+                                        className: "grid grid-cols-1 md:grid-cols-2 gap-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
@@ -1349,7 +1375,7 @@ function ResidentialBuildingPermitPage() {
                                                         children: "Phone 1*"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 452,
+                                                        lineNumber: 457,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1358,45 +1384,12 @@ function ResidentialBuildingPermitPage() {
                                                         ...register("phone1")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 453,
+                                                        lineNumber: 458,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.phone1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "text-destructive text-xs mt-1",
                                                         children: errors.phone1.message
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 454,
-                                                        columnNumber: 37
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                lineNumber: 451,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
-                                                        htmlFor: "phone2",
-                                                        children: "Phone 2"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 457,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                        id: "phone2",
-                                                        type: "tel",
-                                                        ...register("phone2")
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                                        lineNumber: 458,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    errors.phone2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-destructive text-xs mt-1",
-                                                        children: errors.phone2.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
                                                         lineNumber: 459,
@@ -1411,29 +1404,29 @@ function ResidentialBuildingPermitPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
-                                                        htmlFor: "phone3",
-                                                        children: "Phone 3"
+                                                        htmlFor: "phone2",
+                                                        children: "Phone 2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
                                                         lineNumber: 462,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                        id: "phone3",
+                                                        id: "phone2",
                                                         type: "tel",
-                                                        ...register("phone3")
+                                                        ...register("phone2")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
                                                         lineNumber: 463,
                                                         columnNumber: 19
                                                     }, this),
-                                                    errors.phone3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    errors.phone2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         className: "text-destructive text-xs mt-1",
-                                                        children: errors.phone3.message
+                                                        children: errors.phone2.message
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
                                                         lineNumber: 464,
-                                                        columnNumber: 38
+                                                        columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
@@ -1444,7 +1437,7 @@ function ResidentialBuildingPermitPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                        lineNumber: 450,
+                                        lineNumber: 455,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1565,13 +1558,13 @@ function ResidentialBuildingPermitPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                                lineNumber: 365,
+                                lineNumber: 370,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                        lineNumber: 360,
+                        lineNumber: 365,
                         columnNumber: 11
                     }, this),
                     currentStep === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2930,13 +2923,13 @@ function ResidentialBuildingPermitPage() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-                lineNumber: 357,
+                lineNumber: 355,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/apply/residential-building-permit/page.tsx",
-        lineNumber: 313,
+        lineNumber: 311,
         columnNumber: 5
     }, this);
 }
