@@ -7,13 +7,18 @@ import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Edit, Loader2, Save, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Edit, Loader2, Save, Trash2, X, Receipt } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { updateApplicationData, updateApplicationStatus } from '@/app/actions/adminActions';
 import ApplicationDetails from '../ApplicationDetails';
 import type { StoredApplication } from '../page';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { createBill } from '@/app/actions/billingActions';
+
 
 const statusOptions: ('Inprogress' | 'Approved' | 'Rejected')[] = ['Inprogress', 'Approved', 'Rejected'];
 
@@ -33,6 +38,13 @@ export default function ApplicationDetailPage() {
   
   const [rejectionReason, setRejectionReason] = useState('');
   const [isRejectionDialogOpen, setIsRejectionDialogOpen] = useState(false);
+
+  // State for billing dialog
+  const [isBillingDialogOpen, setIsBillingDialogOpen] = useState(false);
+  const [billingAmount, setBillingAmount] = useState('');
+  const [billingDescription, setBillingDescription] = useState('');
+  const [isCreatingBill, setIsCreatingBill] = useState(false);
+
 
   const fetchApplication = useCallback(async () => {
     setLoading(true);
@@ -147,6 +159,39 @@ export default function ApplicationDetailPage() {
       toast({ title: "Action Disabled", description: "Deleting from the detail page is disabled for safety.", variant: "destructive" });
   };
   
+  const handleCreateBill = async () => {
+    if (!application || !billingAmount || !billingDescription) {
+        toast({ title: 'Error', description: 'Please fill in all billing details.', variant: 'destructive' });
+        return;
+    }
+    setIsCreatingBill(true);
+    try {
+        const amount = parseFloat(billingAmount);
+        if (isNaN(amount) || amount <= 0) {
+            throw new Error("Invalid amount entered.");
+        }
+        
+        // NOTE: The originating_State_Code should be provided by Osoftpay upon go-live.
+        // Using a placeholder for now.
+        const originatingStateCode = "KDSG-KASUPDA"; 
+
+        const result = await createBill(application, amount, billingDescription, originatingStateCode);
+
+        if (result.success) {
+            toast({ title: 'Bill Created', description: 'The payment bill has been generated and is now available to the user.' });
+            setIsBillingDialogOpen(false);
+            setBillingAmount('');
+            setBillingDescription('');
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        toast({ title: 'Billing Error', description: `Could not create bill: ${error instanceof Error ? error.message : 'Unknown error'}`, variant: 'destructive' });
+    } finally {
+        setIsCreatingBill(false);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
@@ -201,18 +246,23 @@ export default function ApplicationDetailPage() {
 
         </CardContent>
          <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6">
-            {isEditing ? (
-              <div className="flex gap-2">
-                <Button onClick={handleSaveChanges} disabled={isSaving}>
-                  {isSaving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Save Changes</>}
+            <div className="flex flex-wrap gap-2">
+                {isEditing ? (
+                <>
+                    <Button onClick={handleSaveChanges} disabled={isSaving}>
+                        {isSaving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Save Changes</>}
+                    </Button>
+                    <Button variant="ghost" onClick={handleEditToggle}><X className="mr-2 h-4 w-4" />Cancel</Button>
+                </>
+                ) : (
+                <Button onClick={handleEditToggle} variant="outline" className="gap-2">
+                    <Edit className="h-4 w-4" /> Edit Application
                 </Button>
-                <Button variant="ghost" onClick={handleEditToggle}><X className="mr-2 h-4 w-4" />Cancel</Button>
-              </div>
-            ) : (
-              <Button onClick={handleEditToggle} variant="outline" className="gap-2">
-                <Edit className="h-4 w-4" /> Edit Application
-              </Button>
-            )}
+                )}
+                <Button onClick={() => setIsBillingDialogOpen(true)} variant="default" className="gap-2">
+                    <Receipt className="h-4 w-4" /> Create Bill
+                </Button>
+            </div>
              <div className="flex gap-2 flex-wrap justify-end">
                 {statusOptions.map(status => (
                     <Button key={status} size="sm" onClick={() => handleStatusChange(status)} disabled={isStatusUpdating || application.status === status}>
@@ -262,6 +312,44 @@ export default function ApplicationDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+       <Dialog open={isBillingDialogOpen} onOpenChange={setIsBillingDialogOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Create New Bill</DialogTitle>
+                    <DialogDescription>
+                        Generate a payment invoice for this application. The user will be notified and provided with a payment reference.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="billing-description">Description</Label>
+                        <Input
+                            id="billing-description"
+                            value={billingDescription}
+                            onChange={(e) => setBillingDescription(e.target.value)}
+                            placeholder="e.g., Building Permit Assessment Fee"
+                        />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="billing-amount">Amount (₦)</Label>
+                        <Input
+                            id="billing-amount"
+                            type="number"
+                            value={billingAmount}
+                            onChange={(e) => setBillingAmount(e.target.value)}
+                            placeholder="e.g., 50000"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsBillingDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleCreateBill} disabled={isCreatingBill || !billingAmount || !billingDescription}>
+                        {isCreatingBill ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate Bill"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
