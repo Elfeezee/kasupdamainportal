@@ -99,7 +99,10 @@ async function MyApplicationsPageComponent() {
               <CardContent className="space-y-3 flex-grow flex flex-col">
                 <div className="flex-grow space-y-2">
                     <p className="text-sm text-muted-foreground">
-                    <strong>ID:</strong> {app.original_permit_id || app.din || app.id}
+                    <strong>File Number:</strong> {app.original_permit_id || 'Pending Admin Review'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                    <strong>Application ID:</strong> {app.id}
                     </p>
                     <p className="text-sm text-muted-foreground">
                     <strong>Submitted:</strong> {app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}
@@ -121,12 +124,14 @@ async function MyApplicationsPageComponent() {
                 )}
               </CardContent>
               <CardFooter className="border-t pt-4 flex flex-col sm:flex-row gap-2">
-                  <Button asChild variant="secondary" className="w-full">
-                      <Link href={`/dashboard/acknowledgement/${app.id}`}>
-                          <FileSpreadsheet className="mr-2 h-4 w-4" />
-                          View Acknowledgement
-                      </Link>
-                  </Button>
+                  {app.original_permit_id && (
+                    <Button asChild variant="secondary" className="w-full">
+                        <Link href={`/dashboard/acknowledgement/${app.id}`}>
+                            <FileSpreadsheet className="mr-2 h-4 w-4" />
+                            View Acknowledgement
+                        </Link>
+                    </Button>
+                  )}
                   {app.type === 'Certificate of Fitness' && app.status === 'Approved' && (
                     <Button asChild variant="default" className="w-full">
                         <Link href={`/dashboard/certificate-of-fitness/${app.id}`}>

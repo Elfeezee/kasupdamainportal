@@ -17,9 +17,14 @@ const renderFieldValue = (
     onInputChange: (key: string, value: string | boolean) => void
 ) => {
     // Skip internal fields from rendering
-    if (['id', 'user_id', 'created_at', 'rejection_reason'].includes(key)) {
+    if (['id', 'user_id', 'created_at', 'rejection_reason'].includes(key) && key !== 'original_permit_id') {
         return null;
     }
+    
+    if (key === 'original_permit_id' && !isEditing && !value) {
+        return <p className="text-sm text-muted-foreground italic">Not yet assigned</p>;
+    }
+
 
     // If a field ends with '_url' but the value is null or empty, don't render it.
     if (key.endsWith('_url') && !value) {
@@ -91,6 +96,17 @@ export default function ApplicationDetails({ application, isEditing, editedData,
             <h3 className="text-lg font-semibold text-primary">Application Data</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                 {sortedKeys.map((key) => {
+                    // Always show original_permit_id
+                    if (key === 'original_permit_id') {
+                         const renderedField = renderFieldValue(key, application[key], isEditing, editedData, onInputChange);
+                         return (
+                            <div key={key} className="space-y-1">
+                                <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ')}</Label>
+                                {renderedField}
+                            </div>
+                         );
+                    }
+                    
                     const value = application[key];
                     // Skip null/undefined values unless in edit mode where we might want to add data
                     if (value === null && !isEditing) return null;

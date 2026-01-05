@@ -257,8 +257,8 @@ export default function MastPermitPage() {
 
     try {
         const result = await saveApplication(formData);
-        if (result.success && result.applicationId) {
-            router.push(`/dashboard/acknowledgement/${result.applicationId}`);
+        if (result.success) {
+            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
         } else {
             throw new Error(result.error || "An unknown error occurred.");
         }

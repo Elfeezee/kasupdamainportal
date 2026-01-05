@@ -1,29 +1,42 @@
 
 "use client";
 
-import React, { Suspense } from 'react';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { PartyPopper } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-// This page is now a simple redirector. The actual content is in /dashboard/acknowledgement/[id]
 export default function ApplicationSuccessPage() {
     const router = useRouter();
 
-    // We use a client component with useEffect to get search params safely
-    React.useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const appId = params.get('id');
-        if (appId) {
-            // Redirect to the new permanent acknowledgement page
-            router.replace(`/dashboard/acknowledgement/${appId}`);
-        } else {
-            // If for some reason there's no ID, go to the applications list
-            router.replace('/dashboard/my-applications');
-        }
-    }, [router]);
-
     return (
-        <div className="container mx-auto px-4 py-8 text-center">
-            <p>Redirecting to your acknowledgement letter...</p>
+        <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
+            <Card className="w-full max-w-lg mx-auto text-center">
+                <CardHeader>
+                    <PartyPopper className="mx-auto h-12 w-12 text-green-500" />
+                    <CardTitle className="mt-4 text-2xl font-bold text-primary">Application Submitted Successfully!</CardTitle>
+                    <CardDescription className="mt-2 text-muted-foreground">
+                        Your application has been received and is now pending review by our team.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                        You can track the status of your application, including when the file number is assigned, on your "My Applications" page.
+                    </p>
+                </CardContent>
+                <CardFooter className="flex flex-col sm:flex-row justify-center gap-3">
+                    <Button onClick={() => router.push('/dashboard/my-applications')}>
+                        Go to My Applications
+                    </Button>
+                    <Button variant="outline" asChild>
+                        <Link href="/dashboard">
+                            Return to Dashboard
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
         </div>
     );
 }

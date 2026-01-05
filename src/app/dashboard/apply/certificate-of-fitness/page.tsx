@@ -119,11 +119,7 @@ export default function CertificateOfFitnessPage() {
         const result = await saveApplication(formData);
 
         if (result.success) {
-             toast({
-                title: "Application Submitted!",
-                description: `Your Certificate of Fitness application has been received.`,
-            });
-            router.push('/dashboard/my-applications');
+            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
         } else {
             throw new Error(result.error || "An unknown error occurred.");
         }

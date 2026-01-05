@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, 'react';
+import React from 'react';
 import { useForm, Controller, type FieldName } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -252,8 +252,8 @@ export default function ResidentialBuildingPermitPage() {
     try {
         const result = await saveApplication(formData);
 
-        if (result.success && result.applicationId) {
-            router.push(`/dashboard/acknowledgement/${result.applicationId}`);
+        if (result.success) {
+            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
         } else {
             throw new Error(result.error || "An unknown error occurred.");
         }

@@ -39,7 +39,6 @@ function mapKeyToDbField(key: string): string {
         'localGov': 'local_gov',
         'phone1': 'phone1',
         'phone2': 'phone2',
-        'phone3': 'phone3',
         'email': 'email',
         'idNumber': 'id_number',
 
@@ -235,12 +234,6 @@ async function processAndSaveData(
         if (!insertedData) {
             throw new Error("Failed to get ID from inserted application record.");
         }
-
-        const finalApplicationId = `KSP${String(insertedData.id).padStart(3, '0')}`;
-        await supabase
-            .from('applications')
-            .update({ original_permit_id: finalApplicationId })
-            .eq('id', insertedData.id);
 
         return { success: true, applicationId: insertedData.id };
 

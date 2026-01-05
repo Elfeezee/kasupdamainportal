@@ -2,95 +2,13 @@
   "node": {
     "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
       "workers": {
-        "app/_not-found/page": {
-          "moduleId": "[project]/.next-internal/server/app/_not-found/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/(main)/applications/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/(main)/dashboard/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/(main)/din-applications/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/din-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/(main)/finance/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/finance/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/(main)/permit-applications/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/(main)/permit-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/finance/dashboard/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/finance/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/login/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/admin/page": {
-          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/my-dins/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         }
       },
       "layer": {
-        "app/_not-found/page": "action-browser",
-        "app/admin/(main)/applications/page": "action-browser",
-        "app/admin/(main)/dashboard/page": "action-browser",
-        "app/admin/(main)/din-applications/page": "action-browser",
-        "app/admin/(main)/finance/page": "action-browser",
-        "app/admin/(main)/permit-applications/page": "action-browser",
-        "app/admin/finance/dashboard/page": "action-browser",
-        "app/admin/login/page": "action-browser",
-        "app/admin/page": "action-browser",
-        "app/dashboard/apply/din-application/page": "action-browser",
-        "app/dashboard/my-dins/page": "action-browser",
-        "app/dashboard/page": "action-browser",
         "app/page": "action-browser"
-      }
-    },
-    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
-      "workers": {
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/dashboard/apply/din-application/page": "action-browser"
-      }
-    },
-    "703c8e965250efc42d12325b86de80956fb7b5329f": {
-      "workers": {
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/dashboard/apply/din-application/page": "action-browser"
       }
     }
   },
