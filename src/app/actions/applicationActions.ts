@@ -167,7 +167,39 @@ function mapKeyToDbField(key: string): string {
         'doc_permit': 'doc_permit',
         'doc_co': 'doc_co',
         'doc_building_permit': 'doc_building_permit',
-        'doc_structural_info': 'doc_structural_info'
+        'doc_structural_info': 'doc_structural_info',
+        // New doc fields from other forms
+        'docImageShowingSite': 'doc_image_showing_site',
+        'doc_image_showing_site': 'doc_image_showing_site',
+        'docConsentLetter': 'doc_consent_letter',
+        'doc_consent_letter': 'doc_consent_letter',
+        'docLeaseAgreement': 'doc_lease_agreement',
+        'docStructuralDrawings': 'doc_structural_drawings',
+        'docSiteAnalysisReport': 'doc_site_analysis_report',
+        'docKepasEnvImpactAssessment': 'doc_kepas_env_impact_assessment',
+        'docSoilInvestigationReport': 'doc_soil_investigation_report',
+        'docTelecommunicationDesigns': 'doc_telecommunication_designs',
+        'docStructuralCalculationSheets': 'doc_structural_calculation_sheets',
+        'docElectricalWorksDrawings': 'doc_electrical_works_drawings',
+        'docPoliceReport': 'doc_police_report',
+        'docProofOfOutrightPurchase': 'doc_proof_of_outright_purchase',
+        'docSitePlan': 'doc_site_plan',
+        'docNAMAApproval': 'doc_nama_approval',
+        'docNCAAApproval': 'doc_ncaa_approval',
+        'docLetterOfAttestation': 'doc_letter_of_attestation',
+        'docMechanicalWorksDrawings': 'doc_mechanical_works_drawings',
+        'docArchitecturalWorksDrawings': 'doc_architectural_works_drawings',
+        'docFireServiceReport': 'doc_fire_service_report',
+        'docKasupdaLicense': 'doc_kasupda_license',
+        'docSoilInvestigation': 'doc_soil_investigation',
+        'docCorporateArconLicense': 'doc_corporate_arcon_license',
+        'docTaxClearance': 'doc_tax_clearance',
+        'docSiteLocationType': 'doc_site_location_type',
+        'docKepaEiaApproval': 'doc_kepa_eia_approval',
+        'docStructuralWorkDrawings': 'doc_structural_work_drawings',
+        'docImagerySketch': 'doc_imagery_sketch',
+        'docSiteLocationInstallationCoordinates': 'doc_site_location_installation_coordinates',
+        'docLeaseAgreementLetter': 'doc_lease_agreement_letter'
     };
 
     return mappings[key] || key;
@@ -193,7 +225,6 @@ export async function generateAndSaveDin(
 
         // Direct mapping from form to payload
         for (const [key, value] of formData.entries()) {
-            // Skip metadata fields already handled
             if (['type', 'userId', 'applicantName'].includes(key)) continue;
 
             const dbKey = mapKeyToDbField(key);
@@ -210,21 +241,20 @@ export async function generateAndSaveDin(
                     submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
                 }
             } else if (typeof value === 'string' && value) {
-                // handle "on" for checkboxes
                 if (value === 'on') {
                      submissionPayload[dbKey] = true;
+                } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
+                    submissionPayload[dbKey] = new Date(value).toISOString();
                 } else {
                     submissionPayload[dbKey] = value;
                 }
             }
         }
         
-        // Filter out null/undefined values before insertion
         const cleanedPayload = Object.fromEntries(
             Object.entries(submissionPayload).filter(([_, v]) => v != null)
         );
         
-        // --- Database Insertion ---
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
             .insert(cleanedPayload)
@@ -243,15 +273,12 @@ export async function generateAndSaveDin(
         const newId = insertedData.id;
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         
-        // Update the new application record with the generated DIN
         const {data: updatedApplication, error: updateError} = await supabase.from('applications').update({ din: finalDin }).eq('id', newId).select().single();
 
         if(updateError) throw updateError;
         
-        // Also update the user's profile in the 'users' table with their new DIN
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
         
-        // Automatically create a bill for DIN application
         await createBill(updatedApplication, userId, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
 
         return { success: true, din: finalDin };
@@ -359,3 +386,5 @@ export async function saveApplication(
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }
+
+    
