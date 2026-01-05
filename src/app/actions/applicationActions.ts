@@ -151,22 +151,23 @@ function mapKeyToDbField(key: string): string {
         'ceoNameContact': 'ceo_name_contact',
 
         // Document fields - map from form name to DB name directly
-        'docLandTitle': 'doc_land_title',
-        'docKadgisAcknowledgement': 'doc_kadgis_acknowledgement',
-        'docSar': 'doc_sar',
-        'docWorkingDrawings': 'doc_working_drawings',
-        'docCalculationSheet': 'doc_calculation_sheet',
-        'docBuildersDoc': 'doc_builders_doc',
-        'docSoilTest': 'doc_soil_test',
-        'docPdfDrawings': 'doc_pdf_drawings',
-        'docApplicantId': 'doc_applicant_id',
-        'docRepId': 'doc_rep_id',
-        'docUtilityBill': 'doc_utility_bill',
-        'docQualityAssurance': 'doc_quality_assurance',
-        'docKepaEiaCert': 'doc_kepa_eia_cert',
+        'doc_land_title': 'doc_land_title',
+        'doc_kadgis_acknowledgement': 'doc_kadgis_acknowledgement',
+        'doc_sar': 'doc_sar',
+        'doc_working_drawings': 'doc_working_drawings',
+        'doc_calculation_sheet': 'doc_calculation_sheet',
+        'doc_builders_doc': 'doc_builders_doc',
+        'doc_soil_test': 'doc_soil_test',
+        'doc_pdf_drawings': 'doc_pdf_drawings',
+        'doc_applicant_id': 'doc_applicant_id',
+        'doc_rep_id': 'doc_rep_id',
+        'doc_utility_bill': 'doc_utility_bill',
+        'doc_quality_assurance': 'doc_quality_assurance',
+        'doc_kepa_eia_cert': 'doc_kepa_eia_cert',
         'doc_permit': 'doc_permit',
         'doc_co': 'doc_co',
-        'docStructuralInfo': 'doc_structural_info'
+        'doc_building_permit': 'doc_building_permit',
+        'doc_structural_info': 'doc_structural_info'
     };
 
     return mappings[key] || key;
@@ -227,7 +228,7 @@ export async function generateAndSaveDin(
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
             .insert(cleanedPayload)
-            .select('id')
+            .select('id, applicant_name')
             .single();
 
         if (dbError) {
@@ -251,7 +252,7 @@ export async function generateAndSaveDin(
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
         
         // Automatically create a bill for DIN application
-        await createBill(updatedApplication, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
+        await createBill(updatedApplication, userId, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
 
         return { success: true, din: finalDin };
 
@@ -348,7 +349,7 @@ export async function saveApplication(
         }
         
         // Automatically create a bill for permit applications
-        await createBill(insertedData, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+        await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
 
         return { success: true, applicationId: insertedData.id, applicantName };
 
@@ -358,5 +359,3 @@ export async function saveApplication(
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }
-
-    

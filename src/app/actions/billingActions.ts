@@ -28,6 +28,7 @@ interface OsoftValidationResponse {
  */
 export async function createBill(
     application: StoredApplication,
+    userId: string,
     amount: number,
     description: string,
     originatingStateCode: string
@@ -35,15 +36,10 @@ export async function createBill(
     const supabase = createSupabaseServerClient();
     
     // 1. Get user details for payment
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        return { success: false, error: "User not authenticated." };
-    }
-
     const { data: userProfile, error: profileError } = await supabase
         .from('users')
         .select('phone, email')
-        .eq('uid', user.id)
+        .eq('uid', userId)
         .single();
     
     if (profileError || !userProfile) {
@@ -86,7 +82,7 @@ export async function createBill(
         const { error: dbError } = await supabase
             .from('transactions')
             .insert({
-                user_id: user.id,
+                user_id: userId,
                 application_id: application.id,
                 amount: amount,
                 description: description,
