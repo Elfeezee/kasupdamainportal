@@ -163,15 +163,16 @@ function mapKeyToDbField(key: string): string {
         'docUtilityBill': 'doc_utility_bill',
         'docQualityAssurance': 'doc_quality_assurance',
         'docKepaEiaCert': 'doc_kepa_eia_cert',
-        'doc_permit_url': 'doc_permit_url',
-        'doc_co_url': 'doc_co_url',
+        'doc_permit': 'doc_permit',
+        'doc_co': 'doc_co',
+        'docStructuralInfo': 'doc_structural_info'
     };
 
     return mappings[key] || key;
 }
 
 /**
- * Processes form data and saves it to the 'applications' table in Supabase.
+ * A robust function to process form data and save it to the 'applications' table in Supabase.
  * This is the new, robust function for all application types.
  * @param formData The FormData object from the form submission.
  * @param userId The ID of the user submitting the form.

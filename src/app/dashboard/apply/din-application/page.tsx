@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -30,14 +31,14 @@ const dinApplicationSchema = z.object({
   plotAddress: z.string().min(1, "Plot Address is required"),
   kbpNumber: z.string().min(1, "KBP Number is required"),
   kdlNumber: z.string().min(1, "KDL Number is required"),
-  doc_permit_url: z.any()
+  doc_permit: z.any()
     .refine((files) => files?.length == 1, "Permit document is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
     ),
-  doc_co_url: z.any()
+  doc_co: z.any()
     .refine((files) => files?.length == 1, "C/O document is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
@@ -63,8 +64,8 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
       plotAddress: "",
       kbpNumber: "",
       kdlNumber: "",
-      doc_permit_url: undefined,
-      doc_co_url: undefined,
+      doc_permit: undefined,
+      doc_co: undefined,
       declaration: false,
     }
   });
@@ -126,14 +127,14 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                    <Label htmlFor="doc_permit_url">Upload Permit*</Label>
-                    <Input id="doc_permit_url" type="file" {...register("doc_permit_url")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.doc_permit_url && <p className="text-destructive text-xs mt-1">{errors.doc_permit_url.message as string}</p>}
+                    <Label htmlFor="doc_permit">Upload Permit*</Label>
+                    <Input id="doc_permit" type="file" {...register("doc_permit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                    {errors.doc_permit && <p className="text-destructive text-xs mt-1">{errors.doc_permit.message as string}</p>}
                 </div>
                 <div className="space-y-1.5">
-                    <Label htmlFor="doc_co_url">Upload C/O (Certificate of Occupancy)*</Label>
-                    <Input id="doc_co_url" type="file" {...register("doc_co_url")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.doc_co_url && <p className="text-destructive text-xs mt-1">{errors.doc_co_url.message as string}</p>}
+                    <Label htmlFor="doc_co">Upload C/O (Certificate of Occupancy)*</Label>
+                    <Input id="doc_co" type="file" {...register("doc_co")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                    {errors.doc_co && <p className="text-destructive text-xs mt-1">{errors.doc_co.message as string}</p>}
                 </div>
             </div>
 
@@ -236,9 +237,7 @@ export default function DinApplicationPage() {
 
     // Append all form values to FormData
     Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof Date) {
-        formData.append(key, value.toISOString());
-      } else if (typeof value === 'boolean') {
+      if (typeof value === 'boolean') {
         if (value) formData.append(key, 'on');
       } else if (value instanceof FileList) {
         if (value.length > 0 && value[0].size > 0) formData.append(key, value[0]);
