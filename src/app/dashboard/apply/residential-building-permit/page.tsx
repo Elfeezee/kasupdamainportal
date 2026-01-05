@@ -12,7 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Separator } from '@/components/ui/separator';
@@ -23,6 +23,26 @@ import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+
+const fileValidation = z.any()
+    .refine((files) => files?.length == 1, "This document is required.")
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine(
+      (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .pdf files are accepted."
+    );
+
+const optionalFileValidation = z.any()
+    .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 5MB.`)
+    .refine(
+      (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .pdf files are accepted."
+    )
+    .optional();
+
 
 // Define Zod schema based on the form
 const permitApplicationSchema = z.object({
@@ -95,16 +115,16 @@ const permitApplicationSchema = z.object({
   plotLGA: z.string().optional(),
   plotDescriptionAddress: z.string().min(1, "Plot Description/Address is required"),
   
-  // Box 6: Documents
-  docLandTitle: z.any().optional(),
-  docSar: z.any().optional(),
-  docWorkingDrawings: z.any().optional(),
-  docStructuralInfo: z.any().optional(),
-  docSoilTest: z.any().optional(),
-  docPdfDrawings: z.any().optional(),
-  docApplicantId: z.any().optional(),
-  docRepId: z.any().optional(),
-  docUtilityBill: z.any().optional(),
+  // Box 6: Documents - All fields are now mandatory except for repId
+  docLandTitle: fileValidation,
+  docSar: fileValidation,
+  docWorkingDrawings: fileValidation,
+  docStructuralInfo: fileValidation,
+  docSoilTest: fileValidation,
+  docPdfDrawings: fileValidation,
+  docApplicantId: fileValidation,
+  docRepId: optionalFileValidation,
+  docUtilityBill: fileValidation,
 
   declaration: z.boolean().refine(val => val === true, {
     message: "You must agree to the declaration to submit the application."
@@ -122,15 +142,15 @@ const identificationOptions = [
 ];
 
 const residentialDocs = [
-    { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)" },
-    { id: "docSar" as const, label: "Site Analysis Report (SAR)" },
-    { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)" },
-    { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings." },
-    { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors." },
-    { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD" },
-    { id: "docApplicantId" as const, label: "Means of ID of applicant" },
-    { id: "docRepId" as const, label: "Means of ID of representative (optional)" },
-    { id: "docUtilityBill" as const, label: "Copy of utility bill" },
+    { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)", required: true },
+    { id: "docSar" as const, label: "Site Analysis Report (SAR)", required: true },
+    { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)", required: true },
+    { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings.", required: true },
+    { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors.", required: true },
+    { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD", required: true },
+    { id: "docApplicantId" as const, label: "Means of ID of applicant", required: true },
+    { id: "docRepId" as const, label: "Means of ID of representative (optional)", required: false },
+    { id: "docUtilityBill" as const, label: "Copy of utility bill", required: true },
 ];
 
 
@@ -140,7 +160,7 @@ const steps = [
   { id: 3, name: "Representative", fields: ['repEmail'] as FieldName<PermitApplicationFormValues>[] },
   { id: 4, name: "Representative Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
   { id: 5, name: "Plot Details", fields: ['plotDescriptionAddress'] as FieldName<PermitApplicationFormValues>[] },
-  { id: 6, name: "Documents & Declaration", fields: ['declaration'] as FieldName<PermitApplicationFormValues>[] },
+  { id: 6, name: "Documents & Declaration", fields: ['declaration', 'docLandTitle', 'docSar', 'docWorkingDrawings', 'docStructuralInfo', 'docSoilTest', 'docPdfDrawings', 'docApplicantId', 'docUtilityBill'] as FieldName<PermitApplicationFormValues>[] },
 ];
 
 export default function ResidentialBuildingPermitPage() {
@@ -255,7 +275,7 @@ export default function ResidentialBuildingPermitPage() {
         if (result.success) {
             router.push(`/dashboard/apply/success?id=${result.applicationId}`);
         } else {
-            throw new Error(result.error || "An unknown error occurred.");
+            throw new Error(result.error || "An unknown server error occurred.");
         }
 
     } catch (error) {
@@ -334,7 +354,7 @@ export default function ResidentialBuildingPermitPage() {
                     "bg-muted border-border text-muted-foreground"
                   )}
                 >
-                  {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
+                  {currentStep > step.id ? <Check className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
                 <p className={cn(
                   "mt-1 text-[10px] leading-tight sm:text-xs font-medium transition-all duration-300 break-words",
@@ -714,7 +734,7 @@ export default function ResidentialBuildingPermitPage() {
                 <CardHeader>
                     <CardTitle className="text-lg sm:text-xl">BOX 6: DOCUMENT UPLOAD &amp; DECLARATION</CardTitle>
                     <CardDescription className="text-xs sm:text-sm">
-                        Please upload the required documents.
+                        Please upload the required documents. Documents marked with an asterisk (*) are mandatory.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
@@ -725,7 +745,7 @@ export default function ResidentialBuildingPermitPage() {
                         {residentialDocs.map(doc => (
                             <div key={doc.id} className="space-y-1.5">
                                 <Label htmlFor={doc.id} className="text-sm font-medium">
-                                    {doc.label}
+                                    {doc.label}{doc.required && ' *'}
                                 </Label>
                                 <Input
                                     id={doc.id}
@@ -733,6 +753,7 @@ export default function ResidentialBuildingPermitPage() {
                                     {...register(doc.id)}
                                     className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 />
+                                {errors[doc.id] && <p className="text-destructive text-xs mt-1">{errors[doc.id]?.message as string}</p>}
                             </div>
                         ))}
                         </div>
@@ -810,25 +831,5 @@ export default function ResidentialBuildingPermitPage() {
         </CardFooter>
       </form>
     </div>
-  );
-}
-
-// Simple CheckIcon for stepper
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
   );
 }
