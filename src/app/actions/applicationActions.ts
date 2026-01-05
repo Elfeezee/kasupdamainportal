@@ -6,11 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A robust function to convert form data keys from form-friendly names
- * to snake_case for the database. This handles nested objects correctly.
- * This is a highly explicit mapping to prevent errors.
+ * to snake_case for the database. This is a highly explicit mapping to prevent errors.
  *
  * @param key The form field key from FormData.
- * @returns The snake_cased key for the database.
+ * @returns The snake_cased key for the database, or the original key if no mapping exists.
  */
 function mapKeyToDbField(key: string): string {
     const mappings: { [key: string]: string } = {
@@ -24,7 +23,6 @@ function mapKeyToDbField(key: string): string {
         'kopNumber': 'kop_number',
         'applicantAddress': 'applicant_address',
         'plotAddress': 'plot_address',
-
 
         // Applicant Info (BPI & Others)
         'title': 'title',
@@ -41,6 +39,7 @@ function mapKeyToDbField(key: string): string {
         'phone2': 'phone2',
         'email': 'email',
         'idNumber': 'id_number',
+        'identificationType': 'identification_type', // Parent for checkboxes
 
         // Applicant Address
         'appHouseNo': 'app_house_no',
@@ -80,7 +79,8 @@ function mapKeyToDbField(key: string): string {
         'ceoPhone': 'ceo_phone',
         'ceoEmail': 'ceo_email',
         'ceoIdNumber': 'ceo_id_number',
-        
+        'ceoIdentificationType': 'ceo_identification_type', // Parent for checkboxes
+
         // Representative Info
         'repFirstName': 'rep_first_name',
         'repMiddleName': 'rep_middle_name',
@@ -89,6 +89,7 @@ function mapKeyToDbField(key: string): string {
         'repPhone2': 'rep_phone2',
         'repEmail': 'rep_email',
         'repIdNumber': 'rep_id_number',
+        'repIdentificationType': 'rep_identification_type', // Parent for checkboxes
         'repHouseNo': 'rep_house_no',
         'repStreetName': 'rep_street_name',
         'repDistrict': 'rep_district',
@@ -147,15 +148,24 @@ function mapKeyToDbField(key: string): string {
         'phoneNo': 'phone_no',
         'emailAddress': 'email_address',
         'ceoNameContact': 'ceo_name_contact',
+
+        // Document fields - map from form name to DB name directly
+        'docLandTitle': 'doc_land_title',
+        'docKadgisAcknowledgement': 'doc_kadgis_acknowledgement',
+        'docSar': 'doc_sar',
+        'docWorkingDrawings': 'doc_working_drawings',
+        'docCalculationSheet': 'doc_calculation_sheet',
+        'docBuildersDoc': 'doc_builders_doc',
+        'docSoilTest': 'doc_soil_test',
+        'docPdfDrawings': 'doc_pdf_drawings',
+        'docApplicantId': 'doc_applicant_id',
+        'docRepId': 'doc_rep_id',
+        'docUtilityBill': 'doc_utility_bill',
+        'docQualityAssurance': 'doc_quality_assurance',
+        'docKepaEiaCert': 'doc_kepa_eia_cert',
+        'doc_permit_url': 'doc_permit_url',
+        'doc_co_url': 'doc_co_url',
     };
-    
-    // Handle nested checkbox objects (e.g., identificationType.nationalIdCard)
-    if (key.includes('.')) {
-        const [parent, child] = key.split('.');
-        const snakeParent = parent.replace(/([A-Z])/g, '_$1').toLowerCase();
-        const snakeChild = child.replace(/([A-Z])/g, '_$1').toLowerCase();
-        return `${snakeParent}_${snakeChild}`;
-    }
 
     return mappings[key] || key;
 }
@@ -205,17 +215,26 @@ async function processAndSaveData(
                 // Important: DB expects file URLs to have '_url' suffix.
                 submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
-        } else if (typeof value === 'string') {
-            if (value === 'on') {
+        } else if (typeof value === 'string' && value) {
+            // Handle checkbox 'on' values and nested objects from forms
+            if (key.includes('.')) {
+                 const [parent, child] = key.split('.');
+                 const dbParentKey = mapKeyToDbField(parent);
+                 if (!submissionPayload[dbParentKey]) {
+                     submissionPayload[dbParentKey] = {};
+                 }
+                 submissionPayload[dbParentKey][child] = true;
+            } else if (value === 'on') {
                 submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
                 submissionPayload[dbKey] = new Date(value).toISOString();
-            } else if (value) {
+            } else {
                 submissionPayload[dbKey] = value;
             }
         }
     }
     
+    // Remove null/undefined values before sending to DB
     const cleanedPayload = Object.fromEntries(
       Object.entries(submissionPayload).filter(([_, v]) => v != null)
     );
@@ -356,6 +375,3 @@ export async function saveApplication(
         return { success: false, error: result.error };
     }
 }
-
-    
-

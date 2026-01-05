@@ -33,6 +33,8 @@ const fileValidation = z.any()
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
     );
+const optionalFileValidation = z.any().optional();
+
 
 // Define Zod schema based on the form
 const bpoPermitApplicationSchema = z.object({
@@ -105,13 +107,13 @@ const bpoPermitApplicationSchema = z.object({
   docWorkingDrawings: fileValidation,
   docCalculationSheet: fileValidation,
   docBuildersDoc: fileValidation,
-  docSoilTest: fileValidation, // Made required, but might be contextual in a real app
+  docSoilTest: fileValidation,
   docPdfDrawings: fileValidation,
   docApplicantId: fileValidation,
-  docRepId: z.any().optional(), // Representative ID is optional
+  docRepId: optionalFileValidation,
   docUtilityBill: fileValidation,
   docQualityAssurance: fileValidation,
-  docKepaEiaCert: z.any().optional(), // Optional as per label
+  docKepaEiaCert: optionalFileValidation,
   
   // Box 6: SIGNATURE (as Declaration)
   declaration: z.boolean().refine(val => val === true, {
@@ -130,19 +132,19 @@ const identificationOptions = [
 ];
 
 const orgRequiredDocs = [
-    { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter)" },
-    { id: "docKadgisAcknowledgement" as const, label: "KADGIS Acknowledgment" },
-    { id: "docSar" as const, label: "Site Analysis Report (SAR)" },
-    { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Structural, Mechanical and Electrical)" },
-    { id: "docCalculationSheet" as const, label: "Calculation sheet, Letter for Supervision/ Responsibility for storey buildings." },
-    { id: "docBuildersDoc" as const, label: "Builder’s Document to be produced by Registered Builder" },
-    { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors." },
-    { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD" },
-    { id: "docApplicantId" as const, label: "Means of ID of applicant" },
-    { id: "docRepId" as const, label: "Means of ID of representative (optional)" },
-    { id: "docUtilityBill" as const, label: "Copy of utility bill" },
-    { id: "docQualityAssurance" as const, label: "Clearance From Quality Assurance" },
-    { id: "docKepaEiaCert" as const, label: "KEPA EIA Certificate (could be submitted while application is in process)" }
+    { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter)", required: true },
+    { id: "docKadgisAcknowledgement" as const, label: "KADGIS Acknowledgment", required: true },
+    { id: "docSar" as const, label: "Site Analysis Report (SAR)", required: true },
+    { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Structural, Mechanical and Electrical)", required: true },
+    { id: "docCalculationSheet" as const, label: "Calculation sheet, Letter for Supervision/ Responsibility for storey buildings.", required: true },
+    { id: "docBuildersDoc" as const, label: "Builder’s Document to be produced by Registered Builder", required: true },
+    { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors.", required: true },
+    { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD", required: true },
+    { id: "docApplicantId" as const, label: "Means of ID of applicant", required: true },
+    { id: "docRepId" as const, label: "Means of ID of representative (optional)", required: false },
+    { id: "docUtilityBill" as const, label: "Copy of utility bill", required: true },
+    { id: "docQualityAssurance" as const, label: "Clearance From Quality Assurance", required: true },
+    { id: "docKepaEiaCert" as const, label: "KEPA EIA Certificate (could be submitted while application is in process)", required: false }
 ];
 
 
@@ -151,7 +153,7 @@ const steps = [
   { id: 2, name: "Organisation Address", fields: [] as FieldName<BpoPermitApplicationFormValues>[] }, 
   { id: 3, name: "Representative", fields: ['repEmail'] as FieldName<BpoPermitApplicationFormValues>[] },
   { id: 4, name: "Plot Details", fields: ['plotDescriptionAddress'] as FieldName<BpoPermitApplicationFormValues>[] },
-  { id: 5, name: "Documents & Declaration", fields: ['declaration'] as FieldName<BpoPermitApplicationFormValues>[] },
+  { id: 5, name: "Documents & Declaration", fields: ['declaration', 'docLandTitle', 'docKadgisAcknowledgement', 'docSar', 'docWorkingDrawings', 'docCalculationSheet', 'docBuildersDoc', 'docSoilTest', 'docPdfDrawings', 'docApplicantId', 'docUtilityBill', 'docQualityAssurance'] as FieldName<BpoPermitApplicationFormValues>[] },
 ];
 
 export default function CommercialIndustrialOtherPermitPage() {
@@ -667,7 +669,7 @@ export default function CommercialIndustrialOtherPermitPage() {
                         {orgRequiredDocs.map(doc => (
                             <div key={doc.id} className="space-y-1.5">
                                 <Label htmlFor={doc.id} className="text-sm font-medium">
-                                    {doc.label}{!doc.label.includes('(optional)') && !doc.label.includes('(could be submitted') && ' *'}
+                                    {doc.label}{doc.required && ' *'}
                                 </Label>
                                 <Input
                                     id={doc.id}
