@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, ListFilter, Search, Package, Trash2, Eye, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { MoreHorizontal, ListFilter, Search, Package, Trash2, Eye, Loader2, ChevronDown, ChevronUp, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
   Table,
@@ -24,6 +24,10 @@ import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase/client';
 import ApplicationDetails from './ApplicationDetails';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { updateApplicationData } from '@/app/actions/adminActions';
+
 
 // A more complete type definition that reflects the new schema
 export interface StoredApplication {
@@ -73,6 +77,12 @@ export default function ManageApplicationsPage() {
   const [applicationToDelete, setApplicationToDelete] = useState<StoredApplication | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   
+  const [isAckDialogOpen, setIsAckDialogOpen] = useState(false);
+  const [ackApp, setAckApp] = useState<StoredApplication | null>(null);
+  const [ackFileNumber, setAckFileNumber] = useState('');
+  const [isSendingAck, setIsSendingAck] = useState(false);
+
+
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
@@ -99,6 +109,12 @@ export default function ManageApplicationsPage() {
     setApplicationToDelete(app);
     setIsDeleteDialogOpen(true);
   };
+  
+  const openAckDialog = (app: StoredApplication) => {
+    setAckApp(app);
+    setAckFileNumber(app.original_permit_id || '');
+    setIsAckDialogOpen(true);
+  }
 
   const handleDelete = async () => {
     if (!applicationToDelete) return;
@@ -130,6 +146,33 @@ export default function ManageApplicationsPage() {
         toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }
   };
+
+  const handleSendAcknowledgement = async () => {
+    if (!ackApp || !ackFileNumber.trim()) {
+        toast({ title: "Error", description: "File number cannot be empty.", variant: "destructive" });
+        return;
+    }
+    setIsSendingAck(true);
+
+    try {
+        const result = await updateApplicationData(ackApp.id, { original_permit_id: ackFileNumber });
+        if (result.success) {
+            toast({ title: "Acknowledgement Sent", description: "File number has been assigned to the application." });
+            // Optimistically update the UI
+            setApplications(prev => prev.map(app => app.id === ackApp.id ? { ...app, original_permit_id: ackFileNumber } : app));
+            setIsAckDialogOpen(false);
+            setAckApp(null);
+            setAckFileNumber('');
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        toast({ title: 'Error', description: `Could not send acknowledgement: ${error instanceof Error ? error.message : ''}`, variant: 'destructive' });
+    } finally {
+        setIsSendingAck(false);
+    }
+  }
+
 
   const filteredApplications = applications.filter(app => {
     const termMatch = searchTerm.trim() === '' || 
@@ -212,6 +255,9 @@ export default function ManageApplicationsPage() {
                                 <DropdownMenuContent align="end">
                                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                   <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
+                                   <DropdownMenuItem onClick={() => openAckDialog(app)}>
+                                        <Send className="mr-2 h-4 w-4" /> Send Acknowledgement
+                                  </DropdownMenuItem>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuItem onClick={() => handleStatusChange(app, 'Approved')}>Approve</DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => handleStatusChange(app, 'Rejected')}>Reject</DropdownMenuItem>
@@ -253,6 +299,37 @@ export default function ManageApplicationsPage() {
           <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+        <Dialog open={isAckDialogOpen} onOpenChange={setIsAckDialogOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Send Acknowledgement Letter</DialogTitle>
+                    <DialogDescription>
+                        Enter the official File Number for this application. This will be sent to the user.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="file-number" className="text-right">
+                            File Number
+                        </Label>
+                        <Input
+                            id="file-number"
+                            value={ackFileNumber}
+                            onChange={(e) => setAckFileNumber(e.target.value)}
+                            className="col-span-3"
+                            placeholder="e.g., KSP12345"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsAckDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleSendAcknowledgement} disabled={isSendingAck || !ackFileNumber.trim()}>
+                        {isSendingAck ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Sending...</> : "Send"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
