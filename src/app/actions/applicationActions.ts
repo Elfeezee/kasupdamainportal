@@ -3,6 +3,7 @@
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
+import { createBill } from './billingActions';
 
 /**
  * A robust function to convert form data keys from form-friendly names
@@ -171,99 +172,6 @@ function mapKeyToDbField(key: string): string {
     return mappings[key] || key;
 }
 
-/**
- * A robust function to process form data and save it to the 'applications' table in Supabase.
- * This is the new, robust function for all application types.
- * @param formData The FormData object from the form submission.
- * @param userId The ID of the user submitting the form.
- * @param type The type of application being submitted.
- * @param applicantName The name of the applicant.
- * @returns A promise that resolves to the result of the database operation.
- */
-async function processAndSaveData(
-    formData: FormData,
-    userId: string,
-    type: string,
-    applicantName: string
-): Promise<{ success: boolean; applicationId?: number; error?: string; }> {
-    const supabase = createSupabaseServerClient();
-    const submissionPayload: Record<string, any> = {};
-
-    submissionPayload.type = type;
-    submissionPayload.applicant_name = applicantName;
-    submissionPayload.user_id = userId;
-    submissionPayload.status = 'Inprogress';
-
-    // Process all entries from FormData
-    for (const [key, value] of formData.entries()) {
-        if (['type', 'userId', 'applicantName'].includes(key)) {
-            continue;
-        }
-        
-        const dbKey = mapKeyToDbField(key);
-        
-        if (value instanceof File) {
-            if (value.size > 0) {
-                const filePath = `${userId}/${uuidv4()}-${value.name}`;
-                const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-                
-                if (uploadError) {
-                    console.error(`Storage error for ${key}:`, uploadError);
-                    return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
-                }
-                
-                const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                // Important: DB expects file URLs to have '_url' suffix.
-                submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
-            }
-        } else if (typeof value === 'string' && value) {
-            // Handle checkbox 'on' values and nested objects from forms
-            if (key.includes('.')) {
-                 const [parent, child] = key.split('.');
-                 const dbParentKey = mapKeyToDbField(parent);
-                 if (!submissionPayload[dbParentKey]) {
-                     submissionPayload[dbParentKey] = {};
-                 }
-                 submissionPayload[dbParentKey][child] = true;
-            } else if (value === 'on') {
-                submissionPayload[dbKey] = true;
-            } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                submissionPayload[dbKey] = new Date(value).toISOString();
-            } else {
-                submissionPayload[dbKey] = value;
-            }
-        }
-    }
-    
-    // Remove null/undefined values before sending to DB
-    const cleanedPayload = Object.fromEntries(
-      Object.entries(submissionPayload).filter(([_, v]) => v != null)
-    );
-
-    try {
-        const { data: insertedData, error: dbError } = await supabase
-            .from('applications')
-            .insert(cleanedPayload)
-            .select('id')
-            .single();
-
-        if (dbError) {
-            console.error('Supabase insert error:', dbError);
-            throw dbError;
-        }
-        if (!insertedData) {
-            throw new Error("Failed to get ID from inserted application record.");
-        }
-
-        return { success: true, applicationId: insertedData.id };
-
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred during database insertion.';
-        console.error('Database Insertion Error:', errorMessage);
-        return { success: false, error: `Failed to save application: ${errorMessage}` };
-    }
-}
-
 
 /**
  * Generates a Development Identification Number (DIN) and saves the application.
@@ -335,10 +243,15 @@ export async function generateAndSaveDin(
         const finalDin = `DIN${String(newId).padStart(3, '0')}`;
         
         // Update the new application record with the generated DIN
-        await supabase.from('applications').update({ din: finalDin }).eq('id', newId);
+        const {data: updatedApplication, error: updateError} = await supabase.from('applications').update({ din: finalDin }).eq('id', newId).select().single();
+
+        if(updateError) throw updateError;
         
         // Also update the user's profile in the 'users' table with their new DIN
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
+        
+        // Automatically create a bill for DIN application
+        await createBill(updatedApplication, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
 
         return { success: true, din: finalDin };
 
@@ -355,7 +268,10 @@ export async function generateAndSaveDin(
  */
 export async function saveApplication(
     formData: FormData
-): Promise<{ success: boolean; applicationId?: number; applicantName?: string; error?: string; }> {
+): Promise<{ success: boolean; applicationId?: string; applicantName?: string; error?: string; }> {
+    const supabase = createSupabaseServerClient();
+    const submissionPayload: Record<string, any> = {};
+
     const type = formData.get('type') as string;
     const applicantName = formData.get('applicantName') as string;
     const userId = formData.get('userId') as string;
@@ -368,11 +284,79 @@ export async function saveApplication(
         return { success: false, error: 'DIN Applications must use the generateAndSaveDin action.' };
     }
     
-    const result = await processAndSaveData(formData, userId, type, applicantName);
+    submissionPayload.type = type;
+    submissionPayload.applicant_name = applicantName;
+    submissionPayload.user_id = userId;
+    submissionPayload.status = 'Inprogress';
+
+    // Process all entries from FormData
+    for (const [key, value] of formData.entries()) {
+        if (['type', 'userId', 'applicantName'].includes(key)) {
+            continue;
+        }
+        
+        const dbKey = mapKeyToDbField(key);
+        
+        if (value instanceof File) {
+            if (value.size > 0) {
+                const filePath = `${userId}/${uuidv4()}-${value.name}`;
+                const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
+                
+                if (uploadError) {
+                    console.error(`Storage error for ${key}:`, uploadError);
+                    return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
+                }
+                
+                const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
+            }
+        } else if (typeof value === 'string' && value) {
+            if (key.includes('.')) {
+                 const [parent, child] = key.split('.');
+                 const dbParentKey = mapKeyToDbField(parent);
+                 if (!submissionPayload[dbParentKey]) {
+                     submissionPayload[dbParentKey] = {};
+                 }
+                 submissionPayload[dbParentKey][child] = true;
+            } else if (value === 'on') {
+                submissionPayload[dbKey] = true;
+            } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
+                submissionPayload[dbKey] = new Date(value).toISOString();
+            } else {
+                submissionPayload[dbKey] = value;
+            }
+        }
+    }
     
-    if (result.success) {
-        return { success: true, applicationId: result.applicationId, applicantName: applicantName };
-    } else {
-        return { success: false, error: result.error };
+    const cleanedPayload = Object.fromEntries(
+      Object.entries(submissionPayload).filter(([_, v]) => v != null)
+    );
+
+    try {
+        const { data: insertedData, error: dbError } = await supabase
+            .from('applications')
+            .insert(cleanedPayload)
+            .select()
+            .single();
+
+        if (dbError) {
+            console.error('Supabase insert error:', dbError);
+            throw dbError;
+        }
+        if (!insertedData) {
+            throw new Error("Failed to get ID from inserted application record.");
+        }
+        
+        // Automatically create a bill for permit applications
+        await createBill(insertedData, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+
+        return { success: true, applicationId: insertedData.id, applicantName };
+
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred during database insertion.';
+        console.error('Database Insertion Error:', errorMessage);
+        return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }
+
+    
