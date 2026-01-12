@@ -207,95 +207,6 @@ function mapKeyToDbField(key: string): string {
 
 
 /**
- * Generates a Development Identification Number (DIN) and saves the application.
- */
-export async function generateAndSaveDin(
-    userId: string,
-    applicantName: string,
-    formData: FormData
-): Promise<{ success: boolean; din?: string; error?: string; }> {
-    const supabase = createSupabaseServerClient();
-    const submissionPayload: Record<string, any> = {};
-
-    try {
-        submissionPayload.type = 'DIN Application';
-        submissionPayload.applicant_name = applicantName;
-        submissionPayload.user_id = userId;
-        submissionPayload.status = 'Approved'; // DINs are auto-approved
-
-        // Process all entries from FormData
-        for (const [key, value] of formData.entries()) {
-            if (['type', 'userId', 'applicantName'].includes(key)) {
-                continue;
-            }
-
-            const dbKey = mapKeyToDbField(key);
-
-            if (value instanceof File) {
-                if (value.size > 0) {
-                    const filePath = `${userId}/din_docs/${uuidv4()}-${value.name}`;
-                    const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-                    if (uploadError) {
-                        console.error(`Storage error for ${key}:`, uploadError);
-                        return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
-                    }
-                    const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                    // Ensure the key for the URL is correct, e.g., 'doc_permit_url'
-                    submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
-                }
-            } else if (typeof value === 'string' && value) {
-                if (value === 'on') {
-                    submissionPayload[dbKey] = true;
-                } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                    submissionPayload[dbKey] = new Date(value).toISOString();
-                } else {
-                    submissionPayload[dbKey] = value;
-                }
-            }
-        }
-        
-        const cleanedPayload = Object.fromEntries(
-            Object.entries(submissionPayload).filter(([_, v]) => v != null)
-        );
-        
-        const { data: insertedData, error: dbError } = await supabase
-            .from('applications')
-            .insert(cleanedPayload)
-            .select('id, applicant_name')
-            .single();
-
-        if (dbError) {
-            console.error('Supabase DIN insert error:', dbError);
-            throw dbError;
-        }
-
-        if (!insertedData) {
-            throw new Error("Failed to get ID from inserted record for DIN generation.");
-        }
-
-        const newId = insertedData.id;
-        const finalDin = `DIN${String(newId).padStart(3, '0')}`;
-        
-        const {data: updatedApplication, error: updateError} = await supabase.from('applications').update({ din: finalDin }).eq('id', newId).select().single();
-
-        if(updateError) throw updateError;
-        
-        await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
-        
-        // Pass userId directly to createBill
-        await createBill(updatedApplication, userId, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
-
-        return { success: true, din: finalDin };
-
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred during DIN generation.';
-        console.error('DIN Generation Error:', errorMessage);
-        return { success: false, error: `Failed to generate DIN: ${errorMessage}` };
-    }
-}
-
-
-/**
  * Saves a generic application form to the database. This is the main entry point for form submissions.
  */
 export async function saveApplication(
@@ -310,10 +221,6 @@ export async function saveApplication(
 
     if (!type || !applicantName || !userId) {
         return { success: false, error: 'Missing required application metadata (type, applicantName, or userId).' };
-    }
-    
-    if (type === 'DIN Application') {
-        return { success: false, error: 'DIN Applications must use the generateAndSaveDin action.' };
     }
     
     submissionPayload.type = type;
@@ -385,9 +292,12 @@ export async function saveApplication(
             throw new Error("Failed to get ID from inserted application record.");
         }
         
-        // Automatically create a bill for permit applications
-        // Pass userId directly to createBill
-        await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+        // Automatically create a bill based on application type
+        if (type === 'DIN Application') {
+            await createBill(insertedData, userId, 5000, 'DIN Application Fee', 'KDSG-KASUPDA');
+        } else {
+            await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+        }
 
         return { success: true, applicationId: insertedData.id, applicantName };
 
@@ -397,7 +307,3 @@ export async function saveApplication(
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }
-
-    
-
-    

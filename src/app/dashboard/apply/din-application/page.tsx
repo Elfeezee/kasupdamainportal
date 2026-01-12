@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
-import { generateAndSaveDin } from '@/app/actions/applicationActions';
+import { saveApplication } from '@/app/actions/applicationActions';
 import { Textarea } from '@/components/ui/textarea';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -78,7 +78,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
           Development Identification Number (DIN) Application
         </CardTitle>
         <CardDescription className="text-sm sm:text-base">
-          Complete this form to apply for a new KASUPDA DIN. This number will be used to identify you in all future applications.
+          Complete this form to apply for a new KASUPDA DIN. You will be required to make a payment of ₦5,000 to complete the process.
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,10 +169,10 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
           >
               {isSubmitting ? (
                   <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting...
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting for Payment...
                   </>
               ) : (
-                  "Submit Application & Get DIN"
+                  "Proceed to Payment"
               )}
           </Button>
         </CardFooter>
@@ -234,8 +234,11 @@ export default function DinApplicationPage() {
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     
     const formData = new FormData();
+    formData.append('type', 'DIN Application');
+    formData.append('applicantName', applicantName);
+    formData.append('userId', user.id);
 
-    // Append all form values to FormData
+    // Append all other form values to FormData
     Object.entries(data).forEach(([key, value]) => {
       if (typeof value === 'boolean') {
         if (value) formData.append(key, 'on');
@@ -247,12 +250,13 @@ export default function DinApplicationPage() {
     });
     
     try {
-        const result = await generateAndSaveDin(user.id, applicantName, formData);
+        const result = await saveApplication(formData);
 
-        if (result.success && result.din) {
-            router.push(`/dashboard/apply/din-application/success?din=${result.din}`);
+        if (result.success) {
+            toast({ title: "Application Submitted", description: "Please proceed with payment to get your DIN." });
+            router.push(`/dashboard/billing`);
         } else {
-            throw new Error(result.error || "An unknown error occurred during DIN generation.");
+            throw new Error(result.error || "An unknown error occurred during DIN application submission.");
         }
 
     } catch (error) {

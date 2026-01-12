@@ -156,3 +156,58 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         return { success: false, error: `Failed to verify payment: ${errorMessage}` };
     }
 }
+
+/**
+ * Assigns a DIN to a user and application after successful payment.
+ * This is an admin-only action.
+ */
+export async function assignDin(
+  applicationId: string,
+  userId: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = createSupabaseServerClient();
+
+  try {
+    // Check if the DIN application fee has been paid
+    const { data: transaction, error: transactionError } = await supabase
+      .from('transactions')
+      .select('status')
+      .eq('application_id', applicationId)
+      .eq('description', 'DIN Application Fee')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (transactionError || !transaction || transaction.status !== 'Verified') {
+      return { success: false, error: "Payment for DIN application has not been verified." };
+    }
+
+    // Generate DIN and update records
+    const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
+    
+    const { error: appUpdateError } = await supabase
+      .from('applications')
+      .update({ din: finalDin, status: 'Approved' })
+      .eq('id', applicationId);
+    
+    if (appUpdateError) throw appUpdateError;
+
+    const { error: userUpdateError } = await supabase
+      .from('users')
+      .update({ din: finalDin })
+      .eq('uid', userId);
+      
+    if (userUpdateError) throw userUpdateError;
+    
+    revalidatePath('/admin/applications');
+    revalidatePath(`/admin/applications/${applicationId}`);
+    revalidatePath('/admin/din-applications');
+    revalidatePath('/dashboard/my-dins');
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    console.error('Assign DIN Error:', errorMessage);
+    return { success: false, error: `Failed to assign DIN: ${errorMessage}` };
+  }
+}
