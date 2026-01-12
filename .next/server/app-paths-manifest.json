@@ -1,5 +1,7 @@
 {
   "/apply-for-permit/page": "app/apply-for-permit/page.js",
+  "/dashboard/billing/page": "app/dashboard/billing/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }
