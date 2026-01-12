@@ -223,14 +223,16 @@ export async function generateAndSaveDin(
         submissionPayload.user_id = userId;
         submissionPayload.status = 'Approved'; // DINs are auto-approved
 
-        // Direct mapping from form to payload
+        // Process all entries from FormData
         for (const [key, value] of formData.entries()) {
-            if (['type', 'userId', 'applicantName'].includes(key)) continue;
+            if (['type', 'userId', 'applicantName'].includes(key)) {
+                continue;
+            }
 
             const dbKey = mapKeyToDbField(key);
 
             if (value instanceof File) {
-                 if (value.size > 0) {
+                if (value.size > 0) {
                     const filePath = `${userId}/din_docs/${uuidv4()}-${value.name}`;
                     const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
                     if (uploadError) {
@@ -238,11 +240,12 @@ export async function generateAndSaveDin(
                         return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
                     }
                     const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+                    // Ensure the key for the URL is correct, e.g., 'doc_permit_url'
                     submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
                 }
             } else if (typeof value === 'string' && value) {
                 if (value === 'on') {
-                     submissionPayload[dbKey] = true;
+                    submissionPayload[dbKey] = true;
                 } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
                     submissionPayload[dbKey] = new Date(value).toISOString();
                 } else {
@@ -279,6 +282,7 @@ export async function generateAndSaveDin(
         
         await supabase.from('users').update({ din: finalDin }).eq('uid', userId);
         
+        // Pass userId directly to createBill
         await createBill(updatedApplication, userId, 10000, 'DIN Application Fee', 'KDSG-KASUPDA');
 
         return { success: true, din: finalDin };
@@ -382,6 +386,7 @@ export async function saveApplication(
         }
         
         // Automatically create a bill for permit applications
+        // Pass userId directly to createBill
         await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
 
         return { success: true, applicationId: insertedData.id, applicantName };

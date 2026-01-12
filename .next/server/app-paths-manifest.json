@@ -5,6 +5,7 @@
   "/dashboard/apply/page": "app/dashboard/apply/page.js",
   "/dashboard/apply/residential-building-permit/page": "app/dashboard/apply/residential-building-permit/page.js",
   "/dashboard/billing/page": "app/dashboard/billing/page.js",
+  "/dashboard/my-dins/page": "app/dashboard/my-dins/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/dashboard/stage-approval/page": "app/dashboard/stage-approval/page.js",
   "/login/page": "app/login/page.js",
