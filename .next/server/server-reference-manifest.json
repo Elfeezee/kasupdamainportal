@@ -6,12 +6,32 @@
           "moduleId": "[project]/.next-internal/server/app/apply-for-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
+        "app/dashboard/apply/building-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/residential-building-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
         "app/dashboard/billing/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/login/page": {
@@ -25,8 +45,13 @@
       },
       "layer": {
         "app/apply-for-permit/page": "action-browser",
+        "app/dashboard/apply/building-permit/page": "action-browser",
+        "app/dashboard/apply/din-application/page": "action-browser",
+        "app/dashboard/apply/page": "action-browser",
+        "app/dashboard/apply/residential-building-permit/page": "action-browser",
         "app/dashboard/billing/page": "action-browser",
         "app/dashboard/page": "action-browser",
+        "app/dashboard/stage-approval/page": "action-browser",
         "app/login/page": "action-browser",
         "app/page": "action-browser"
       }
@@ -62,6 +87,48 @@
       },
       "layer": {
         "app/dashboard/billing/page": "action-browser"
+      }
+    },
+    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
+      "workers": {
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/residential-building-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/din-application/page": "action-browser",
+        "app/dashboard/apply/residential-building-permit/page": "action-browser",
+        "app/dashboard/stage-approval/page": "action-browser"
+      }
+    },
+    "703c8e965250efc42d12325b86de80956fb7b5329f": {
+      "workers": {
+        "app/dashboard/apply/din-application/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/apply/residential-building-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/stage-approval/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/din-application/page": "action-browser",
+        "app/dashboard/apply/residential-building-permit/page": "action-browser",
+        "app/dashboard/stage-approval/page": "action-browser"
       }
     }
   },

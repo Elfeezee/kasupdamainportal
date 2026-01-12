@@ -147,7 +147,6 @@ const ACCEPTED_FILE_TYPES = [
 ];
 const stageApprovalSchema = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["object"])({
     // Box 1: Applicant Details
-    din: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["string"])().min(1, "DIN is required"),
     originalPermitId: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["string"])().min(1, "Original Permit ID is required"),
     // Box 2: Project Details
     kbpNumber: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$lib$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["string"])().optional(),
@@ -164,7 +163,6 @@ const steps = [
         id: 1,
         name: "Project Details",
         fields: [
-            'din',
             'originalPermitId'
         ]
     },
@@ -191,26 +189,33 @@ function LoadingSkeleton() {
                         className: "h-8 w-3/4"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                        lineNumber: 66,
+                        lineNumber: 65,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                         className: "h-5 w-1/2 mt-2"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                        lineNumber: 67,
+                        lineNumber: 66,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                lineNumber: 65,
+                lineNumber: 64,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "space-y-4",
                     children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
+                            className: "h-10 w-full"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
+                            lineNumber: 70,
+                            columnNumber: 21
+                        }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
                             className: "h-10 w-full"
                         }, void 0, false, {
@@ -224,29 +229,22 @@ function LoadingSkeleton() {
                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
                             lineNumber: 72,
                             columnNumber: 21
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Skeleton"], {
-                            className: "h-10 w-full"
-                        }, void 0, false, {
-                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                            lineNumber: 73,
-                            columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                    lineNumber: 70,
+                    lineNumber: 69,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                lineNumber: 69,
+                lineNumber: 68,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-        lineNumber: 64,
+        lineNumber: 63,
         columnNumber: 9
     }, this);
 }
@@ -278,7 +276,6 @@ function StageApprovalPage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         if (user) {
             reset({
-                din: "",
                 originalPermitId: "",
                 kbpNumber: "",
                 kdlNumber: "",
@@ -364,12 +361,12 @@ function StageApprovalPage() {
             className: "container mx-auto px-2 sm:px-4 py-8",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(LoadingSkeleton, {}, void 0, false, {
                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                lineNumber: 195,
+                lineNumber: 193,
                 columnNumber: 13
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-            lineNumber: 194,
+            lineNumber: 192,
             columnNumber: 10
         }, this);
     }
@@ -387,14 +384,14 @@ function StageApprovalPage() {
                                     className: "h-7 w-7"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 205,
+                                    lineNumber: 203,
                                     columnNumber: 14
                                 }, this),
                                 "Stage Approval Application"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                            lineNumber: 204,
+                            lineNumber: 202,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -402,13 +399,13 @@ function StageApprovalPage() {
                             children: "Apply for inspection and approval for a completed stage of your construction project."
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                            lineNumber: 208,
+                            lineNumber: 206,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                    lineNumber: 203,
+                    lineNumber: 201,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -429,12 +426,12 @@ function StageApprovalPage() {
                                                     className: "w-4 h-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 226,
+                                                    lineNumber: 224,
                                                     columnNumber: 46
                                                 }, this) : step.id
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                lineNumber: 218,
+                                                lineNumber: 216,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -442,36 +439,36 @@ function StageApprovalPage() {
                                                 children: step.name
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                lineNumber: 228,
+                                                lineNumber: 226,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                        lineNumber: 217,
+                                        lineNumber: 215,
                                         columnNumber: 17
                                     }, this),
                                     index < steps.length - 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("flex-1 h-1 mt-3.5 transition-all duration-300", currentStep > step.id ? "bg-primary" : "bg-border")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                        lineNumber: 234,
+                                        lineNumber: 232,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, step.id, true, {
                                 fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                lineNumber: 216,
+                                lineNumber: 214,
                                 columnNumber: 17
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                        lineNumber: 214,
+                        lineNumber: 212,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                    lineNumber: 213,
+                    lineNumber: 211,
                     columnNumber: 10
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -487,88 +484,53 @@ function StageApprovalPage() {
                                             children: "Box 1: Project Details"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 245,
+                                            lineNumber: 243,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "space-y-4",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                            htmlFor: "din",
-                                                            children: "Your Development Identification Number (DIN)*"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 248,
-                                                            columnNumber: 29
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                            id: "din",
-                                                            ...register("din"),
-                                                            placeholder: "Enter your DIN"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 249,
-                                                            columnNumber: 29
-                                                        }, this),
-                                                        errors.din && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-destructive text-xs mt-1",
-                                                            children: errors.din.message
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 250,
-                                                            columnNumber: 44
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 247,
-                                                    columnNumber: 24
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                            htmlFor: "originalPermitId",
-                                                            children: "Original Building Permit ID*"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 253,
-                                                            columnNumber: 29
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                            id: "originalPermitId",
-                                                            ...register("originalPermitId"),
-                                                            placeholder: "Enter the ID of your approved building permit"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 254,
-                                                            columnNumber: 29
-                                                        }, this),
-                                                        errors.originalPermitId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-destructive text-xs mt-1",
-                                                            children: errors.originalPermitId.message
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 255,
-                                                            columnNumber: 57
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 252,
-                                                    columnNumber: 25
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                        htmlFor: "originalPermitId",
+                                                        children: "Original Building Permit ID*"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
+                                                        lineNumber: 247,
+                                                        columnNumber: 29
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                        id: "originalPermitId",
+                                                        ...register("originalPermitId"),
+                                                        placeholder: "Enter the ID of your approved building permit"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
+                                                        lineNumber: 248,
+                                                        columnNumber: 29
+                                                    }, this),
+                                                    errors.originalPermitId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-destructive text-xs mt-1",
+                                                        children: errors.originalPermitId.message
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
+                                                        lineNumber: 249,
+                                                        columnNumber: 57
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
+                                                lineNumber: 246,
+                                                columnNumber: 25
+                                            }, this)
+                                        }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 246,
+                                            lineNumber: 244,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 244,
+                                    lineNumber: 242,
                                     columnNumber: 17
                                 }, this),
                                 currentStep === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -578,7 +540,7 @@ function StageApprovalPage() {
                                             children: "Box 2: Project Documents"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 263,
+                                            lineNumber: 257,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -591,7 +553,7 @@ function StageApprovalPage() {
                                                             children: "KBP Number (if available)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 266,
+                                                            lineNumber: 260,
                                                             columnNumber: 29
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -600,13 +562,13 @@ function StageApprovalPage() {
                                                             placeholder: "Enter the KBP number"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 267,
+                                                            lineNumber: 261,
                                                             columnNumber: 29
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 265,
+                                                    lineNumber: 259,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -616,7 +578,7 @@ function StageApprovalPage() {
                                                             children: "KDL Number / KADGIS File Number"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 270,
+                                                            lineNumber: 264,
                                                             columnNumber: 29
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -625,13 +587,13 @@ function StageApprovalPage() {
                                                             placeholder: "Enter the KDL or KADGIS File Number"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 271,
+                                                            lineNumber: 265,
                                                             columnNumber: 29
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 269,
+                                                    lineNumber: 263,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -642,7 +604,7 @@ function StageApprovalPage() {
                                                             children: "Copy of C of O Document (Optional)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 274,
+                                                            lineNumber: 268,
                                                             columnNumber: 29
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -652,7 +614,7 @@ function StageApprovalPage() {
                                                             className: "text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 275,
+                                                            lineNumber: 269,
                                                             columnNumber: 29
                                                         }, this),
                                                         errors.docCO && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -660,13 +622,13 @@ function StageApprovalPage() {
                                                             children: errors.docCO.message
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 281,
+                                                            lineNumber: 275,
                                                             columnNumber: 46
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 267,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -677,7 +639,7 @@ function StageApprovalPage() {
                                                             children: "Copy of Building Permit Document (Optional)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 284,
+                                                            lineNumber: 278,
                                                             columnNumber: 29
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -687,7 +649,7 @@ function StageApprovalPage() {
                                                             className: "text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 285,
+                                                            lineNumber: 279,
                                                             columnNumber: 29
                                                         }, this),
                                                         errors.docBuildingPermit && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -695,25 +657,25 @@ function StageApprovalPage() {
                                                             children: errors.docBuildingPermit.message
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 291,
+                                                            lineNumber: 285,
                                                             columnNumber: 58
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 283,
+                                                    lineNumber: 277,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 264,
+                                            lineNumber: 258,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 262,
+                                    lineNumber: 256,
                                     columnNumber: 17
                                 }, this),
                                 currentStep === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -723,7 +685,7 @@ function StageApprovalPage() {
                                             children: "Box 3: Declaration"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 299,
+                                            lineNumber: 293,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -739,12 +701,12 @@ function StageApprovalPage() {
                                                             className: "mt-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                            lineNumber: 305,
+                                                            lineNumber: 299,
                                                             columnNumber: 33
                                                         }, void 0)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 301,
+                                                    lineNumber: 295,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
@@ -753,13 +715,13 @@ function StageApprovalPage() {
                                                     children: "I declare that the information provided is true and that the construction stage for which I seek approval complies with the plans specified in the original building permit."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 313,
+                                                    lineNumber: 307,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 300,
+                                            lineNumber: 294,
                                             columnNumber: 21
                                         }, this),
                                         errors.declaration && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -767,19 +729,19 @@ function StageApprovalPage() {
                                             children: errors.declaration.message
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 317,
+                                            lineNumber: 311,
                                             columnNumber: 44
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 298,
+                                    lineNumber: 292,
                                     columnNumber: 18
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                            lineNumber: 242,
+                            lineNumber: 240,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardFooter"], {
@@ -799,14 +761,14 @@ function StageApprovalPage() {
                                                     className: "mr-2 h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 330,
+                                                    lineNumber: 324,
                                                     columnNumber: 21
                                                 }, this),
                                                 " Previous"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 323,
+                                            lineNumber: 317,
                                             columnNumber: 17
                                         }, this),
                                         currentStep < steps.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -819,13 +781,13 @@ function StageApprovalPage() {
                                                     className: "ml-2 h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                                    lineNumber: 338,
+                                                    lineNumber: 332,
                                                     columnNumber: 30
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 333,
+                                            lineNumber: 327,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                             type: "submit",
@@ -834,43 +796,43 @@ function StageApprovalPage() {
                                             children: isSubmitting ? 'Submitting...' : 'Submit Application'
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                            lineNumber: 341,
+                                            lineNumber: 335,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 322,
+                                    lineNumber: 316,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Separator"], {
                                     className: "my-2"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                                    lineNumber: 350,
+                                    lineNumber: 344,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                            lineNumber: 321,
+                            lineNumber: 315,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-                    lineNumber: 241,
+                    lineNumber: 239,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-            lineNumber: 202,
+            lineNumber: 200,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-        lineNumber: 201,
+        lineNumber: 199,
         columnNumber: 5
     }, this);
 }
@@ -890,12 +852,12 @@ function CheckIcon(props) {
             points: "20 6 9 17 4 12"
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-            lineNumber: 372,
+            lineNumber: 366,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/dashboard/stage-approval/page.tsx",
-        lineNumber: 360,
+        lineNumber: 354,
         columnNumber: 5
     }, this);
 }
