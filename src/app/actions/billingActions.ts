@@ -67,6 +67,8 @@ export async function createBill(
         });
 
         if (!response.ok) {
+            const errorBody = await response.text();
+            console.error('Osoftpay API Error Body:', errorBody);
             throw new Error(`Osoftpay API responded with status: ${response.status}`);
         }
 
@@ -120,9 +122,14 @@ export async function verifyPayment(transactionId: number, paymentReference: str
     try {
         const response = await fetch(`https://agency.osoftpay.net/api/CallValidation/${paymentReference}`, {
             method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
         });
 
         if (!response.ok) {
+             const errorBody = await response.text();
+            console.error('Osoftpay Validation API Error Body:', errorBody);
             throw new Error(`Osoftpay validation API responded with status: ${response.status}`);
         }
 

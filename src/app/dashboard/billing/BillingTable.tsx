@@ -61,7 +61,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
         setIsVerifying(transaction.id);
         try {
             const result = await verifyPayment(transaction.id, transaction.payment_reference);
-            if (result.success) {
+            if (result.success && result.status) {
                 toast({
                     title: 'Verification Complete',
                     description: `Payment status is now: ${result.status}`,
@@ -71,7 +71,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                     prev.map(t => t.id === transaction.id ? { ...t, status: result.status as Transaction['status'] } : t)
                 );
             } else {
-                throw new Error(result.error);
+                throw new Error(result.error || 'Verification request failed');
             }
         } catch (error) {
             toast({
