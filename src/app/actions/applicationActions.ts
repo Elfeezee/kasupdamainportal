@@ -323,6 +323,19 @@ export async function saveApplication(
             continue;
         }
         
+        // Handle checkbox groups (e.g., 'identificationType.nationalIdCard')
+        if (key.includes('.')) {
+             const [parentKey, childKey] = key.split('.');
+             const dbParentKey = mapKeyToDbField(parentKey);
+             if (!submissionPayload[dbParentKey]) {
+                 submissionPayload[dbParentKey] = {};
+             }
+             if (value === 'on') {
+                submissionPayload[dbParentKey][childKey] = true;
+             }
+             continue; // Move to next item in form data
+        }
+        
         const dbKey = mapKeyToDbField(key);
         
         if (value instanceof File) {
@@ -339,14 +352,7 @@ export async function saveApplication(
                 submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
         } else if (typeof value === 'string' && value) {
-            if (key.includes('.')) {
-                 const [parent, child] = key.split('.');
-                 const dbParentKey = mapKeyToDbField(parent);
-                 if (!submissionPayload[dbParentKey]) {
-                     submissionPayload[dbParentKey] = {};
-                 }
-                 submissionPayload[dbParentKey][child] = true;
-            } else if (value === 'on') {
+            if (value === 'on') {
                 submissionPayload[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
                 submissionPayload[dbKey] = new Date(value).toISOString();
@@ -386,5 +392,7 @@ export async function saveApplication(
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }
+
+    
 
     
