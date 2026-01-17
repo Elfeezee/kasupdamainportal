@@ -1,6 +1,6 @@
 {
   "node": {
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
+    "7f18520b31abec02c632270924383ad4863bd8b93c": {
       "workers": {
         "app/dashboard/apply/din-application/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -11,18 +11,7 @@
         "app/dashboard/apply/din-application/page": "action-browser"
       }
     },
-    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
-      "workers": {
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/dashboard/apply/din-application/page": "action-browser"
-      }
-    },
-    "703c8e965250efc42d12325b86de80956fb7b5329f": {
+    "404cb0f259b2f412d177db9d1e0300ddecc804fa82": {
       "workers": {
         "app/dashboard/apply/din-application/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

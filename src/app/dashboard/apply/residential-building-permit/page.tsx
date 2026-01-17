@@ -28,20 +28,20 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 const fileValidation = z.any()
-    .refine((files) => files?.length == 1, "This document is required.")
-    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-    .refine(
-      (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
-      "Only .jpg, .jpeg, .png and .pdf files are accepted."
-    );
+  .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 5MB.`)
+  .refine(
+    (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+    "Only .jpg, .jpeg, .png and .pdf files are accepted."
+  )
+  .optional();
 
 const optionalFileValidation = z.any()
-    .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 5MB.`)
-    .refine(
-      (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
-      "Only .jpg, .jpeg, .png and .pdf files are accepted."
-    )
-    .optional();
+  .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 5MB.`)
+  .refine(
+    (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+    "Only .jpg, .jpeg, .png and .pdf files are accepted."
+  )
+  .optional();
 
 
 // Define Zod schema based on the form
@@ -107,14 +107,14 @@ const permitApplicationSchema = z.object({
   repPOBox: z.string().optional(),
   repCO: z.string().optional(),
   repAdditionalAddressInfo: z.string().optional(),
-  
+
   // Box 5: Plot
   landUse: z.string().optional(),
   purpose: z.string().optional(),
   plotDistrict: z.string().optional(),
   plotLGA: z.string().optional(),
   plotDescriptionAddress: z.string().min(1, "Plot Description/Address is required"),
-  
+
   // Box 6: Documents - All fields are now mandatory except for repId
   docLandTitle: fileValidation,
   docSar: fileValidation,
@@ -142,21 +142,21 @@ const identificationOptions = [
 ];
 
 const residentialDocs = [
-    { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)", required: true },
-    { id: "docSar" as const, label: "Site Analysis Report (SAR)", required: true },
-    { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)", required: true },
-    { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings.", required: true },
-    { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors.", required: true },
-    { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD", required: true },
-    { id: "docApplicantId" as const, label: "Means of ID of applicant", required: true },
-    { id: "docRepId" as const, label: "Means of ID of representative (optional)", required: false },
-    { id: "docUtilityBill" as const, label: "Copy of utility bill", required: true },
+  { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)", required: false },
+  { id: "docSar" as const, label: "Site Analysis Report (SAR)", required: false },
+  { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)", required: false },
+  { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings.", required: false },
+  { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors.", required: false },
+  { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD", required: false },
+  { id: "docApplicantId" as const, label: "Means of ID of applicant", required: false },
+  { id: "docRepId" as const, label: "Means of ID of representative (optional)", required: false },
+  { id: "docUtilityBill" as const, label: "Copy of utility bill", required: false },
 ];
 
 
 const steps = [
   { id: 1, name: "Applicant", fields: ['firstName', 'surname', 'gender', 'dateOfBirth', 'phone1', 'email'] as FieldName<PermitApplicationFormValues>[] },
-  { id: 2, name: "Applicant Address", fields: [] as FieldName<PermitApplicationFormValues>[] }, 
+  { id: 2, name: "Applicant Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
   { id: 3, name: "Representative", fields: ['repEmail'] as FieldName<PermitApplicationFormValues>[] },
   { id: 4, name: "Representative Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
   { id: 5, name: "Plot Details", fields: ['plotDescriptionAddress'] as FieldName<PermitApplicationFormValues>[] },
@@ -172,20 +172,20 @@ export default function ResidentialBuildingPermitPage() {
 
   React.useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/residential-building-permit');
-        } else {
-            setUser(session.user);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/residential-building-permit');
+      } else {
+        setUser(session.user);
+      }
     };
     checkSession();
   }, [router]);
 
   const { register, handleSubmit, control, formState: { errors }, trigger } = useForm<PermitApplicationFormValues>({
     resolver: zodResolver(permitApplicationSchema),
-    mode: "onChange", 
-    defaultValues: { 
+    mode: "onChange",
+    defaultValues: {
       kdlNumber: "",
       title: "",
       firstName: "",
@@ -237,11 +237,11 @@ export default function ResidentialBuildingPermitPage() {
 
   const onSubmit = async (data: PermitApplicationFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
-    
+
     const formData = new FormData();
     formData.append('type', "Building Permit (Individual)");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
@@ -250,43 +250,52 @@ export default function ResidentialBuildingPermitPage() {
 
     // Convert all data to a serializable format for FormData
     Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof FileList && value.length > 0) {
-            if (value[0].size > 0) {
-                formData.append(key, value[0]);
-            }
-        } else if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
-            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                }
-            });
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, value.toString());
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) {
+          formData.append(key, value[0]);
         }
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
+        Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          }
+        });
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, value.toString());
+      }
     });
 
     try {
-        const result = await saveApplication(formData);
+      const result = await saveApplication(formData);
 
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      if (result.success) {
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive"
+          });
+          router.push('/dashboard/my-applications');
         } else {
-            throw new Error(result.error || "An unknown server error occurred.");
+          router.push(`/dashboard/billing`);
         }
+      } else {
+        throw new Error(result.error || "An unknown server error occurred.");
+      }
 
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit the application. Please try again.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit the application. Please try again.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -316,14 +325,14 @@ export default function ResidentialBuildingPermitPage() {
 
   if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
 
@@ -332,7 +341,7 @@ export default function ResidentialBuildingPermitPage() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl font-bold text-center text-primary">
-            Building Permit Application 
+            Building Permit Application
           </CardTitle>
           <CardDescription className="text-center text-sm sm:text-base">
             Kaduna State Urban Planning and Development Authority
@@ -345,27 +354,27 @@ export default function ResidentialBuildingPermitPage() {
         <div className="flex items-start w-full min-w-[360px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div
                   className={cn(
                     "w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                     currentStep > step.id ? "bg-primary border-primary text-primary-foreground" :
-                    currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" :
-                    "bg-muted border-border text-muted-foreground"
+                      currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" :
+                        "bg-muted border-border text-muted-foreground"
                   )}
                 >
                   {currentStep > step.id ? <Check className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
                 <p className={cn(
                   "mt-1 text-[10px] leading-tight sm:text-xs font-medium transition-all duration-300 break-words",
-                   currentStep === step.id ? "text-primary font-semibold" : "text-muted-foreground"
+                  currentStep === step.id ? "text-primary font-semibold" : "text-muted-foreground"
                 )}>{step.name}</p>
               </div>
               {index < steps.length - 1 && (
                 <div className={cn(
-                    "flex-1 h-0.5 sm:h-1 mt-2.5 sm:mt-3.5 mx-0.5 sm:mx-1 transition-all duration-300", 
-                    currentStep > step.id ? "bg-primary" : "bg-border" 
-                    )} />
+                  "flex-1 h-0.5 sm:h-1 mt-2.5 sm:mt-3.5 mx-0.5 sm:mx-1 transition-all duration-300",
+                  currentStep > step.id ? "bg-primary" : "bg-border"
+                )} />
               )}
             </React.Fragment>
           ))}
@@ -380,7 +389,7 @@ export default function ResidentialBuildingPermitPage() {
             <Input id="kdlNumber" {...register("kdlNumber")} />
           </div>
         </div>
-        
+
         {currentStep === 1 && (
           <Card>
             <CardHeader>
@@ -471,7 +480,7 @@ export default function ResidentialBuildingPermitPage() {
                   <Input id="localGov" {...register("localGov")} />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="phone1">Phone 1*</Label>
@@ -497,15 +506,15 @@ export default function ResidentialBuildingPermitPage() {
                   {identificationOptions.map(opt => (
                     <div key={opt.id} className="flex items-center space-x-2">
                       <Controller
-                          name={`identificationType.${opt.id}`}
-                          control={control}
-                          render={({ field }) => (
-                              <Checkbox
-                                  id={`applicant_${opt.id}`}
-                                  checked={!!field.value} 
-                                  onCheckedChange={field.onChange}
-                              />
-                          )}
+                        name={`identificationType.${opt.id}`}
+                        control={control}
+                        render={({ field }) => (
+                          <Checkbox
+                            id={`applicant_${opt.id}`}
+                            checked={!!field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        )}
                       />
                       <Label htmlFor={`applicant_${opt.id}`} className="font-normal text-xs sm:text-sm">{opt.label}</Label>
                     </div>
@@ -574,7 +583,7 @@ export default function ResidentialBuildingPermitPage() {
         )}
 
         {currentStep === 3 && (
-           <Card>
+          <Card>
             <CardHeader>
               <CardTitle className="text-lg sm:text-xl">BOX 3: REPRESENTATIVE (Optional)</CardTitle>
               <CardDescription className="text-xs sm:text-sm">Applicants who wish to appoint a representative must complete this Box. Original identification document of representative is required.</CardDescription>
@@ -617,15 +626,15 @@ export default function ResidentialBuildingPermitPage() {
                   {identificationOptions.map(opt => (
                     <div key={opt.id} className="flex items-center space-x-2">
                       <Controller
-                          name={`repIdentificationType.${opt.id}`}
-                          control={control}
-                          render={({ field }) => (
-                              <Checkbox
-                                  id={`rep_${opt.id}`}
-                                  checked={!!field.value}
-                                  onCheckedChange={field.onChange}
-                              />
-                          )}
+                        name={`repIdentificationType.${opt.id}`}
+                        control={control}
+                        render={({ field }) => (
+                          <Checkbox
+                            id={`rep_${opt.id}`}
+                            checked={!!field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        )}
                       />
                       <Label htmlFor={`rep_${opt.id}`} className="font-normal text-xs sm:text-sm">{opt.label}</Label>
                     </div>
@@ -701,131 +710,131 @@ export default function ResidentialBuildingPermitPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                      <Label htmlFor="landUse">Land Use</Label>
-                      <Input id="landUse" {...register("landUse")} />
-                  </div>
-                  <div>
-                      <Label htmlFor="purpose">Purpose</Label>
-                      <Input id="purpose" {...register("purpose")} />
-                  </div>
+                <div>
+                  <Label htmlFor="landUse">Land Use</Label>
+                  <Input id="landUse" {...register("landUse")} />
+                </div>
+                <div>
+                  <Label htmlFor="purpose">Purpose</Label>
+                  <Input id="purpose" {...register("purpose")} />
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                      <Label htmlFor="plotDistrict">District</Label>
-                      <Input id="plotDistrict" {...register("plotDistrict")} />
-                  </div>
-                  <div>
-                      <Label htmlFor="plotLGA">L.G.A</Label>
-                      <Input id="plotLGA" {...register("plotLGA")} />
-                  </div>
+                <div>
+                  <Label htmlFor="plotDistrict">District</Label>
+                  <Input id="plotDistrict" {...register("plotDistrict")} />
+                </div>
+                <div>
+                  <Label htmlFor="plotLGA">L.G.A</Label>
+                  <Input id="plotLGA" {...register("plotLGA")} />
+                </div>
               </div>
               <div>
-                  <Label htmlFor="plotDescriptionAddress">Plot Description / Address*</Label>
-                  <Textarea id="plotDescriptionAddress" {...register("plotDescriptionAddress")} />
-                  {errors.plotDescriptionAddress && <p className="text-destructive text-xs mt-1">{errors.plotDescriptionAddress.message}</p>}
+                <Label htmlFor="plotDescriptionAddress">Plot Description / Address*</Label>
+                <Textarea id="plotDescriptionAddress" {...register("plotDescriptionAddress")} />
+                {errors.plotDescriptionAddress && <p className="text-destructive text-xs mt-1">{errors.plotDescriptionAddress.message}</p>}
               </div>
             </CardContent>
           </Card>
         )}
-        
+
         {currentStep === 6 && (
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-lg sm:text-xl">BOX 6: DOCUMENT UPLOAD &amp; DECLARATION</CardTitle>
-                    <CardDescription className="text-xs sm:text-sm">
-                        Please upload the required documents. Documents marked with an asterisk (*) are mandatory.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-8">
-                    {/* Residential Documents Upload */}
-                    <div className="space-y-4">
-                        <h3 className="text-md font-semibold text-primary">Required Documents</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                        {residentialDocs.map(doc => (
-                            <div key={doc.id} className="space-y-1.5">
-                                <Label htmlFor={doc.id} className="text-sm font-medium">
-                                    {doc.label}{doc.required && ' *'}
-                                </Label>
-                                <Input
-                                    id={doc.id}
-                                    type="file"
-                                    {...register(doc.id)}
-                                    className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                                />
-                                {errors[doc.id] && <p className="text-destructive text-xs mt-1">{errors[doc.id]?.message as string}</p>}
-                            </div>
-                        ))}
-                        </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg sm:text-xl">BOX 6: DOCUMENT UPLOAD &amp; DECLARATION</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
+                Please upload the required documents. Documents marked with an asterisk (*) are mandatory.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              {/* Residential Documents Upload */}
+              <div className="space-y-4">
+                <h3 className="text-md font-semibold text-primary">Required Documents</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                  {residentialDocs.map(doc => (
+                    <div key={doc.id} className="space-y-1.5">
+                      <Label htmlFor={doc.id} className="text-sm font-medium">
+                        {doc.label}{doc.required && ' *'}
+                      </Label>
+                      <Input
+                        id={doc.id}
+                        type="file"
+                        {...register(doc.id)}
+                        className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                      />
+                      {errors[doc.id] && <p className="text-destructive text-xs mt-1">{errors[doc.id]?.message as string}</p>}
                     </div>
+                  ))}
+                </div>
+              </div>
 
-                    <Separator />
+              <Separator />
 
-                    {/* Declaration */}
-                    <div>
-                        <Label className="text-md font-semibold">Declaration</Label>
-                        <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
-                             <Controller
-                                name="declaration"
-                                control={control}
-                                render={({ field }) => (
-                                    <Checkbox
-                                        id="declaration"
-                                        checked={!!field.value}
-                                        onCheckedChange={field.onChange}
-                                        className="mt-1"
-                                    />
-                                )}
-                            />
-                            <Label htmlFor="declaration" className="font-normal text-sm sm:text-base leading-snug">
-                                I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.
-                            </Label>
-                        </div>
-                         {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
-                         <p className="text-sm text-muted-foreground px-1 mt-2">
-                            Applicant Signature: <span className="font-medium">[Digital acceptance via checkbox]</span>
-                        </p>
-                        <p className="text-sm text-muted-foreground px-1">
-                            Representative Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span>
-                        </p>
-                    </div>
+              {/* Declaration */}
+              <div>
+                <Label className="text-md font-semibold">Declaration</Label>
+                <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
+                  <Controller
+                    name="declaration"
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        id="declaration"
+                        checked={!!field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-1"
+                      />
+                    )}
+                  />
+                  <Label htmlFor="declaration" className="font-normal text-sm sm:text-base leading-snug">
+                    I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.
+                  </Label>
+                </div>
+                {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
+                <p className="text-sm text-muted-foreground px-1 mt-2">
+                  Applicant Signature: <span className="font-medium">[Digital acceptance via checkbox]</span>
+                </p>
+                <p className="text-sm text-muted-foreground px-1">
+                  Representative Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span>
+                </p>
+              </div>
 
-                </CardContent>
-            </Card>
+            </CardContent>
+          </Card>
         )}
 
 
         <CardFooter className="flex flex-col items-center space-y-4 pt-6">
-            <div className="flex w-full flex-col sm:flex-row sm:justify-between gap-2">
-                <Button 
-                  type="button" 
-                  onClick={handlePreviousStep} 
-                  disabled={currentStep === 1} 
-                  variant="outline"
-                  className="w-full sm:w-auto"
-                >
-                    <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-                {currentStep < steps.length ? (
-                    <Button 
-                      type="button" 
-                      onClick={handleNextStep}
-                      className="w-full sm:w-auto"
-                    >
-                        Next <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                ) : (
-                    <Button 
-                      type="submit" 
-                      className="w-full sm:w-auto py-3 text-base sm:text-lg"
-                      disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Submitting...' : 'Submit Application'}
-                    </Button>
-                )}
-            </div>
+          <div className="flex w-full flex-col sm:flex-row sm:justify-between gap-2">
+            <Button
+              type="button"
+              onClick={handlePreviousStep}
+              disabled={currentStep === 1}
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
+              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+            </Button>
+            {currentStep < steps.length ? (
+              <Button
+                type="button"
+                onClick={handleNextStep}
+                className="w-full sm:w-auto"
+              >
+                Next <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full sm:w-auto py-3 text-base sm:text-lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Application'}
+              </Button>
+            )}
+          </div>
           <Separator className="my-2" />
-           <p className="text-xs text-muted-foreground text-center">
+          <p className="text-xs text-muted-foreground text-center">
             KASUPDA Regulations, 2025 &nbsp;&nbsp;|&nbsp;&nbsp; Version 1.5 2025
           </p>
         </CardFooter>

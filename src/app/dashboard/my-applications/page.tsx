@@ -23,9 +23,9 @@ const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
   return {
     variant: (
       status === 'Approved' ? 'default' :
-      status === 'Rejected' ? 'destructive' :
-      status === 'Inprogress' ? 'secondary' :
-      'default'
+        status === 'Rejected' ? 'destructive' :
+          status === 'Inprogress' ? 'secondary' :
+            'default'
     ) as "default" | "destructive" | "secondary" | "outline" | null | undefined,
   };
 };
@@ -43,23 +43,23 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
 };
 
 async function getApplications(userId: string) {
-    const supabase = createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-    
-    if (error) {
-        console.error("Error fetching user applications from Supabase:", error);
-        return [];
-    }
-    return data as StoredApplication[];
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('applications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error("Error fetching user applications from Supabase:", error);
+    return [];
+  }
+  return data as StoredApplication[];
 }
 
 
 async function MyApplicationsPageComponent() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -67,7 +67,7 @@ async function MyApplicationsPageComponent() {
   }
 
   const applications = await getApplications(user.id);
-  
+
   return (
     <div className="space-y-8">
       <CardHeader className="px-0 pt-0">
@@ -98,48 +98,48 @@ async function MyApplicationsPageComponent() {
               </CardHeader>
               <CardContent className="space-y-3 flex-grow flex flex-col">
                 <div className="flex-grow space-y-2">
-                    <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     <strong>File Number:</strong> {app.original_permit_id || 'Pending Admin Review'}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                  </p>
+                  <p className="text-sm text-muted-foreground">
                     <strong>Application ID:</strong> {app.id}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                  </p>
+                  <p className="text-sm text-muted-foreground">
                     <strong>Submitted:</strong> {app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}
-                    </p>
-                    <div className="flex items-center">
+                  </p>
+                  <div className="flex items-center">
                     <p className="text-sm text-muted-foreground mr-2"><strong>Status:</strong></p>
                     <StatusBadge status={app.status as ApplicationStatus} />
-                    </div>
+                  </div>
                 </div>
 
                 {app.status === 'Rejected' && app.rejection_reason && (
-                    <div className="p-3 mt-4 rounded-md bg-destructive/10 border border-destructive/20">
-                        <h4 className="font-semibold text-destructive text-sm flex items-center gap-2">
-                            <AlertTriangle className="h-4 w-4" />
-                            Reason for Rejection
-                        </h4>
-                        <p className="text-xs text-destructive/90 mt-1">{app.rejection_reason}</p>
-                    </div>
+                  <div className="p-3 mt-4 rounded-md bg-destructive/10 border border-destructive/20">
+                    <h4 className="font-semibold text-destructive text-sm flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4" />
+                      Reason for Rejection
+                    </h4>
+                    <p className="text-xs text-destructive/90 mt-1">{app.rejection_reason}</p>
+                  </div>
                 )}
               </CardContent>
               <CardFooter className="border-t pt-4 flex flex-col sm:flex-row gap-2">
-                  {app.original_permit_id && (
-                    <Button asChild variant="secondary" className="w-full">
-                        <Link href={`/dashboard/acknowledgement/${app.id}`}>
-                            <FileSpreadsheet className="mr-2 h-4 w-4" />
-                            View Acknowledgement
-                        </Link>
-                    </Button>
-                  )}
-                  {app.type === 'Certificate of Fitness' && app.status === 'Approved' && (
-                    <Button asChild variant="default" className="w-full">
-                        <Link href={`/dashboard/certificate-of-fitness/${app.id}`}>
-                            <Award className="mr-2 h-4 w-4" />
-                            View Certificate
-                        </Link>
-                    </Button>
-                  )}
+                {app.original_permit_id && (
+                  <Button asChild variant="secondary" className="w-full">
+                    <Link href={`/dashboard/acknowledgement/${app.id}`}>
+                      <FileSpreadsheet className="mr-2 h-4 w-4" />
+                      View Acknowledgement
+                    </Link>
+                  </Button>
+                )}
+                {app.type === 'Certificate of Fitness' && app.status === 'Approved' && (
+                  <Button asChild variant="default" className="w-full">
+                    <Link href={`/dashboard/certificate-of-fitness/${app.id}`}>
+                      <Award className="mr-2 h-4 w-4" />
+                      View Certificate
+                    </Link>
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}
@@ -150,9 +150,9 @@ async function MyApplicationsPageComponent() {
 }
 
 export default function MyApplicationsPage() {
-    return (
-        <Suspense fallback={<div className="text-center p-8">Loading applications...</div>}>
-            <MyApplicationsPageComponent />
-        </Suspense>
-    )
+  return (
+    <Suspense fallback={<div className="text-center p-8">Loading applications...</div>}>
+      <MyApplicationsPageComponent />
+    </Suspense>
+  )
 }

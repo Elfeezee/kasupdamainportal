@@ -8,7 +8,7 @@ import AcknowledgementLetterContent from './AcknowledgementLetterContent';
 import { Skeleton } from '@/components/ui/skeleton';
 
 async function getApplicationData(id: string) {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -50,10 +50,10 @@ function AcknowledgementLoadingSkeleton() {
 
 export default async function AcknowledgementPage({ params }: { params: { id: string } }) {
     const applicationData = await getApplicationData(params.id);
-    
+
     return (
         <div className="print-container">
-             <Suspense fallback={<AcknowledgementLoadingSkeleton />}>
+            <Suspense fallback={<AcknowledgementLoadingSkeleton />}>
                 <AcknowledgementLetterContent applicationData={applicationData} />
             </Suspense>
         </div>

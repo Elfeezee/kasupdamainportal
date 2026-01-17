@@ -26,6 +26,9 @@ interface OsoftValidationResponse {
 /**
  * Generates a payment reference from the Osoftpay API and saves the transaction record.
  */
+/**
+ * Generates a payment reference from the Osoftpay API and saves the transaction record.
+ */
 export async function createBill(
     application: StoredApplication,
     userId: string,
@@ -33,15 +36,15 @@ export async function createBill(
     description: string,
     originatingStateCode: string
 ): Promise<{ success: boolean; error?: string; }> {
-    const supabase = createSupabaseServerClient();
-    
+    const supabase = await createSupabaseServerClient();
+
     // 1. Get user details for payment
     const { data: userProfile, error: profileError } = await supabase
         .from('users')
         .select('phone, email')
         .eq('uid', userId)
         .single();
-    
+
     if (profileError || !userProfile) {
         console.error("Error fetching user profile for billing:", profileError);
         return { success: false, error: "Could not retrieve user details for billing." };
@@ -50,13 +53,15 @@ export async function createBill(
     // 2. Call Osoftpay API to generate payment reference
     try {
         const payload = {
-            customer_Name: application.applicant_name,
-            customer_Phone: userProfile.phone || 'N/A',
-            customer_Email: userProfile.email || 'N/A',
-            originating_State_Code: originatingStateCode,
-            transaction_Amount: amount.toString(),
-            payment_Item_Name: description,
+            "customer_Name": application.applicant_name,
+            "customer_Phone": userProfile.phone || '08000000000', // Fallback if missing, as API likely requires it
+            "customer_Email": userProfile.email || 'no-email@example.com',
+            "originating_State_Code": originatingStateCode,
+            "transaction_Amount": amount.toString(),
+            "payment_Item_Name": description
         };
+
+        console.log("Osoftpay Request Payload:", JSON.stringify(payload, null, 2));
 
         const response = await fetch('https://agency.osoftpay.net/api/AgencyCustomers', {
             method: 'POST',
@@ -73,6 +78,7 @@ export async function createBill(
         }
 
         const result: OsoftPayResponse = await response.json();
+        console.log("Osoftpay Response:", result);
 
         if (result.status !== '00' || !result.data?.paymentReference) {
             throw new Error(result.message || 'Failed to generate payment reference from Osoftpay.');
@@ -102,7 +108,7 @@ export async function createBill(
         revalidatePath('/dashboard/billing');
         revalidatePath('/admin/applications');
         revalidatePath(`/admin/applications/${application.id}`);
-        
+
         return { success: true };
 
     } catch (error) {
@@ -117,7 +123,7 @@ export async function createBill(
  * Verifies a payment status with the Osoftpay API and updates our database.
  */
 export async function verifyPayment(transactionId: number, paymentReference: string): Promise<{ success: boolean; status?: string; error?: string; }> {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
     try {
         const response = await fetch(`https://agency.osoftpay.net/api/CallValidation/${paymentReference}`, {
@@ -128,24 +134,26 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         });
 
         if (!response.ok) {
-             const errorBody = await response.text();
+            const errorBody = await response.text();
             console.error('Osoftpay Validation API Error Body:', errorBody);
             throw new Error(`Osoftpay validation API responded with status: ${response.status}`);
         }
 
         const result: OsoftValidationResponse = await response.json();
-        
+        console.log("Osoftpay Validation Response:", result);
+
+        // Check for "Successful" status as per documentation
         const newStatus = result.payment_Status === 'Successful' ? 'Verified' : 'Pending';
 
         const { error: dbError } = await supabase
             .from('transactions')
             .update({ status: newStatus, last_verified_at: new Date().toISOString() })
             .eq('id', transactionId);
-        
+
         if (dbError) {
             throw dbError;
         }
-        
+
         revalidatePath('/dashboard/billing');
 
         return { success: true, status: newStatus };
@@ -162,52 +170,52 @@ export async function verifyPayment(transactionId: number, paymentReference: str
  * This is an admin-only action.
  */
 export async function assignDin(
-  applicationId: string,
-  userId: string
+    applicationId: string,
+    userId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
 
-  try {
-    // Check if the DIN application fee has been paid
-    const { data: transaction, error: transactionError } = await supabase
-      .from('transactions')
-      .select('status')
-      .eq('application_id', applicationId)
-      .eq('description', 'DIN Application Fee')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+    try {
+        // Check if the DIN application fee has been paid
+        const { data: transaction, error: transactionError } = await supabase
+            .from('transactions')
+            .select('status')
+            .eq('application_id', applicationId)
+            .eq('description', 'DIN Application Fee')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
 
-    if (transactionError || !transaction || transaction.status !== 'Verified') {
-      return { success: false, error: "Payment for DIN application has not been verified." };
+        if (transactionError || !transaction || transaction.status !== 'Verified') {
+            return { success: false, error: "Payment for DIN application has not been verified." };
+        }
+
+        // Generate DIN and update records
+        const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
+
+        const { error: appUpdateError } = await supabase
+            .from('applications')
+            .update({ din: finalDin, status: 'Approved' })
+            .eq('id', applicationId);
+
+        if (appUpdateError) throw appUpdateError;
+
+        const { error: userUpdateError } = await supabase
+            .from('users')
+            .update({ din: finalDin })
+            .eq('uid', userId);
+
+        if (userUpdateError) throw userUpdateError;
+
+        revalidatePath('/admin/applications');
+        revalidatePath(`/admin/applications/${applicationId}`);
+        revalidatePath('/admin/din-applications');
+        revalidatePath('/dashboard/my-dins');
+
+        return { success: true };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        console.error('Assign DIN Error:', errorMessage);
+        return { success: false, error: `Failed to assign DIN: ${errorMessage}` };
     }
-
-    // Generate DIN and update records
-    const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
-    
-    const { error: appUpdateError } = await supabase
-      .from('applications')
-      .update({ din: finalDin, status: 'Approved' })
-      .eq('id', applicationId);
-    
-    if (appUpdateError) throw appUpdateError;
-
-    const { error: userUpdateError } = await supabase
-      .from('users')
-      .update({ din: finalDin })
-      .eq('uid', userId);
-      
-    if (userUpdateError) throw userUpdateError;
-    
-    revalidatePath('/admin/applications');
-    revalidatePath(`/admin/applications/${applicationId}`);
-    revalidatePath('/admin/din-applications');
-    revalidatePath('/dashboard/my-dins');
-
-    return { success: true };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-    console.error('Assign DIN Error:', errorMessage);
-    return { success: false, error: `Failed to assign DIN: ${errorMessage}` };
-  }
 }

@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import CertificateOfFitnessContent from './CertificateOfFitnessContent';
 
 async function getApplicationData(id: string) {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -52,10 +52,10 @@ function CertificateLoadingSkeleton() {
 
 export default async function CertificateOfFitnessPage({ params }: { params: { id: string } }) {
     const applicationData = await getApplicationData(params.id);
-    
+
     return (
         <div className="print-container">
-             <Suspense fallback={<CertificateLoadingSkeleton />}>
+            <Suspense fallback={<CertificateLoadingSkeleton />}>
                 <CertificateOfFitnessContent applicationData={applicationData} />
             </Suspense>
         </div>

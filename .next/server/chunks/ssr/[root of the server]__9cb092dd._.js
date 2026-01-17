@@ -333,7 +333,7 @@ const knowledgeBase = [
 
 var { g: global, __dirname } = __turbopack_context__;
 {
-/* __next_internal_action_entry_do_not_use__ {"7f41d60e81e261d78502096d2bc3db94492aea0f4e":"chat"} */ __turbopack_context__.s({
+/* __next_internal_action_entry_do_not_use__ {"7f18520b31abec02c632270924383ad4863bd8b93c":"chat"} */ __turbopack_context__.s({
     "chat": (()=>chat)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.js [app-rsc] (ecmascript)");
@@ -399,7 +399,7 @@ Now, please answer the following question based on the knowledge provided: ${que
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
     chat
 ]);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(chat, "7f41d60e81e261d78502096d2bc3db94492aea0f4e", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(chat, "7f18520b31abec02c632270924383ad4863bd8b93c", null);
 }}),
 "[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <locals>": ((__turbopack_context__) => {
 "use strict";
@@ -424,7 +424,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["chat"])
+    "7f18520b31abec02c632270924383ad4863bd8b93c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["chat"])
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$applications$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <locals>');
@@ -435,7 +435,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$applications$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["7f41d60e81e261d78502096d2bc3db94492aea0f4e"])
+    "7f18520b31abec02c632270924383ad4863bd8b93c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$applications$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["7f18520b31abec02c632270924383ad4863bd8b93c"])
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$applications$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation>');
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$applications$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <exports>');
@@ -596,8 +596,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/headers.js [app-rsc] (ecmascript)");
 ;
 ;
-function createSupabaseServerClient() {
-    const cookieStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["cookies"])();
+async function createSupabaseServerClient() {
+    const cookieStore = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["cookies"])();
     return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$ssr$2f$dist$2f$module$2f$createServerClient$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createServerClient"])(("TURBOPACK compile-time value", "https://unpjwhhmobtcelwxrixl.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVucGp3aGhtb2J0Y2Vsd3hyaXhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4MDA0NDAsImV4cCI6MjA3MzM3NjQ0MH0.-LBGWmR-mpGKh-oGk3TfXSuB46v0LTKITd9eKQs_P1I"), {
         cookies: {
             get (name) {
@@ -711,6 +711,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-x.js [app-rsc] (ecmascript) <export default as XCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/triangle-alert.js [app-rsc] (ecmascript) <export default as AlertTriangle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$spreadsheet$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__FileSpreadsheet$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/file-spreadsheet.js [app-rsc] (ecmascript) <export default as FileSpreadsheet>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$award$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Award$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/award.js [app-rsc] (ecmascript) <export default as Award>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/utils.ts [app-rsc] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/date-fns/format.mjs [app-rsc] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/date-fns/parseISO.mjs [app-rsc] (ecmascript)");
@@ -774,7 +775,7 @@ const StatusBadge = ({ status, className })=>{
     }, this);
 };
 async function getApplications(userId) {
-    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
+    const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const { data, error } = await supabase.from('applications').select('*').eq('user_id', userId).order('created_at', {
         ascending: false
     });
@@ -785,7 +786,7 @@ async function getApplications(userId) {
     return data;
 }
 async function MyApplicationsPageComponent() {
-    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
+    const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$components$2f$navigation$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["redirect"])('/login?redirectTo=/dashboard/my-applications');
@@ -905,19 +906,37 @@ async function MyApplicationsPageComponent() {
                                                 className: "text-sm text-muted-foreground",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: "ID:"
+                                                        children: "File Number:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
                                                         lineNumber: 102,
                                                         columnNumber: 21
                                                     }, this),
                                                     " ",
-                                                    app.original_permit_id || app.din || app.id
+                                                    app.original_permit_id || 'Pending Admin Review'
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
                                                 lineNumber: 101,
-                                                columnNumber: 21
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm text-muted-foreground",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: "Application ID:"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                                        lineNumber: 105,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    " ",
+                                                    app.id
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                                lineNumber: 104,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-sm text-muted-foreground",
@@ -926,7 +945,7 @@ async function MyApplicationsPageComponent() {
                                                         children: "Submitted:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                        lineNumber: 105,
+                                                        lineNumber: 108,
                                                         columnNumber: 21
                                                     }, this),
                                                     " ",
@@ -934,8 +953,8 @@ async function MyApplicationsPageComponent() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                lineNumber: 104,
-                                                columnNumber: 21
+                                                lineNumber: 107,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex items-center",
@@ -946,26 +965,26 @@ async function MyApplicationsPageComponent() {
                                                             children: "Status:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                            lineNumber: 108,
+                                                            lineNumber: 111,
                                                             columnNumber: 71
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                        lineNumber: 108,
+                                                        lineNumber: 111,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(StatusBadge, {
                                                         status: app.status
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                        lineNumber: 109,
+                                                        lineNumber: 112,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                lineNumber: 107,
-                                                columnNumber: 21
+                                                lineNumber: 110,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
@@ -983,29 +1002,29 @@ async function MyApplicationsPageComponent() {
                                                         className: "h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                        lineNumber: 116,
-                                                        columnNumber: 29
+                                                        lineNumber: 119,
+                                                        columnNumber: 23
                                                     }, this),
                                                     "Reason for Rejection"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                lineNumber: 115,
-                                                columnNumber: 25
+                                                lineNumber: 118,
+                                                columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-xs text-destructive/90 mt-1",
                                                 children: app.rejection_reason
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                lineNumber: 119,
-                                                columnNumber: 25
+                                                lineNumber: 122,
+                                                columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                        lineNumber: 114,
-                                        columnNumber: 21
+                                        lineNumber: 117,
+                                        columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
@@ -1014,37 +1033,65 @@ async function MyApplicationsPageComponent() {
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["CardFooter"], {
-                                className: "border-t pt-4",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Button"], {
-                                    asChild: true,
-                                    variant: "secondary",
-                                    className: "w-full",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
-                                        href: `/dashboard/acknowledgement/${app.id}`,
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$spreadsheet$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__FileSpreadsheet$3e$__["FileSpreadsheet"], {
-                                                className: "mr-2 h-4 w-4"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                                lineNumber: 126,
-                                                columnNumber: 27
-                                            }, this),
-                                            "View Acknowledgement"
-                                        ]
-                                    }, void 0, true, {
+                                className: "border-t pt-4 flex flex-col sm:flex-row gap-2",
+                                children: [
+                                    app.original_permit_id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Button"], {
+                                        asChild: true,
+                                        variant: "secondary",
+                                        className: "w-full",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
+                                            href: `/dashboard/acknowledgement/${app.id}`,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$spreadsheet$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__FileSpreadsheet$3e$__["FileSpreadsheet"], {
+                                                    className: "mr-2 h-4 w-4"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                                    lineNumber: 130,
+                                                    columnNumber: 23
+                                                }, this),
+                                                "View Acknowledgement"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                            lineNumber: 129,
+                                            columnNumber: 21
+                                        }, this)
+                                    }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                        lineNumber: 125,
-                                        columnNumber: 23
+                                        lineNumber: 128,
+                                        columnNumber: 19
+                                    }, this),
+                                    app.type === 'Certificate of Fitness' && app.status === 'Approved' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Button"], {
+                                        asChild: true,
+                                        variant: "default",
+                                        className: "w-full",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
+                                            href: `/dashboard/certificate-of-fitness/${app.id}`,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$award$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$export__default__as__Award$3e$__["Award"], {
+                                                    className: "mr-2 h-4 w-4"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                                    lineNumber: 138,
+                                                    columnNumber: 23
+                                                }, this),
+                                                "View Certificate"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                            lineNumber: 137,
+                                            columnNumber: 21
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
+                                        lineNumber: 136,
+                                        columnNumber: 19
                                     }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                    lineNumber: 124,
-                                    columnNumber: 19
-                                }, this)
-                            }, void 0, false, {
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-                                lineNumber: 123,
-                                columnNumber: 16
+                                lineNumber: 126,
+                                columnNumber: 15
                             }, this)
                         ]
                     }, app.id, true, {
@@ -1071,18 +1118,18 @@ function MyApplicationsPage() {
             children: "Loading applications..."
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-            lineNumber: 141,
-            columnNumber: 29
+            lineNumber: 154,
+            columnNumber: 25
         }, void 0),
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(MyApplicationsPageComponent, {}, void 0, false, {
             fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-            lineNumber: 142,
-            columnNumber: 13
+            lineNumber: 155,
+            columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/dashboard/my-applications/page.tsx",
-        lineNumber: 141,
-        columnNumber: 9
+        lineNumber: 154,
+        columnNumber: 5
     }, this);
 }
 }}),

@@ -20,7 +20,7 @@ const renderFieldValue = (
     if (['id', 'user_id', 'created_at', 'rejection_reason'].includes(key) && key !== 'original_permit_id') {
         return null;
     }
-    
+
     if (key === 'original_permit_id' && !isEditing && !value) {
         return <p className="text-sm text-muted-foreground italic">Not yet assigned</p>;
     }
@@ -30,7 +30,7 @@ const renderFieldValue = (
     if (key.endsWith('_url') && !value) {
         return null;
     }
-    
+
     // Standardize 'on' to true for consistency
     if (value === 'on') value = true;
 
@@ -48,7 +48,7 @@ const renderFieldValue = (
         }
         if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
             return (
-                 <Input
+                <Input
                     type="date"
                     value={currentEditedValue ? format(parseISO(currentEditedValue), 'yyyy-MM-dd') : ''}
                     onChange={(e) => onInputChange(key, e.target.value)}
@@ -56,7 +56,7 @@ const renderFieldValue = (
             );
         }
         if (key.endsWith('_url') && typeof value === 'string') {
-             return <p className="text-sm text-muted-foreground">[File URL - not editable here]</p>;
+            return <p className="text-sm text-muted-foreground">[File URL - not editable here]</p>;
         }
         return <Input value={currentEditedValue ?? ''} onChange={(e) => onInputChange(key, e.target.value)} />;
     }
@@ -65,7 +65,7 @@ const renderFieldValue = (
     if (typeof value === 'boolean') {
         return value ? <Badge>Yes</Badge> : <Badge variant="secondary">No</Badge>;
     }
-    
+
     if (key.endsWith('_url') && typeof value === 'string' && value) {
         return (
             <a href={value} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-2">
@@ -73,7 +73,7 @@ const renderFieldValue = (
             </a>
         );
     }
-    
+
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
         return <p className="text-sm text-foreground">{format(parseISO(value), 'PPP')}</p>;
     }
@@ -89,7 +89,11 @@ interface ApplicationDetailsProps {
 }
 
 export default function ApplicationDetails({ application, isEditing, editedData, onInputChange }: ApplicationDetailsProps) {
-    const sortedKeys = Object.keys(application).sort();
+    // Flatten the 'data' JSONB column if it exists to avoid rendering the object directly
+    const { data, ...rest } = application;
+    const flattenedApplication = { ...rest, ...(typeof data === 'object' && data !== null ? data : {}) };
+
+    const sortedKeys = Object.keys(flattenedApplication).sort();
 
     return (
         <div className="space-y-4">
@@ -98,19 +102,19 @@ export default function ApplicationDetails({ application, isEditing, editedData,
                 {sortedKeys.map((key) => {
                     // Always show original_permit_id
                     if (key === 'original_permit_id') {
-                         const renderedField = renderFieldValue(key, application[key], isEditing, editedData, onInputChange);
-                         return (
+                        const renderedField = renderFieldValue(key, flattenedApplication[key], isEditing, editedData, onInputChange);
+                        return (
                             <div key={key} className="space-y-1">
                                 <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ')}</Label>
                                 {renderedField}
                             </div>
-                         );
+                        );
                     }
-                    
-                    const value = application[key];
+
+                    const value = flattenedApplication[key];
                     // Skip null/undefined values unless in edit mode where we might want to add data
                     if (value === null && !isEditing) return null;
-                    
+
                     const renderedField = renderFieldValue(key, value, isEditing, editedData, onInputChange);
                     if (!renderedField) return null;
 

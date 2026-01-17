@@ -56,7 +56,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
   const { register, handleSubmit, control, formState: { errors } } = useForm<DinApplicationFormValues>({
     resolver: zodResolver(dinApplicationSchema),
     mode: "onChange",
-    defaultValues: { 
+    defaultValues: {
       firstName: user.user_metadata?.full_name?.split(' ')[0] || "",
       surname: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || "",
       middleName: "",
@@ -74,7 +74,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
     <Card className="max-w-3xl mx-auto">
       <CardHeader>
         <CardTitle className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-3">
-           <Fingerprint className="h-7 w-7"/>
+          <Fingerprint className="h-7 w-7" />
           Development Identification Number (DIN) Application
         </CardTitle>
         <CardDescription className="text-sm sm:text-base">
@@ -83,97 +83,97 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <Label htmlFor="firstName">First Name*</Label>
-                    <Input id="firstName" {...register("firstName")} />
-                    {errors.firstName && <p className="text-destructive text-xs mt-1">{errors.firstName.message}</p>}
-                </div>
-                <div>
-                    <Label htmlFor="middleName">Middle Name</Label>
-                    <Input id="middleName" {...register("middleName")} />
-                </div>
-                <div>
-                    <Label htmlFor="surname">Surname*</Label>
-                    <Input id="surname" {...register("surname")} />
-                    {errors.surname && <p className="text-destructive text-xs mt-1">{errors.surname.message}</p>}
-                </div>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <Label htmlFor="applicantAddress">Applicant Address*</Label>
-                <Textarea id="applicantAddress" {...register("applicantAddress")} />
-                {errors.applicantAddress && <p className="text-destructive text-xs mt-1">{errors.applicantAddress.message}</p>}
+              <Label htmlFor="firstName">First Name*</Label>
+              <Input id="firstName" {...register("firstName")} />
+              {errors.firstName && <p className="text-destructive text-xs mt-1">{errors.firstName.message}</p>}
             </div>
-            
             <div>
-                <Label htmlFor="plotAddress">Plot Address*</Label>
-                <Textarea id="plotAddress" {...register("plotAddress")} />
-                {errors.plotAddress && <p className="text-destructive text-xs mt-1">{errors.plotAddress.message}</p>}
+              <Label htmlFor="middleName">Middle Name</Label>
+              <Input id="middleName" {...register("middleName")} />
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                  <Label htmlFor="kbpNumber">KBP Number*</Label>
-                  <Input id="kbpNumber" {...register("kbpNumber")} />
-                  {errors.kbpNumber && <p className="text-destructive text-xs mt-1">{errors.kbpNumber.message}</p>}
-              </div>
-               <div>
-                  <Label htmlFor="kdlNumber">KDL Number*</Label>
-                  <Input id="kdlNumber" {...register("kdlNumber")} />
-                  {errors.kdlNumber && <p className="text-destructive text-xs mt-1">{errors.kdlNumber.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                    <Label htmlFor="doc_permit">Upload Permit*</Label>
-                    <Input id="doc_permit" type="file" {...register("doc_permit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.doc_permit && <p className="text-destructive text-xs mt-1">{errors.doc_permit.message as string}</p>}
-                </div>
-                <div className="space-y-1.5">
-                    <Label htmlFor="doc_co">Upload C/O (Certificate of Occupancy)*</Label>
-                    <Input id="doc_co" type="file" {...register("doc_co")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    {errors.doc_co && <p className="text-destructive text-xs mt-1">{errors.doc_co.message as string}</p>}
-                </div>
-            </div>
-
-            {/* Declaration */}
             <div>
-                <Label className="text-md font-semibold">Declaration</Label>
-                <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
-                      <Controller
-                        name="declaration"
-                        control={control}
-                        render={({ field }) => (
-                            <Checkbox
-                                id="declaration"
-                                checked={!!field.value}
-                                onCheckedChange={field.onChange}
-                                className="mt-1"
-                            />
-                        )}
-                    />
-                    <Label htmlFor="declaration" className="font-normal text-sm sm:text-base leading-snug">
-                        I declare that the information provided in this application is true, correct, and complete to the best of my knowledge and belief.
-                    </Label>
-                </div>
-                  {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
+              <Label htmlFor="surname">Surname*</Label>
+              <Input id="surname" {...register("surname")} />
+              {errors.surname && <p className="text-destructive text-xs mt-1">{errors.surname.message}</p>}
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="applicantAddress">Applicant Address*</Label>
+            <Textarea id="applicantAddress" {...register("applicantAddress")} />
+            {errors.applicantAddress && <p className="text-destructive text-xs mt-1">{errors.applicantAddress.message}</p>}
+          </div>
+
+          <div>
+            <Label htmlFor="plotAddress">Plot Address*</Label>
+            <Textarea id="plotAddress" {...register("plotAddress")} />
+            {errors.plotAddress && <p className="text-destructive text-xs mt-1">{errors.plotAddress.message}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="kbpNumber">KBP Number*</Label>
+              <Input id="kbpNumber" {...register("kbpNumber")} />
+              {errors.kbpNumber && <p className="text-destructive text-xs mt-1">{errors.kbpNumber.message}</p>}
+            </div>
+            <div>
+              <Label htmlFor="kdlNumber">KDL Number*</Label>
+              <Input id="kdlNumber" {...register("kdlNumber")} />
+              {errors.kdlNumber && <p className="text-destructive text-xs mt-1">{errors.kdlNumber.message}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="doc_permit">Upload Permit*</Label>
+              <Input id="doc_permit" type="file" {...register("doc_permit")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+              {errors.doc_permit && <p className="text-destructive text-xs mt-1">{errors.doc_permit.message as string}</p>}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="doc_co">Upload C/O (Certificate of Occupancy)*</Label>
+              <Input id="doc_co" type="file" {...register("doc_co")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+              {errors.doc_co && <p className="text-destructive text-xs mt-1">{errors.doc_co.message as string}</p>}
+            </div>
+          </div>
+
+          {/* Declaration */}
+          <div>
+            <Label className="text-md font-semibold">Declaration</Label>
+            <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
+              <Controller
+                name="declaration"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="declaration"
+                    checked={!!field.value}
+                    onCheckedChange={field.onChange}
+                    className="mt-1"
+                  />
+                )}
+              />
+              <Label htmlFor="declaration" className="font-normal text-sm sm:text-base leading-snug">
+                I declare that the information provided in this application is true, correct, and complete to the best of my knowledge and belief.
+              </Label>
+            </div>
+            {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
+          </div>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full sm:w-auto py-3 text-base sm:text-lg"
             disabled={isSubmitting}
           >
-              {isSubmitting ? (
-                  <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting for Payment...
-                  </>
-              ) : (
-                  "Proceed to Payment"
-              )}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting for Payment...
+              </>
+            ) : (
+              "Proceed to Payment"
+            )}
           </Button>
         </CardFooter>
       </form>
@@ -182,21 +182,21 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
 }
 
 function LoadingCard() {
-    return (
-        <Card className="max-w-3xl mx-auto">
-            <CardHeader>
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-5 w-1/2" />
-            </CardHeader>
-            <CardContent className="space-y-8">
-                <div className="space-y-4">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
-                </div>
-            </CardContent>
-        </Card>
-    );
+  return (
+    <Card className="max-w-3xl mx-auto">
+      <CardHeader>
+        <Skeleton className="h-8 w-3/4" />
+        <Skeleton className="h-5 w-1/2" />
+      </CardHeader>
+      <CardContent className="space-y-8">
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default function DinApplicationPage() {
@@ -208,31 +208,31 @@ export default function DinApplicationPage() {
 
   useEffect(() => {
     const checkUser = async () => {
-        setLoading(true);
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError || !session) {
-            toast({ title: 'Authentication Required', description: 'Please log in to apply for a DIN.', variant: 'destructive' });
-            router.push('/login?redirectTo=/dashboard/apply/din-application');
-            return;
-        }
+      setLoading(true);
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-        setUser(session.user);
-        setLoading(false);
+      if (sessionError || !session) {
+        toast({ title: 'Authentication Required', description: 'Please log in to apply for a DIN.', variant: 'destructive' });
+        router.push('/login?redirectTo=/dashboard/apply/din-application');
+        return;
+      }
+
+      setUser(session.user);
+      setLoading(false);
     };
     checkUser();
   }, [router, toast]);
-  
+
   const onSubmit = async (data: DinApplicationFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to proceed.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to proceed.", variant: "destructive" });
+      return;
     }
 
     setIsSubmitting(true);
 
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
-    
+
     const formData = new FormData();
     formData.append('type', 'DIN Application');
     formData.append('applicantName', applicantName);
@@ -248,23 +248,32 @@ export default function DinApplicationPage() {
         formData.append(key, String(value));
       }
     });
-    
-    try {
-        const result = await saveApplication(formData);
 
-        if (result.success) {
-            toast({ title: "Application Submitted", description: "Please proceed with payment to get your DIN." });
-            router.push(`/dashboard/billing`);
+    try {
+      const result = await saveApplication(formData);
+
+      if (result.success) {
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive"
+          });
+          router.push('/dashboard/my-dins'); // Redirect to my-dins for DIN application
         } else {
-            throw new Error(result.error || "An unknown error occurred during DIN application submission.");
+          toast({ title: "Application Submitted", description: "Please proceed with payment to get your DIN." });
+          router.push(`/dashboard/billing`);
         }
+      } else {
+        throw new Error(result.error || "An unknown error occurred during DIN application submission.");
+      }
 
     } catch (error) {
-        console.error("DIN Application failed:", error);
-        const errorMessage = error instanceof Error ? error.message : "Could not process your application. Please try again.";
-        toast({ title: "Submission Failed", description: errorMessage, variant: "destructive" });
+      console.error("DIN Application failed:", error);
+      const errorMessage = error instanceof Error ? error.message : "Could not process your application. Please try again.";
+      toast({ title: "Submission Failed", description: errorMessage, variant: "destructive" });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 

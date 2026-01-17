@@ -41,33 +41,33 @@ const fitnessCertificateSchema = z.object({
 type FitnessCertificateFormValues = z.infer<typeof fitnessCertificateSchema>;
 
 function LoadingSkeleton() {
-    return (
-        <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-5 w-1/2 mt-2" />
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-6">
-                    <div className="space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                     <div className="space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                     <div className="space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                </div>
-            </CardContent>
-            <CardFooter>
-                 <Skeleton className="h-12 w-48" />
-            </CardFooter>
-        </Card>
-    );
+  return (
+    <Card className="max-w-2xl mx-auto">
+      <CardHeader>
+        <Skeleton className="h-8 w-3/4" />
+        <Skeleton className="h-5 w-1/2 mt-2" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Skeleton className="h-12 w-48" />
+      </CardFooter>
+    </Card>
+  );
 }
 
 export default function CertificateOfFitnessPage() {
@@ -84,29 +84,29 @@ export default function CertificateOfFitnessPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/certificate-of-fitness');
-        } else {
-            setUser(session.user);
-            setLoading(false);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/certificate-of-fitness');
+      } else {
+        setUser(session.user);
+        setLoading(false);
+      }
     };
     checkSession();
   }, [router]);
-  
+
   const onSubmit = async (data: FitnessCertificateFormValues) => {
-     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit.", variant: "destructive" });
-        return;
+    if (!user) {
+      toast({ title: "Error", description: "You must be logged in to submit.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
-    
+
     const formData = new FormData();
     formData.append('type', "Certificate of Fitness");
     formData.append('applicantName', data.applicantName);
     formData.append('userId', user.id);
-    
+
     // Correctly name the fields for the server action
     if (data.doc_building_permit[0]) {
       formData.append('doc_building_permit', data.doc_building_permit[0]);
@@ -116,31 +116,40 @@ export default function CertificateOfFitnessPage() {
     }
 
     try {
-        const result = await saveApplication(formData);
+      const result = await saveApplication(formData);
 
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      if (result.success) {
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive"
+          });
+          router.push('/dashboard/my-applications');
         } else {
-            throw new Error(result.error || "An unknown error occurred.");
+          router.push(`/dashboard/billing`);
         }
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit the application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit the application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   if (loading) {
-      return (
-         <div className="container mx-auto px-2 sm:px-4 py-8">
-            <LoadingSkeleton />
-        </div>
-      );
+    return (
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <LoadingSkeleton />
+      </div>
+    );
   }
 
   return (
@@ -148,7 +157,7 @@ export default function CertificateOfFitnessPage() {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-3">
-             <Award className="h-7 w-7"/>
+            <Award className="h-7 w-7" />
             Certificate of Fitness and Habitation Application
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
@@ -175,7 +184,7 @@ export default function CertificateOfFitnessPage() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full sm:w-auto py-3 text-base" disabled={isSubmitting}>
-              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Submitting...</> : 'Submit Application'}
+              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : 'Submit Application'}
             </Button>
           </CardFooter>
         </form>
@@ -184,4 +193,4 @@ export default function CertificateOfFitnessPage() {
   );
 }
 
-    
+

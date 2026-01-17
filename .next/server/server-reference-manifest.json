@@ -1,6 +1,6 @@
 {
   "node": {
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
+    "7f18520b31abec02c632270924383ad4863bd8b93c": {
       "workers": {
         "app/apply-for-permit/page": {
           "moduleId": "[project]/.next-internal/server/app/apply-for-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -8,10 +8,6 @@
         },
         "app/dashboard/apply/building-permit/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/apply/building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/dashboard/apply/page": {
@@ -26,16 +22,12 @@
           "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
-        "app/dashboard/my-dins/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+        "app/dashboard/my-applications/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/my-applications/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/dashboard/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/stage-approval/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         },
         "app/login/page": {
@@ -50,18 +42,27 @@
       "layer": {
         "app/apply-for-permit/page": "action-browser",
         "app/dashboard/apply/building-permit/page": "action-browser",
-        "app/dashboard/apply/din-application/page": "action-browser",
         "app/dashboard/apply/page": "action-browser",
         "app/dashboard/apply/residential-building-permit/page": "action-browser",
         "app/dashboard/billing/page": "action-browser",
-        "app/dashboard/my-dins/page": "action-browser",
+        "app/dashboard/my-applications/page": "action-browser",
         "app/dashboard/page": "action-browser",
-        "app/dashboard/stage-approval/page": "action-browser",
         "app/login/page": "action-browser",
         "app/page": "action-browser"
       }
     },
-    "005eb87850b7be5b869797fed6bf5f82976033b76a": {
+    "404cb0f259b2f412d177db9d1e0300ddecc804fa82": {
+      "workers": {
+        "app/dashboard/apply/residential-building-permit/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/apply/residential-building-permit/page": "action-browser"
+      }
+    },
+    "00b7293196e06881f02fcd11c6c361d92db7bfaf30": {
       "workers": {
         "app/dashboard/billing/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -72,7 +73,7 @@
         "app/dashboard/billing/page": "rsc"
       }
     },
-    "60f6fa89aeb0dc0cbb5fa436805a5bde0bbb8689af": {
+    "605340445713e637a93355cf8620cb004249d3a0b3": {
       "workers": {
         "app/dashboard/billing/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -83,7 +84,7 @@
         "app/dashboard/billing/page": "action-browser"
       }
     },
-    "7cdfe8ffcac2e6496566f60db9b9e93b3fd7d90d74": {
+    "60fbefd7327a995037bf4dbace18bcf2a84e450f3e": {
       "workers": {
         "app/dashboard/billing/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -94,49 +95,18 @@
         "app/dashboard/billing/page": "action-browser"
       }
     },
-    "40f2830c5c83ad1a378102d2832ff202e405fc74b2": {
+    "7c783386390a4c0bd560a89c29439c4fc3f4230d96": {
       "workers": {
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/apply/residential-building-permit/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/stage-approval/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+        "app/dashboard/billing/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/billing/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/dashboard/billing/page.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/app/actions/billingActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
           "async": false
         }
       },
       "layer": {
-        "app/dashboard/apply/din-application/page": "action-browser",
-        "app/dashboard/apply/residential-building-permit/page": "action-browser",
-        "app/dashboard/stage-approval/page": "action-browser"
-      }
-    },
-    "703c8e965250efc42d12325b86de80956fb7b5329f": {
-      "workers": {
-        "app/dashboard/apply/din-application/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/din-application/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/apply/residential-building-permit/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/apply/residential-building-permit/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        },
-        "app/dashboard/stage-approval/page": {
-          "moduleId": "[project]/.next-internal/server/app/dashboard/stage-approval/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/app/actions/applicationActions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/dashboard/apply/din-application/page": "action-browser",
-        "app/dashboard/apply/residential-building-permit/page": "action-browser",
-        "app/dashboard/stage-approval/page": "action-browser"
+        "app/dashboard/billing/page": "action-browser"
       }
     }
   },
   "edge": {},
-  "encryptionKey": "UzXya1IMrWqczqQ6yh722napY6tz+NDsJov+H5SSqDo="
+  "encryptionKey": "TGwTinI4hh1ywZjmQGMGOTCcVpmQ3Gczz5viReO8ax8="
 }

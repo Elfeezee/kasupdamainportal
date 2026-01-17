@@ -13,8 +13,8 @@ const ContactFormSchema = z.object({
 export async function saveContactMessage(
   formData: FormData
 ): Promise<{ success: boolean; error?: string; fieldErrors?: any }> {
-  const supabase = createSupabaseServerClient();
-  
+  const supabase = await createSupabaseServerClient();
+
   const validatedFields = ContactFormSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -36,7 +36,7 @@ export async function saveContactMessage(
     const { error } = await supabase
       .from('contact_messages')
       .insert([{ name, email, subject, message }]);
-    
+
     if (error) throw error;
 
     return { success: true };

@@ -1,6 +1,6 @@
 {
   "node": {
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": {
+    "7f18520b31abec02c632270924383ad4863bd8b93c": {
       "workers": {
         "app/dashboard/my-dins/page": {
           "moduleId": "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

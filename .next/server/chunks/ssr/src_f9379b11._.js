@@ -160,14 +160,14 @@ AlertDialogCancel.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$
 
 var { g: global, __dirname } = __turbopack_context__;
 {
-/* __next_internal_action_entry_do_not_use__ {"607d08d4ce76d72f65e5584668c7340d2d03715865":"updateApplicationData","70d3faa85b4ed42a7d9c0f90eb9b3497d78369324f":"updateApplicationStatus"} */ __turbopack_context__.s({
+/* __next_internal_action_entry_do_not_use__ {"606809ade5c1bb7f9037a655696e90716001898645":"updateApplicationData","70c720be9e4ef9c4420384e876f4aa7cc4eeacdecf":"updateApplicationStatus"} */ __turbopack_context__.s({
     "updateApplicationData": (()=>updateApplicationData),
     "updateApplicationStatus": (()=>updateApplicationStatus)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-client-wrapper.js [app-ssr] (ecmascript)");
 ;
-var updateApplicationData = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createServerReference"])("607d08d4ce76d72f65e5584668c7340d2d03715865", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["findSourceMapURL"], "updateApplicationData");
-var updateApplicationStatus = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createServerReference"])("70d3faa85b4ed42a7d9c0f90eb9b3497d78369324f", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["findSourceMapURL"], "updateApplicationStatus");
+var updateApplicationData = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createServerReference"])("606809ade5c1bb7f9037a655696e90716001898645", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["findSourceMapURL"], "updateApplicationData");
+var updateApplicationStatus = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createServerReference"])("70c720be9e4ef9c4420384e876f4aa7cc4eeacdecf", __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["callServer"], void 0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$client$2d$wrapper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["findSourceMapURL"], "updateApplicationStatus");
 }}),
 "[project]/src/components/ui/label.tsx [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -277,7 +277,21 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
         'user_id',
         'created_at',
         'rejection_reason'
-    ].includes(key)) {
+    ].includes(key) && key !== 'original_permit_id') {
+        return null;
+    }
+    if (key === 'original_permit_id' && !isEditing && !value) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+            className: "text-sm text-muted-foreground italic",
+            children: "Not yet assigned"
+        }, void 0, false, {
+            fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
+            lineNumber: 25,
+            columnNumber: 16
+        }, this);
+    }
+    // If a field ends with '_url' but the value is null or empty, don't render it.
+    if (key.endsWith('_url') && !value) {
         return null;
     }
     // Standardize 'on' to true for consistency
@@ -292,7 +306,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 onCheckedChange: (checked)=>onInputChange(key, !!checked)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 32,
+                lineNumber: 42,
                 columnNumber: 17
             }, this);
         }
@@ -303,8 +317,8 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 onChange: (e)=>onInputChange(key, e.target.value)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 41,
-                columnNumber: 18
+                lineNumber: 51,
+                columnNumber: 17
             }, this);
         }
         if (key.endsWith('_url') && typeof value === 'string') {
@@ -313,8 +327,8 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                 children: "[File URL - not editable here]"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 49,
-                columnNumber: 21
+                lineNumber: 59,
+                columnNumber: 20
             }, this);
         }
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -322,7 +336,7 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             onChange: (e)=>onInputChange(key, e.target.value)
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 51,
+            lineNumber: 61,
             columnNumber: 16
         }, this);
     }
@@ -332,14 +346,14 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             children: "Yes"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 56,
+            lineNumber: 66,
             columnNumber: 24
         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
             variant: "secondary",
             children: "No"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 56,
+            lineNumber: 66,
             columnNumber: 45
         }, this);
     }
@@ -354,26 +368,24 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                    lineNumber: 62,
+                    lineNumber: 72,
                     columnNumber: 17
                 }, this),
                 " Download File"
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 61,
+            lineNumber: 71,
             columnNumber: 13
         }, this);
     }
-    // Don't render the URL fields themselves, they are handled above
-    if (key.endsWith('_url')) return null;
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
             className: "text-sm text-foreground",
             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parseISO"])(value), 'PPP')
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 70,
+            lineNumber: 78,
             columnNumber: 16
         }, this);
     }
@@ -384,17 +396,23 @@ const renderFieldValue = (key, value, isEditing, editedData, onInputChange)=>{
             children: "Not provided"
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-            lineNumber: 73,
+            lineNumber: 81,
             columnNumber: 61
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-        lineNumber: 73,
+        lineNumber: 81,
         columnNumber: 12
     }, this);
 };
 function ApplicationDetails({ application, isEditing, editedData, onInputChange }) {
-    const sortedKeys = Object.keys(application).sort();
+    // Flatten the 'data' JSONB column if it exists to avoid rendering the object directly
+    const { data, ...rest } = application;
+    const flattenedApplication = {
+        ...rest,
+        ...typeof data === 'object' && data !== null ? data : {}
+    };
+    const sortedKeys = Object.keys(flattenedApplication).sort();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-4",
         children: [
@@ -403,45 +421,74 @@ function ApplicationDetails({ application, isEditing, editedData, onInputChange 
                 children: "Application Data"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 88,
+                lineNumber: 100,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4",
                 children: sortedKeys.map((key)=>{
-                    const value = application[key];
+                    // Always show original_permit_id
+                    if (key === 'original_permit_id') {
+                        const renderedField = renderFieldValue(key, flattenedApplication[key], isEditing, editedData, onInputChange);
+                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "space-y-1",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                    className: "capitalize text-xs text-muted-foreground",
+                                    children: key.replace(/_/g, ' ')
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
+                                    lineNumber: 108,
+                                    columnNumber: 33
+                                }, this),
+                                renderedField
+                            ]
+                        }, key, true, {
+                            fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
+                            lineNumber: 107,
+                            columnNumber: 29
+                        }, this);
+                    }
+                    const value = flattenedApplication[key];
                     // Skip null/undefined values unless in edit mode where we might want to add data
                     if (value === null && !isEditing) return null;
                     const renderedField = renderFieldValue(key, value, isEditing, editedData, onInputChange);
                     if (!renderedField) return null;
+                    // Don't render the plain URL field if we've already rendered it as a download link
+                    if (key.endsWith('_url')) {
+                        const baseKey = key.replace('_url', '');
+                        if (sortedKeys.includes(baseKey)) {
+                        // This logic is tricky, let's just show the link under its own name
+                        }
+                    }
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-1",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
                                 className: "capitalize text-xs text-muted-foreground",
-                                children: key.replace(/_/g, ' ')
+                                children: key.replace(/_/g, ' ').replace(' doc ', ' ').replace(' url', '')
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                                lineNumber: 100,
+                                lineNumber: 132,
                                 columnNumber: 29
                             }, this),
                             renderedField
                         ]
                     }, key, true, {
                         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                        lineNumber: 99,
+                        lineNumber: 131,
                         columnNumber: 25
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-                lineNumber: 89,
+                lineNumber: 101,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/admin/(main)/applications/ApplicationDetails.tsx",
-        lineNumber: 87,
+        lineNumber: 99,
         columnNumber: 9
     }, this);
 }
@@ -487,7 +534,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2f28$mai
 ;
 ;
 const statusOptions = [
-    'Pending',
+    'Inprogress',
     'Approved',
     'Rejected'
 ];
@@ -651,12 +698,12 @@ function ApplicationDetailPage() {
                 className: "h-8 w-8 animate-spin"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                lineNumber: 151,
+                lineNumber: 154,
                 columnNumber: 67
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-            lineNumber: 151,
+            lineNumber: 154,
             columnNumber: 12
         }, this);
     }
@@ -666,7 +713,7 @@ function ApplicationDetailPage() {
             children: "Application not found."
         }, void 0, false, {
             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-            lineNumber: 155,
+            lineNumber: 158,
             columnNumber: 12
         }, this);
     }
@@ -682,14 +729,14 @@ function ApplicationDetailPage() {
                         className: "h-4 w-4"
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                        lineNumber: 161,
+                        lineNumber: 164,
                         columnNumber: 9
                     }, this),
                     " Back to List"
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                lineNumber: 160,
+                lineNumber: 163,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -704,7 +751,7 @@ function ApplicationDetailPage() {
                                             children: application.type
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                            lineNumber: 168,
+                                            lineNumber: 171,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -714,13 +761,13 @@ function ApplicationDetailPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                            lineNumber: 169,
+                                            lineNumber: 172,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 167,
+                                    lineNumber: 170,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Badge"], {
@@ -729,18 +776,18 @@ function ApplicationDetailPage() {
                                     children: application.status
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 171,
+                                    lineNumber: 174,
                                     columnNumber: 14
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 166,
+                            lineNumber: 169,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                        lineNumber: 165,
+                        lineNumber: 168,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -753,7 +800,7 @@ function ApplicationDetailPage() {
                                 onInputChange: handleInputChange
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 180,
+                                lineNumber: 183,
                                 columnNumber: 11
                             }, this),
                             application.status === 'Rejected' && application.rejection_reason && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -764,7 +811,7 @@ function ApplicationDetailPage() {
                                         children: "Reason for Rejection"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 189,
+                                        lineNumber: 192,
                                         columnNumber: 21
                                     }, this),
                                     isEditing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -773,106 +820,108 @@ function ApplicationDetailPage() {
                                         className: "mt-1"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 191,
+                                        lineNumber: 194,
                                         columnNumber: 26
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-xs text-destructive/90 mt-1",
                                         children: application.rejection_reason
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 197,
+                                        lineNumber: 200,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 188,
+                                lineNumber: 191,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                        lineNumber: 178,
+                        lineNumber: 181,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardFooter"], {
                         className: "flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6",
                         children: [
-                            isEditing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex gap-2",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                        onClick: handleSaveChanges,
-                                        disabled: isSaving,
-                                        children: isSaving ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex flex-wrap gap-2",
+                                children: isEditing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                            onClick: handleSaveChanges,
+                                            disabled: isSaving,
+                                            children: isSaving ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                        className: "mr-2 h-4 w-4 animate-spin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                                        lineNumber: 211,
+                                                        columnNumber: 39
+                                                    }, this),
+                                                    "Saving..."
+                                                ]
+                                            }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$save$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Save$3e$__["Save"], {
+                                                        className: "mr-2 h-4 w-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                                        lineNumber: 211,
+                                                        columnNumber: 105
+                                                    }, this),
+                                                    "Save Changes"
+                                                ]
+                                            }, void 0, true)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                            lineNumber: 210,
+                                            columnNumber: 21
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                            variant: "ghost",
+                                            onClick: handleEditToggle,
                                             children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                                    className: "mr-2 h-4 w-4 animate-spin"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                                    lineNumber: 207,
-                                                    columnNumber: 33
-                                                }, this),
-                                                "Saving..."
-                                            ]
-                                        }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$save$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Save$3e$__["Save"], {
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
                                                     className: "mr-2 h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                                    lineNumber: 207,
-                                                    columnNumber: 99
+                                                    lineNumber: 213,
+                                                    columnNumber: 72
                                                 }, this),
-                                                "Save Changes"
+                                                "Cancel"
                                             ]
-                                        }, void 0, true)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 206,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                        variant: "ghost",
-                                        onClick: handleEditToggle,
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
-                                                className: "mr-2 h-4 w-4"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                                lineNumber: 209,
-                                                columnNumber: 68
-                                            }, this),
-                                            "Cancel"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 209,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                            lineNumber: 213,
+                                            columnNumber: 21
+                                        }, this)
+                                    ]
+                                }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                    onClick: handleEditToggle,
+                                    variant: "outline",
+                                    className: "gap-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2d$pen$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Edit$3e$__["Edit"], {
+                                            className: "h-4 w-4"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                            lineNumber: 217,
+                                            columnNumber: 21
+                                        }, this),
+                                        " Edit Application"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
+                                    lineNumber: 216,
+                                    columnNumber: 17
+                                }, this)
+                            }, void 0, false, {
                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 205,
-                                columnNumber: 15
-                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                onClick: handleEditToggle,
-                                variant: "outline",
-                                className: "gap-2",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2d$pen$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Edit$3e$__["Edit"], {
-                                        className: "h-4 w-4"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 213,
-                                        columnNumber: 17
-                                    }, this),
-                                    " Edit Application"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 212,
-                                columnNumber: 15
+                                lineNumber: 207,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex gap-2 flex-wrap justify-end",
@@ -884,7 +933,7 @@ function ApplicationDetailPage() {
                                             children: isStatusUpdating ? 'Updating...' : `Mark as ${status}`
                                         }, status, false, {
                                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                            lineNumber: 218,
+                                            lineNumber: 223,
                                             columnNumber: 21
                                         }, this)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -897,32 +946,32 @@ function ApplicationDetailPage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                                lineNumber: 223,
+                                                lineNumber: 228,
                                                 columnNumber: 21
                                             }, this),
                                             " Delete"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 227,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 216,
+                                lineNumber: 221,
                                 columnNumber: 14
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                        lineNumber: 203,
+                        lineNumber: 206,
                         columnNumber: 10
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                lineNumber: 164,
+                lineNumber: 167,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -936,20 +985,20 @@ function ApplicationDetailPage() {
                                     children: "Are you absolutely sure?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 237,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                     children: "This action cannot be undone. This will permanently delete this application."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 233,
+                                    lineNumber: 238,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 231,
+                            lineNumber: 236,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -958,7 +1007,7 @@ function ApplicationDetailPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 238,
+                                    lineNumber: 243,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -967,24 +1016,24 @@ function ApplicationDetailPage() {
                                     children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 239,
+                                    lineNumber: 244,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 237,
+                            lineNumber: 242,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                    lineNumber: 230,
+                    lineNumber: 235,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                lineNumber: 229,
+                lineNumber: 234,
                 columnNumber: 8
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -998,20 +1047,20 @@ function ApplicationDetailPage() {
                                     children: "Reason for Rejection"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 247,
+                                    lineNumber: 252,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
                                     children: "Please provide a clear reason why this application is being rejected. This will be shown to the user."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 248,
+                                    lineNumber: 253,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 246,
+                            lineNumber: 251,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1022,12 +1071,12 @@ function ApplicationDetailPage() {
                                 onChange: (e)=>setRejectionReason(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                lineNumber: 253,
+                                lineNumber: 258,
                                 columnNumber: 14
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 252,
+                            lineNumber: 257,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -1036,7 +1085,7 @@ function ApplicationDetailPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 260,
+                                    lineNumber: 265,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -1045,30 +1094,30 @@ function ApplicationDetailPage() {
                                     children: "Submit Rejection"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                                    lineNumber: 261,
+                                    lineNumber: 266,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                            lineNumber: 259,
+                            lineNumber: 264,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                    lineNumber: 245,
+                    lineNumber: 250,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-                lineNumber: 244,
+                lineNumber: 249,
                 columnNumber: 8
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/admin/(main)/applications/[id]/page.tsx",
-        lineNumber: 159,
+        lineNumber: 162,
         columnNumber: 5
     }, this);
 }

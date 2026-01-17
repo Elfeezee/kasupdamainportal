@@ -21,8 +21,8 @@ const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
   return {
     variant: (
       status === 'Approved' ? 'default' :
-      status === 'Rejected' ? 'destructive' :
-      'secondary'
+        status === 'Rejected' ? 'destructive' :
+          'secondary'
     ) as "default" | "destructive" | "secondary" | "outline" | null | undefined,
   };
 };
@@ -40,31 +40,31 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
 };
 
 async function getDinApplications(userId: string) {
-    const supabase = createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('type', 'DIN Application')
-        .order('created_at', { ascending: false });
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('applications')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('type', 'DIN Application')
+    .order('created_at', { ascending: false });
 
-    if (error) {
-        console.error("Error fetching user DIN applications from Supabase:", error);
-        return [];
-    }
-    return data as StoredApplication[];
+  if (error) {
+    console.error("Error fetching user DIN applications from Supabase:", error);
+    return [];
+  }
+  return data as StoredApplication[];
 }
 
 async function MyDinsPageComponent() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-      redirect('/login?redirectTo=/dashboard/my-dins');
+    redirect('/login?redirectTo=/dashboard/my-dins');
   }
 
   const applications = await getDinApplications(user.id);
-  
+
   return (
     <div className="space-y-8">
       <CardHeader className="px-0 pt-0">
@@ -88,23 +88,23 @@ async function MyDinsPageComponent() {
             <Card key={app.id} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
               <CardHeader>
                 <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl font-mono text-primary">{app.din || 'Inprogress'}</CardTitle>
-                    <StatusIcon status={app.status as ApplicationStatus} />
+                  <CardTitle className="text-xl font-mono text-primary">{app.din || 'Inprogress'}</CardTitle>
+                  <StatusIcon status={app.status as ApplicationStatus} />
                 </div>
                 <CardDescription className="text-xs">Applicant: {app.applicant_name}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 flex-grow flex flex-col">
                 <div className="flex-grow space-y-2">
-                    <p className="text-sm text-muted-foreground">
-                        <strong>Application ID:</strong> {app.id}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                        <strong>Submitted:</strong> {app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}
-                    </p>
-                    <div className="flex items-center">
-                        <p className="text-sm text-muted-foreground mr-2"><strong>Status:</strong></p>
-                        <StatusBadge status={app.status as ApplicationStatus} />
-                    </div>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Application ID:</strong> {app.id}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Submitted:</strong> {app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}
+                  </p>
+                  <div className="flex items-center">
+                    <p className="text-sm text-muted-foreground mr-2"><strong>Status:</strong></p>
+                    <StatusBadge status={app.status as ApplicationStatus} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -116,9 +116,9 @@ async function MyDinsPageComponent() {
 }
 
 export default function MyDinsPage() {
-    return (
-        <Suspense fallback={<div className="text-center p-8">Loading DINs...</div>}>
-            <MyDinsPageComponent />
-        </Suspense>
-    )
+  return (
+    <Suspense fallback={<div className="text-center p-8">Loading DINs...</div>}>
+      <MyDinsPageComponent />
+    </Suspense>
+  )
 }

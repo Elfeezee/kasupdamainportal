@@ -9,13 +9,13 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
 async function getProfileData() {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
         redirect('/login?redirectTo=/dashboard/profile');
     }
-    
+
     let profile = {
         name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'N/A',
         email: user.email || 'N/A',
@@ -43,7 +43,7 @@ async function getProfileData() {
     } catch (error) {
         console.error("A critical error occurred while fetching profile data:", error);
     }
-    
+
     return profile;
 }
 
@@ -53,10 +53,10 @@ const ProfileItem = ({ label, value }: { label: string; value: string | null | u
         <p className="font-medium">{value || 'N/A'}</p>
     </div>
 );
-    
+
 async function ProfilePageComponent() {
     const profileData = await getProfileData();
-    
+
     async function handleActionClick(actionName: string) {
         'use server';
         // In a real app, this would trigger a server action.
@@ -69,10 +69,10 @@ async function ProfilePageComponent() {
         <div className="space-y-8">
             <CardHeader className="px-0 pt-0">
                 <CardTitle className="text-2xl sm:text-3xl font-bold text-primary flex items-center">
-                <UserCircle2 className="mr-3 h-7 w-7" /> My Profile
+                    <UserCircle2 className="mr-3 h-7 w-7" /> My Profile
                 </CardTitle>
                 <CardDescription>
-                View and manage your personal information and account settings.
+                    View and manage your personal information and account settings.
                 </CardDescription>
             </CardHeader>
             <Card>
@@ -86,12 +86,12 @@ async function ProfilePageComponent() {
                     <ProfileItem label="Email Address" value={profileData.email} />
                     <ProfileItem label="Phone Number" value={profileData.phone} />
                     <ProfileItem label="Registered Address" value={profileData.address} />
-                    
+
                     <div className="pt-4 flex flex-col sm:flex-row gap-2">
                         <form action={async () => { 'use server'; handleActionClick("Edit Profile") }}>
-                             <Button type="submit">Edit Profile</Button>
+                            <Button type="submit">Edit Profile</Button>
                         </form>
-                         <form action={async () => { 'use server'; handleActionClick("Change Password") }}>
+                        <form action={async () => { 'use server'; handleActionClick("Change Password") }}>
                             <Button variant="outline" type="submit">Change Password</Button>
                         </form>
                     </div>
@@ -112,7 +112,7 @@ export default function ProfilePage() {
 // Keep a loading component for suspense boundary
 export function LoadingProfilePage() {
     return (
-         <div className="space-y-8">
+        <div className="space-y-8">
             <CardHeader className="px-0 pt-0">
                 <Skeleton className="h-9 w-64" />
                 <Skeleton className="h-5 w-80" />

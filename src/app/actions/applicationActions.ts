@@ -151,23 +151,23 @@ function mapKeyToDbField(key: string): string {
         'ceoNameContact': 'ceo_name_contact',
 
         // Document fields - map from form name to DB name directly
-        'doc_land_title': 'doc_land_title',
-        'doc_kadgis_acknowledgement': 'doc_kadgis_acknowledgement',
-        'doc_sar': 'doc_sar',
-        'doc_working_drawings': 'doc_working_drawings',
-        'doc_calculation_sheet': 'doc_calculation_sheet',
-        'doc_builders_doc': 'doc_builders_doc',
-        'doc_soil_test': 'doc_soil_test',
-        'doc_pdf_drawings': 'doc_pdf_drawings',
-        'doc_applicant_id': 'doc_applicant_id',
-        'doc_rep_id': 'doc_rep_id',
-        'doc_utility_bill': 'doc_utility_bill',
+        'docLandTitle': 'doc_land_title',
+        'docKadgisAcknowledgement': 'doc_kadgis_acknowledgement',
+        'docSar': 'doc_sar',
+        'docWorkingDrawings': 'doc_working_drawings',
+        'docCalculationSheet': 'doc_calculation_sheet',
+        'docBuildersDoc': 'doc_builders_doc',
+        'docSoilTest': 'doc_soil_test',
+        'docPdfDrawings': 'doc_pdf_drawings',
+        'docApplicantId': 'doc_applicant_id',
+        'docRepId': 'doc_rep_id',
+        'docUtilityBill': 'doc_utility_bill',
         'doc_quality_assurance': 'doc_quality_assurance',
         'doc_kepa_eia_cert': 'doc_kepa_eia_cert',
         'doc_permit': 'doc_permit',
         'doc_co': 'doc_co',
         'doc_building_permit': 'doc_building_permit',
-        'doc_structural_info': 'doc_structural_info',
+        'docStructuralInfo': 'doc_structural_info',
         // New doc fields from other forms
         'docImageShowingSite': 'doc_image_showing_site',
         'doc_image_showing_site': 'doc_image_showing_site',
@@ -212,7 +212,7 @@ function mapKeyToDbField(key: string): string {
 export async function saveApplication(
     formData: FormData
 ): Promise<{ success: boolean; applicationId?: string; applicantName?: string; error?: string; }> {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const submissionPayload: Record<string, any> = {};
 
     const type = formData.get('type') as string;
@@ -222,65 +222,85 @@ export async function saveApplication(
     if (!type || !applicantName || !userId) {
         return { success: false, error: 'Missing required application metadata (type, applicantName, or userId).' };
     }
-    
-    submissionPayload.type = type;
-    submissionPayload.applicant_name = applicantName;
-    submissionPayload.user_id = userId;
-    submissionPayload.status = 'Inprogress';
+
+    // Separate top-level columns from data payload
+    const topLevelColumns = ['type', 'applicant_name', 'user_id', 'status', 'rejection_reason', 'created_at', 'din'];
+
+    const dbPayload: Record<string, any> = {
+        type,
+        applicant_name: applicantName,
+        user_id: userId,
+        status: 'Inprogress',
+        data: {} // Initialize data object for JSONB column
+    };
 
     // Process all entries from FormData
     for (const [key, value] of formData.entries()) {
         if (['type', 'userId', 'applicantName'].includes(key)) {
             continue;
         }
-        
+
         // Handle checkbox groups (e.g., 'identificationType.nationalIdCard')
         if (key.includes('.')) {
-             const [parentKey, childKey] = key.split('.');
-             const dbParentKey = mapKeyToDbField(parentKey);
-             if (!submissionPayload[dbParentKey]) {
-                 submissionPayload[dbParentKey] = {};
-             }
-             if (value === 'on') {
-                submissionPayload[dbParentKey][childKey] = true;
-             }
-             continue; // Move to next item in form data
+            const [parentKey, childKey] = key.split('.');
+            // We don't map keys for JSONB data, we keep them as is or use a consistent convention.
+            // Let's stick to the form's camelCase for JSONB data to avoid confusion, 
+            // OR use the mapping if we want snake_case inside the JSON. 
+            // Given the previous code tried to map, let's map to snake_case for consistency 
+            // but store it inside 'data'.
+            const dbParentKey = mapKeyToDbField(parentKey);
+
+            if (!dbPayload.data[dbParentKey]) {
+                dbPayload.data[dbParentKey] = {};
+            }
+            if (value === 'on') {
+                dbPayload.data[dbParentKey][childKey] = true;
+            }
+            continue;
         }
-        
+
         const dbKey = mapKeyToDbField(key);
-        
+
+        // Check if this key belongs to a top-level column
+        if (topLevelColumns.includes(dbKey)) {
+            if (typeof value === 'string') {
+                dbPayload[dbKey] = value;
+            }
+            continue;
+        }
+
+        // Otherwise, it goes into the 'data' JSONB column
         if (value instanceof File) {
             if (value.size > 0) {
                 const filePath = `${userId}/${uuidv4()}-${value.name}`;
                 const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-                
+
                 if (uploadError) {
                     console.error(`Storage error for ${key}:`, uploadError);
                     return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
                 }
-                
+
                 const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                submissionPayload[`${dbKey}_url`] = publicUrlData.publicUrl;
+                dbPayload.data[`${dbKey}_url`] = publicUrlData.publicUrl;
             }
         } else if (typeof value === 'string' && value) {
             if (value === 'on') {
-                submissionPayload[dbKey] = true;
+                dbPayload.data[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                submissionPayload[dbKey] = new Date(value).toISOString();
+                dbPayload.data[dbKey] = new Date(value).toISOString();
             } else {
-                submissionPayload[dbKey] = value;
+                dbPayload.data[dbKey] = value;
             }
         }
     }
-    
-    const cleanedPayload = Object.fromEntries(
-      Object.entries(submissionPayload).filter(([_, v]) => v != null)
-    );
+
+    // Clean up empty data fields if necessary, though JSONB handles nulls fine.
+    // We don't need to filter nulls from the 'data' object strictly, but it keeps it clean.
 
     try {
         const { data: insertedData, error: dbError } = await supabase
             .from('applications')
-            .insert(cleanedPayload)
+            .insert(dbPayload)
             .select()
             .single();
 
@@ -291,19 +311,47 @@ export async function saveApplication(
         if (!insertedData) {
             throw new Error("Failed to get ID from inserted application record.");
         }
-        
+
         // Automatically create a bill based on application type
+        let billingResult;
         if (type === 'DIN Application') {
-            await createBill(insertedData, userId, 5000, 'DIN Application Fee', 'KDSG-KASUPDA');
+            billingResult = await createBill(insertedData, userId, 5000, 'DIN Application Fee', 'KDSG-KASUPDA');
         } else {
-            await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+            billingResult = await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+        }
+
+        if (!billingResult.success) {
+            console.error("Billing creation failed:", billingResult.error);
+            return {
+                success: true,
+                applicationId: insertedData.id,
+                applicantName,
+                error: `Application saved, but billing failed: ${billingResult.error}`
+            };
         }
 
         return { success: true, applicationId: insertedData.id, applicantName };
 
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred during database insertion.';
-        console.error('Database Insertion Error:', errorMessage);
+    } catch (error: any) {
+        console.error('Database Insertion Error (Full):', error);
+
+        let errorMessage = 'An unknown server error occurred during database insertion.';
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else if (typeof error === 'object' && error !== null) {
+            // Handle Supabase/Postgrest errors which might not be Error instances
+            if ('message' in error) {
+                errorMessage = (error as any).message;
+            } else if ('error' in error) {
+                errorMessage = JSON.stringify((error as any).error);
+            } else {
+                errorMessage = JSON.stringify(error);
+            }
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
 }

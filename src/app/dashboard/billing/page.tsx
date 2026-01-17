@@ -11,13 +11,13 @@ import BillingTable from './BillingTable';
 import type { Transaction } from './BillingTable';
 
 async function getBillingData(userId: string) {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
         .from('transactions')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
-    
+
     if (error) {
         console.error("Error fetching user transactions:", error);
         return [];
@@ -46,10 +46,10 @@ function LoadingSkeleton() {
 
 // Make the main export an async Server Component
 export default async function BillingPage() {
-    
+
     // The data fetching logic is now directly in the page component.
     const PageComponent = async () => {
-        const supabase = createSupabaseServerClient();
+        const supabase = await createSupabaseServerClient();
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
@@ -57,7 +57,7 @@ export default async function BillingPage() {
         }
 
         const transactions = await getBillingData(user.id);
-        
+
         return (
             <div className="space-y-8">
                 <CardHeader className="px-0 pt-0">

@@ -9,8 +9,8 @@ export async function updateApplicationData(
   applicationId: string,
   updateData: Record<string, any>
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
-  
+  const supabase = await createSupabaseServerClient();
+
   // Remove the id from the update payload if it exists
   if (updateData.id) {
     delete updateData.id;
@@ -21,9 +21,9 @@ export async function updateApplicationData(
       .from('applications')
       .update(updateData)
       .eq('id', applicationId);
-    
+
     if (error) throw error;
-    
+
     revalidatePath(`/admin/applications/${applicationId}`);
     revalidatePath(`/admin/applications`);
 
@@ -41,15 +41,15 @@ export async function updateApplicationStatus(
   newStatus: 'Inprogress' | 'Approved' | 'Rejected',
   rejectionReason: string | null
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   try {
     const { error } = await supabase
       .from('applications')
-      .update({ 
-          status: newStatus,
-          rejection_reason: rejectionReason
-       })
+      .update({
+        status: newStatus,
+        rejection_reason: rejectionReason
+      })
       .eq('id', applicationId);
 
     if (error) throw error;

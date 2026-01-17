@@ -333,7 +333,7 @@ const knowledgeBase = [
 
 var { g: global, __dirname } = __turbopack_context__;
 {
-/* __next_internal_action_entry_do_not_use__ {"7f41d60e81e261d78502096d2bc3db94492aea0f4e":"chat"} */ __turbopack_context__.s({
+/* __next_internal_action_entry_do_not_use__ {"7f18520b31abec02c632270924383ad4863bd8b93c":"chat"} */ __turbopack_context__.s({
     "chat": (()=>chat)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.js [app-rsc] (ecmascript)");
@@ -399,7 +399,7 @@ Now, please answer the following question based on the knowledge provided: ${que
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
     chat
 ]);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(chat, "7f41d60e81e261d78502096d2bc3db94492aea0f4e", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(chat, "7f18520b31abec02c632270924383ad4863bd8b93c", null);
 }}),
 "[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <locals>": ((__turbopack_context__) => {
 "use strict";
@@ -424,7 +424,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["chat"])
+    "7f18520b31abec02c632270924383ad4863bd8b93c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["chat"])
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$dins$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <locals>');
@@ -435,7 +435,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "7f41d60e81e261d78502096d2bc3db94492aea0f4e": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$dins$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["7f41d60e81e261d78502096d2bc3db94492aea0f4e"])
+    "7f18520b31abec02c632270924383ad4863bd8b93c": (()=>__TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$dins$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__["7f18520b31abec02c632270924383ad4863bd8b93c"])
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$dins$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation>');
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$dashboard$2f$my$2d$dins$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$src$2f$ai$2f$flows$2f$chat$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$exports$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/dashboard/my-dins/page/actions.js { ACTIONS_MODULE0 => "[project]/src/ai/flows/chat.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <exports>');
@@ -596,8 +596,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/headers.js [app-rsc] (ecmascript)");
 ;
 ;
-function createSupabaseServerClient() {
-    const cookieStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["cookies"])();
+async function createSupabaseServerClient() {
+    const cookieStore = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$headers$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["cookies"])();
     return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$ssr$2f$dist$2f$module$2f$createServerClient$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createServerClient"])(("TURBOPACK compile-time value", "https://unpjwhhmobtcelwxrixl.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVucGp3aGhtb2J0Y2Vsd3hyaXhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4MDA0NDAsImV4cCI6MjA3MzM3NjQ0MH0.-LBGWmR-mpGKh-oGk3TfXSuB46v0LTKITd9eKQs_P1I"), {
         cookies: {
             get (name) {
@@ -708,7 +708,7 @@ const StatusBadge = ({ status, className })=>{
     }, this);
 };
 async function getDinApplications(userId) {
-    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
+    const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const { data, error } = await supabase.from('applications').select('*').eq('user_id', userId).eq('type', 'DIN Application').order('created_at', {
         ascending: false
     });
@@ -719,7 +719,7 @@ async function getDinApplications(userId) {
     return data;
 }
 async function MyDinsPageComponent() {
-    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
+    const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createSupabaseServerClient"])();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$components$2f$navigation$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["redirect"])('/login?redirectTo=/dashboard/my-dins');
@@ -797,14 +797,14 @@ async function MyDinsPageComponent() {
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                 lineNumber: 91,
-                                                columnNumber: 21
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(StatusIcon, {
                                                 status: app.status
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                 lineNumber: 92,
-                                                columnNumber: 21
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
@@ -842,7 +842,7 @@ async function MyDinsPageComponent() {
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                     lineNumber: 99,
-                                                    columnNumber: 25
+                                                    columnNumber: 21
                                                 }, this),
                                                 " ",
                                                 app.id
@@ -850,7 +850,7 @@ async function MyDinsPageComponent() {
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                             lineNumber: 98,
-                                            columnNumber: 21
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-sm text-muted-foreground",
@@ -860,7 +860,7 @@ async function MyDinsPageComponent() {
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                     lineNumber: 102,
-                                                    columnNumber: 25
+                                                    columnNumber: 21
                                                 }, this),
                                                 " ",
                                                 app.created_at ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$parseISO$2e$mjs__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["parseISO"])(app.created_at), 'dd/MM/yyyy') : 'N/A'
@@ -868,7 +868,7 @@ async function MyDinsPageComponent() {
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                             lineNumber: 101,
-                                            columnNumber: 21
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex items-center",
@@ -880,25 +880,25 @@ async function MyDinsPageComponent() {
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                         lineNumber: 105,
-                                                        columnNumber: 75
+                                                        columnNumber: 71
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                     lineNumber: 105,
-                                                    columnNumber: 25
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(StatusBadge, {
                                                     status: app.status
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                                     lineNumber: 106,
-                                                    columnNumber: 25
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
                                             lineNumber: 104,
-                                            columnNumber: 21
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
@@ -937,17 +937,17 @@ function MyDinsPage() {
         }, void 0, false, {
             fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
             lineNumber: 120,
-            columnNumber: 29
+            columnNumber: 25
         }, void 0),
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(MyDinsPageComponent, {}, void 0, false, {
             fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
             lineNumber: 121,
-            columnNumber: 13
+            columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/dashboard/my-dins/page.tsx",
         lineNumber: 120,
-        columnNumber: 9
+        columnNumber: 5
     }, this);
 }
 }}),

@@ -21,19 +21,20 @@ export default function ApplicationSuccessPage() {
                         Your application has been received and is now pending review by our team.
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        You can track the status of your application, including when the file number is assigned, on your "My Applications" page.
+                        Your application has been received. To process your application further, please proceed to the billing section to make the required payment.
                     </p>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 text-yellow-800 text-sm">
+                        <strong>Important:</strong> Your application will not be processed until the application fee is paid.
+                    </div>
                 </CardContent>
                 <CardFooter className="flex flex-col sm:flex-row justify-center gap-3">
-                    <Button onClick={() => router.push('/dashboard/my-applications')}>
-                        Go to My Applications
+                    <Button onClick={() => router.push('/dashboard/billing')} className="w-full sm:w-auto bg-green-600 hover:bg-green-700">
+                        Proceed to Payment
                     </Button>
-                    <Button variant="outline" asChild>
-                        <Link href="/dashboard">
-                            Return to Dashboard
-                        </Link>
+                    <Button variant="outline" onClick={() => router.push('/dashboard/my-applications')} className="w-full sm:w-auto">
+                        View My Applications
                     </Button>
                 </CardFooter>
             </Card>
