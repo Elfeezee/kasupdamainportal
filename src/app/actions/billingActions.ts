@@ -226,9 +226,17 @@ export async function createGeneralBill(
 
         return { success: true, rrrLink };
 
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "An unknown server error occurred.";
-        console.error('Create General Bill Error:', errorMessage);
+    } catch (error: any) {
+        let errorMessage = "An unknown server error occurred.";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else if (error && typeof error === 'object' && error.message) {
+            errorMessage = error.message;
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+
+        console.error('Create General Bill Error:', error);
         return { success: false, error: `Failed to create bill: ${errorMessage}` };
     }
 }
@@ -273,9 +281,17 @@ export async function verifyPayment(transactionId: number, paymentReference: str
 
         return { success: true, status: newStatus };
 
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "An unknown server error occurred.";
-        console.error('Verify Payment Error:', errorMessage);
+    } catch (error: any) {
+        let errorMessage = "An unknown server error occurred.";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else if (error && typeof error === 'object' && error.message) {
+            errorMessage = error.message;
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+
+        console.error('Verify Payment Error:', error);
         return { success: false, error: `Failed to verify payment: ${errorMessage}` };
     }
 }
