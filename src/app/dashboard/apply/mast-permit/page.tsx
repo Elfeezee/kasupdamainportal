@@ -43,31 +43,31 @@ const representativeIdOptions = [
 ];
 
 const mastTypeOptions = [
-    { id: "Radio" as const, label: "Radio" },
-    { id: "TV" as const, label: "TV" },
-    { id: "GSM" as const, label: "GSM" },
-    { id: "Other" as const, label: "Other (Specify)" },
+  { id: "Radio" as const, label: "Radio" },
+  { id: "TV" as const, label: "TV" },
+  { id: "GSM" as const, label: "GSM" },
+  { id: "Other" as const, label: "Other (Specify)" },
 ];
 
 const requiredDocsList = [
-    { id: "docLeaseAgreement", label: "Lease title, agreement and power of attorney" },
-    { id: "docStructuralDrawings", label: "2 Copies of Structural Drawings and Details" },
-    { id: "docSiteAnalysisReport", label: "Site Analysis Report" },
-    { id: "docKepasEnvImpactAssessment", label: "Copy of KEPA's Environment Impact Assessment" },
-    { id: "docSoilInvestigationReport", label: "Soil Investigation Report" },
-    { id: "docTelecommunicationDesigns", label: "Telecommunication Designs" },
-    { id: "docStructuralCalculationSheets", label: "Structural Calculation Sheets" },
-    { id: "docElectricalWorksDrawings", label: "Electrical Works Drawings and Details" },
-    { id: "docPoliceReport", label: "Police Report" },
-    { id: "docConsentLetter", label: "Consent Letter" },
-    { id: "docProofOfOutrightPurchase", label: "Proof of Outright Purchase" },
-    { id: "docSitePlan", label: "Site Plan" },
-    { id: "docNAMAApproval", label: "Nigerian Airspace Management Authority (NAMA) approval (for masts within 15km radius to any airport)" },
-    { id: "docNCAAApproval", label: "Nigerian Civil Aviation Authority (NCAA) approval (for Mast greater than 70m in height)" },
-    { id: "docLetterOfAttestation", label: "Letter of Attestation of Design" },
-    { id: "docMechanicalWorksDrawings", label: "Mechanical Works Drawings and Details" },
-    { id: "docArchitecturalWorksDrawings", label: "Architectural Works Drawings and Details" },
-    { id: "docFireServiceReport", label: "Fire Service Report" },
+  { id: "docLeaseAgreement", label: "Lease title, agreement and power of attorney" },
+  { id: "docStructuralDrawings", label: "2 Copies of Structural Drawings and Details" },
+  { id: "docSiteAnalysisReport", label: "Site Analysis Report" },
+  { id: "docKepasEnvImpactAssessment", label: "Copy of KEPA's Environment Impact Assessment" },
+  { id: "docSoilInvestigationReport", label: "Soil Investigation Report" },
+  { id: "docTelecommunicationDesigns", label: "Telecommunication Designs" },
+  { id: "docStructuralCalculationSheets", label: "Structural Calculation Sheets" },
+  { id: "docElectricalWorksDrawings", label: "Electrical Works Drawings and Details" },
+  { id: "docPoliceReport", label: "Police Report" },
+  { id: "docConsentLetter", label: "Consent Letter" },
+  { id: "docProofOfOutrightPurchase", label: "Proof of Outright Purchase" },
+  { id: "docSitePlan", label: "Site Plan" },
+  { id: "docNAMAApproval", label: "Nigerian Airspace Management Authority (NAMA) approval (for masts within 15km radius to any airport)" },
+  { id: "docNCAAApproval", label: "Nigerian Civil Aviation Authority (NCAA) approval (for Mast greater than 70m in height)" },
+  { id: "docLetterOfAttestation", label: "Letter of Attestation of Design" },
+  { id: "docMechanicalWorksDrawings", label: "Mechanical Works Drawings and Details" },
+  { id: "docArchitecturalWorksDrawings", label: "Architectural Works Drawings and Details" },
+  { id: "docFireServiceReport", label: "Fire Service Report" },
 ];
 
 
@@ -124,7 +124,7 @@ const mastPermitSchema = z.object({
   mastCommencementDate: z.date().optional(),
   mastCoordinates: z.string().optional(),
   mastLocationOfShield: z.string().optional(),
-  
+
   // Box 5: Required Documents
   ...Object.fromEntries(requiredDocsList.map(doc => [doc.id, z.any().optional()])),
 
@@ -150,6 +150,8 @@ const steps = [
   { id: 5, name: "Documents & Declaration", fields: ['declaration'] as FieldName<MastPermitFormValues>[] },
 ];
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function MastPermitPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -159,20 +161,20 @@ export default function MastPermitPage() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        const currentUser = session?.user || null;
-        setUser(currentUser);
-        if (!currentUser) {
-            toast({ title: 'Authentication Error', description: 'You must be logged in to proceed.', variant: 'destructive' });
-            router.push('/login');
-        }
+      const currentUser = session?.user || null;
+      setUser(currentUser);
+      if (!currentUser) {
+        toast({ title: 'Authentication Error', description: 'You must be logged in to proceed.', variant: 'destructive' });
+        router.push('/login');
+      }
     });
 
     return () => {
-        subscription.unsubscribe();
+      subscription.unsubscribe();
     }
   }, [router, toast]);
-  
-  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = useForm<MastPermitFormValues>({
+
+  const form = useForm<MastPermitFormValues>({
     resolver: zodResolver(mastPermitSchema),
     mode: "onChange",
     defaultValues: {
@@ -220,57 +222,62 @@ export default function MastPermitPage() {
     }
   });
 
+  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'mast-permit-form', requiredDocsList.map(doc => doc.id));
+
   const watchedTypeOfLand = watch("siteTypeOfLand");
   const watchedMastType = watch("mastType");
 
- const onSubmit = async (data: MastPermitFormValues) => {
+  const onSubmit = async (data: MastPermitFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
-    
+
     const formData = new FormData();
     formData.append('type', "Mast Installation Permit");
     formData.append('applicantName', data.orgName);
     formData.append('userId', user.id);
 
     Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof FileList && value.length > 0) {
-            if (value[0].size > 0) {
-                formData.append(key, value[0]);
-            }
-        } else if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
-            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                }
-            });
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, String(value));
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) {
+          formData.append(key, value[0]);
         }
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
+        Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          }
+        });
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, String(value));
+      }
     });
 
     try {
-        const result = await saveApplication(formData);
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
-        } else {
-            throw new Error(result.error || "An unknown error occurred.");
-        }
+      const result = await saveApplication(formData);
+      if (result.success) {
+        clearStorage();
+        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit the application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit the application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -278,25 +285,25 @@ export default function MastPermitPage() {
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({ title: "Validation Error", description: "Please correct the errors before proceeding.", variant: "destructive" });
         return;
       }
     }
-     if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()){
-        await trigger('siteProofOfOwnership');
-        if(errors.siteProofOfOwnership){
-            toast({ title: "Validation Error", description: "Proof of Ownership is required for Private land.", variant: "destructive" });
-            return;
-        }
+    if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()) {
+      await trigger('siteProofOfOwnership');
+      if (errors.siteProofOfOwnership) {
+        toast({ title: "Validation Error", description: "Proof of Ownership is required for Private land.", variant: "destructive" });
+        return;
+      }
     }
-    if (currentStep === 4 && watchedMastType === "Other" && !watch('mastTypeOther')?.trim()){
-        await trigger('mastTypeOther');
-        if(errors.mastTypeOther){
-            toast({ title: "Validation Error", description: "Specify 'Other' for mast type.", variant: "destructive" });
-            return;
-        }
+    if (currentStep === 4 && watchedMastType === "Other" && !watch('mastTypeOther')?.trim()) {
+      await trigger('mastTypeOther');
+      if (errors.mastTypeOther) {
+        toast({ title: "Validation Error", description: "Specify 'Other' for mast type.", variant: "destructive" });
+        return;
+      }
     }
     if (currentStep < steps.length) {
       setCurrentStep(prev => prev + 1);
@@ -308,17 +315,17 @@ export default function MastPermitPage() {
       setCurrentStep(prev => prev - 1);
     }
   };
-  
-    if (!user) {
+
+  if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
 
@@ -327,7 +334,7 @@ export default function MastPermitPage() {
       <Card className="mb-6">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-2">
-             <span className="text-4xl font-bold text-primary mr-2">MP</span>
+            <span className="text-4xl font-bold text-primary mr-2">MP</span>
             <div className="text-sm">
               <p className="font-semibold">KADUNA STATE OF NIGERIA</p>
               <p>Kaduna State Urban Planning and Development Authority</p>
@@ -343,7 +350,7 @@ export default function MastPermitPage() {
         <div className="flex items-start w-full min-w-[400px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div className={cn("w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300", currentStep > step.id ? "bg-primary border-primary text-primary-foreground" : currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" : "bg-muted border-border text-muted-foreground")}>
                   {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
@@ -354,7 +361,7 @@ export default function MastPermitPage() {
           ))}
         </div>
       </div>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 px-1">
           <div>
@@ -488,7 +495,7 @@ export default function MastPermitPage() {
                   {requiredDocsList.map(doc => (
                     <div key={doc.id} className="space-y-1.5">
                       <Label htmlFor={doc.id} className="text-sm font-medium">{doc.label}</Label>
-                      <Input id={doc.id} type="file" {...register(doc.id as FieldName<MastPermitFormValues>)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                      <Input id={doc.id} type="file" {...register(doc.id as any)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
                     </div>
                   ))}
                 </div>

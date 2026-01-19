@@ -41,11 +41,11 @@ const representativeIdOptions = [
 ];
 
 const requiredDocsList = [
-    { id: "docConsentLetter" as const, label: "Consent Letter" },
-    { id: "docProofOfOutrightPurchase" as const, label: "Proof of Outright Purchase" },
-    { id: "docImagerySketch" as const, label: "Imagery & Sketch" },
-    { id: "docSiteLocationInstallationCoordinates" as const, label: "Site Location & Type of Installation with Coordinates" },
-    { id: "docLeaseAgreementLetter" as const, label: "Lease Agreement Letter" },
+  { id: "docConsentLetter" as const, label: "Consent Letter" },
+  { id: "docProofOfOutrightPurchase" as const, label: "Proof of Outright Purchase" },
+  { id: "docImagerySketch" as const, label: "Imagery & Sketch" },
+  { id: "docSiteLocationInstallationCoordinates" as const, label: "Site Location & Type of Installation with Coordinates" },
+  { id: "docLeaseAgreementLetter" as const, label: "Lease Agreement Letter" },
 ];
 
 const outdoorAdvertisementPermitSchema = z.object({
@@ -55,7 +55,7 @@ const outdoorAdvertisementPermitSchema = z.object({
   applicantPhone: z.string().min(1, "Phone Number is required").regex(phoneRegex, "Invalid phone number format"),
   applicantEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   applicantFullNameContact: z.string().min(1, "Full Name and Contact of Applicant is required"),
-  
+
   outdoorActivity: z.object(
     Object.fromEntries(outdoorActivityTypes.map(type => [type.id, z.boolean().optional()]))
   ).refine(data => Object.values(data).some(val => val === true), {
@@ -86,7 +86,7 @@ const outdoorAdvertisementPermitSchema = z.object({
     Object.fromEntries(representativeIdOptions.map(type => [type.id, z.boolean().optional()]))
   ).optional().default({}),
   repIdNumber: z.string().optional(),
-  
+
   // Box 4: Required Documents
   docImagerySketch: z.any().optional(),
   docSiteLocationInstallationCoordinates: z.any().optional(),
@@ -99,14 +99,14 @@ const outdoorAdvertisementPermitSchema = z.object({
     message: "You must agree to the declaration to submit the application."
   })
 }).refine(data => !data.outdoorActivity.signboard || (data.outdoorActivity.signboard && !!data.outdoorActivitySignboardSize?.trim()), {
-    message: "Specify Size for Signboard is required",
-    path: ["outdoorActivitySignboardSize"],
+  message: "Specify Size for Signboard is required",
+  path: ["outdoorActivitySignboardSize"],
 }).refine(data => !data.outdoorActivity.others || (data.outdoorActivity.others && !!data.outdoorActivityOthersSpecify?.trim()), {
-    message: "Specify 'Others' for outdoor activity",
-    path: ["outdoorActivityOthersSpecify"],
+  message: "Specify 'Others' for outdoor activity",
+  path: ["outdoorActivityOthersSpecify"],
 }).refine(data => data.siteTypeOfLand !== "Private" || (data.siteTypeOfLand === "Private" && !!data.siteProofOfOwnership?.trim()), {
-    message: "Proof of Ownership is required for Private land",
-    path: ["siteProofOfOwnership"],
+  message: "Proof of Ownership is required for Private land",
+  path: ["siteProofOfOwnership"],
 });
 
 type OutdoorAdvertisementPermitFormValues = z.infer<typeof outdoorAdvertisementPermitSchema>;
@@ -118,6 +118,8 @@ const steps = [
   { id: 4, name: "Documents & Declaration", fields: ['declaration'] as FieldName<OutdoorAdvertisementPermitFormValues>[] },
 ];
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function OutdoorAdvertisementPermitPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -127,17 +129,17 @@ export default function OutdoorAdvertisementPermitPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-permit');
-        } else {
-            setUser(session.user);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-permit');
+      } else {
+        setUser(session.user);
+      }
     };
     checkSession();
   }, [router]);
-  
-  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = useForm<OutdoorAdvertisementPermitFormValues>({
+
+  const form = useForm<OutdoorAdvertisementPermitFormValues>({
     resolver: zodResolver(outdoorAdvertisementPermitSchema),
     mode: "onChange",
     defaultValues: {
@@ -171,69 +173,74 @@ export default function OutdoorAdvertisementPermitPage() {
     }
   });
 
+  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'outdoor-advertisement-permit-form', requiredDocsList.map(doc => doc.id));
+
   const watchedOutdoorActivity = watch("outdoorActivity");
   const watchedTypeOfLand = watch("siteTypeOfLand");
 
- const onSubmit = async (data: OutdoorAdvertisementPermitFormValues) => {
+  const onSubmit = async (data: OutdoorAdvertisementPermitFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
-    
+
     // Create a FormData object to handle file uploads and other data
     const formData = new FormData();
-    
+
     formData.append('type', "Outdoor Advertisement Permit");
     formData.append('applicantName', data.applicantCompanyNameIndividual);
     formData.append('userId', user.id);
-    
+
     // Iterate over the form data and append to FormData
     Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof FileList && value.length > 0) {
-            if (value[0].size > 0) {
-                formData.append(key, value[0]);
-            }
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
-            // For nested objects like 'outdoorActivity' or 'repIdentificationType'
-            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                } else if (nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, String(nestedValue));
-                }
-            });
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, value as string);
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) {
+          formData.append(key, value[0]);
         }
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
+        // For nested objects like 'outdoorActivity' or 'repIdentificationType'
+        Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          } else if (nestedValue) {
+            formData.append(`${key}.${nestedKey}`, String(nestedValue));
+          }
+        });
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, value as string);
+      }
     });
 
 
     try {
-        const result = await saveApplication(formData);
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
-        } else {
-            throw new Error(result.error || "An unknown error occurred.");
-        }
+      const result = await saveApplication(formData);
+      if (result.success) {
+        clearStorage();
+        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit the application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit the application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({ title: "Validation Error", description: "Please correct the errors before proceeding.", variant: "destructive" });
         return;
@@ -241,28 +248,28 @@ export default function OutdoorAdvertisementPermitPage() {
     }
     // Specific conditional validation before proceeding from step 1
     if (currentStep === 1) {
-        if (watchedOutdoorActivity?.signboard && !watch('outdoorActivitySignboardSize')?.trim()) {
-            await trigger('outdoorActivitySignboardSize');
-            if (errors.outdoorActivitySignboardSize) {
-                toast({ title: "Validation Error", description: errors.outdoorActivitySignboardSize.message, variant: "destructive" });
-                return;
-            }
+      if (watchedOutdoorActivity?.signboard && !watch('outdoorActivitySignboardSize')?.trim()) {
+        await trigger('outdoorActivitySignboardSize');
+        if (errors.outdoorActivitySignboardSize) {
+          toast({ title: "Validation Error", description: errors.outdoorActivitySignboardSize.message, variant: "destructive" });
+          return;
         }
-        if (watchedOutdoorActivity?.others && !watch('outdoorActivityOthersSpecify')?.trim()) {
-            await trigger('outdoorActivityOthersSpecify');
-            if (errors.outdoorActivityOthersSpecify) {
-                toast({ title: "Validation Error", description: errors.outdoorActivityOthersSpecify.message, variant: "destructive" });
-                return;
-            }
+      }
+      if (watchedOutdoorActivity?.others && !watch('outdoorActivityOthersSpecify')?.trim()) {
+        await trigger('outdoorActivityOthersSpecify');
+        if (errors.outdoorActivityOthersSpecify) {
+          toast({ title: "Validation Error", description: errors.outdoorActivityOthersSpecify.message, variant: "destructive" });
+          return;
         }
+      }
     }
     // Specific conditional validation for step 2
-    if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()){
-        await trigger('siteProofOfOwnership');
-        if(errors.siteProofOfOwnership){
-            toast({ title: "Validation Error", description: errors.siteProofOfOwnership.message, variant: "destructive" });
-            return;
-        }
+    if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()) {
+      await trigger('siteProofOfOwnership');
+      if (errors.siteProofOfOwnership) {
+        toast({ title: "Validation Error", description: errors.siteProofOfOwnership.message, variant: "destructive" });
+        return;
+      }
     }
 
     if (currentStep < steps.length) {
@@ -275,20 +282,20 @@ export default function OutdoorAdvertisementPermitPage() {
       setCurrentStep(prev => prev - 1);
     }
   };
-  
-    if (!user) {
+
+  if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
-  
+
   return (
     <div className="container mx-auto px-2 sm:px-4 py-8">
       <Card className="mb-6">
@@ -310,7 +317,7 @@ export default function OutdoorAdvertisementPermitPage() {
         <div className="flex items-start w-full min-w-[360px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div className={cn("w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300", currentStep > step.id ? "bg-primary border-primary text-primary-foreground" : currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" : "bg-muted border-border text-muted-foreground")}>
                   {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
@@ -341,7 +348,7 @@ export default function OutdoorAdvertisementPermitPage() {
                 <div><Label htmlFor="applicantEmail">Email Address</Label><Input id="applicantEmail" type="email" {...register("applicantEmail")} />{errors.applicantEmail && <p className="text-destructive text-xs mt-1">{errors.applicantEmail.message}</p>}</div>
               </div>
               <div><Label htmlFor="applicantFullNameContact">Full Name and Contact of (Applicant/CEO)*</Label><Input id="applicantFullNameContact" {...register("applicantFullNameContact")} />{errors.applicantFullNameContact && <p className="text-destructive text-xs mt-1">{errors.applicantFullNameContact.message}</p>}</div>
-              
+
               <div>
                 <Label>Type of Outdoor Activity*</Label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 mt-2">
@@ -353,7 +360,7 @@ export default function OutdoorAdvertisementPermitPage() {
                   ))}
                 </div>
                 {errors.outdoorActivity && <p className="text-destructive text-xs mt-1">{errors.outdoorActivity.message || (errors.outdoorActivity as any)?.root?.message}</p>}
-                
+
                 {watchedOutdoorActivity?.signboard && (
                   <div className="mt-2"><Label htmlFor="outdoorActivitySignboardSize" className="sr-only">Specify Size for Signboard</Label><Input id="outdoorActivitySignboardSize" placeholder="Specify Size for Signboard" {...register("outdoorActivitySignboardSize")} />{errors.outdoorActivitySignboardSize && <p className="text-destructive text-xs mt-1">{errors.outdoorActivitySignboardSize.message}</p>}</div>
                 )}
@@ -421,42 +428,42 @@ export default function OutdoorAdvertisementPermitPage() {
                     </div>
                   ))}
                 </div>
-                 {errors.repIdentificationType && <p className="text-destructive text-xs mt-1">{errors.repIdentificationType.message || (errors.repIdentificationType as any)?.root?.message}</p>}
+                {errors.repIdentificationType && <p className="text-destructive text-xs mt-1">{errors.repIdentificationType.message || (errors.repIdentificationType as any)?.root?.message}</p>}
               </div>
               <div><Label htmlFor="repIdNumber">Representative's ID Number</Label><Input id="repIdNumber" {...register("repIdNumber")} /></div>
             </CardContent>
           </Card>
         )}
-        
+
         {currentStep === 4 && (
           <Card>
             <CardHeader><CardTitle className="text-lg sm:text-xl">BOX 4 & 5: REQUIRED DOCUMENTS & SIGNATURE</CardTitle></CardHeader>
             <CardContent className="space-y-6">
-                <div>
-                    <Label className="text-md font-semibold">BOX 4: Required Documents</Label>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                        {requiredDocsList.map(doc => (
-                            <div key={doc.id} className="space-y-1.5">
-                                <Label htmlFor={doc.id} className="text-sm font-medium">{doc.label}</Label>
-                                <Input id={doc.id} type="file" {...register(doc.id as FieldName<OutdoorAdvertisementPermitFormValues>)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                            </div>
-                        ))}
+              <div>
+                <Label className="text-md font-semibold">BOX 4: Required Documents</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                  {requiredDocsList.map(doc => (
+                    <div key={doc.id} className="space-y-1.5">
+                      <Label htmlFor={doc.id} className="text-sm font-medium">{doc.label}</Label>
+                      <Input id={doc.id} type="file" {...register(doc.id as any)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
                     </div>
+                  ))}
                 </div>
-                <Separator />
-                <div>
-                    <Label className="text-md font-semibold">BOX 5: Signature</Label>
-                    <CardDescription className="text-xs sm:text-sm mb-2">All applicants must affix their signature; the application will not be accepted without a signature. In the case of a representative, they must also affix their signature.</CardDescription>
-                    <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
-                        <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1"/>)} />
-                        <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
-                    </div>
-                    {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
-                    <div className="mt-2 px-1 text-xs text-muted-foreground space-y-1">
-                        <p>Applicant's Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>
-                        <p>Representative's Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span></p>
-                    </div>
+              </div>
+              <Separator />
+              <div>
+                <Label className="text-md font-semibold">BOX 5: Signature</Label>
+                <CardDescription className="text-xs sm:text-sm mb-2">All applicants must affix their signature; the application will not be accepted without a signature. In the case of a representative, they must also affix their signature.</CardDescription>
+                <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
+                  <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1" />)} />
+                  <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
                 </div>
+                {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
+                <div className="mt-2 px-1 text-xs text-muted-foreground space-y-1">
+                  <p>Applicant's Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>
+                  <p>Representative's Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span></p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

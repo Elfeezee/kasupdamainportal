@@ -22,6 +22,14 @@ interface OsoftValidationResponse {
     [key: string]: any;
 }
 
+interface GeneralPaymentResponse {
+    status: string;
+    message: string;
+    reference: string;
+    amount: string;
+    rrrLink: string;
+}
+
 
 /**
  * Generates a payment reference from the Osoftpay API and saves the transaction record.
@@ -120,13 +128,109 @@ export async function createBill(
 
 
 /**
+ * Generates a payment reference from the Osoftpay GeneralPayments API and saves the transaction record.
+ * This version does not use state code and returns an RRR link.
+ */
+export async function createGeneralBill(
+    application: StoredApplication,
+    userId: string,
+    amount: number,
+    description: string
+): Promise<{ success: boolean; error?: string; rrrLink?: string }> {
+    const supabase = await createSupabaseServerClient();
+
+    // 1. Get user details for payment
+    const { data: userProfile, error: profileError } = await supabase
+        .from('users')
+        .select('phone, email')
+        .eq('uid', userId)
+        .single();
+
+    if (profileError || !userProfile) {
+        console.error("Error fetching user profile for billing:", profileError);
+        return { success: false, error: "Could not retrieve user details for billing." };
+    }
+
+    // 2. Call Osoftpay GeneralPayments API
+    try {
+        const payload = {
+            "Payment_Item": description,
+            "Payer_Name": application.applicant_name,
+            "Payer_Phone": userProfile.phone || '08000000000',
+            "Payer_Email": userProfile.email || 'no-email@example.com',
+            "Description": description,
+            "Total_Price": amount.toString(),
+            "Platform": "PayKaduna"
+        };
+
+        console.log("Osoftpay General Request Payload:", JSON.stringify(payload, null, 2));
+
+        const response = await fetch('https://kasupda.osoftpay.net/api/GeneralPayments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error('Osoftpay General API Error Body:', errorBody);
+            throw new Error(`Osoftpay General API responded with status: ${response.status}`);
+        }
+
+        const result: GeneralPaymentResponse = await response.json();
+        console.log("Osoftpay General Response:", result);
+
+        if (result.status !== '00' || !result.reference) {
+            throw new Error(result.message || 'Failed to generate payment reference from Osoftpay.');
+        }
+
+        const paymentReference = result.reference;
+        const rrrLink = result.rrrLink;
+
+        // 3. Save transaction to our database
+        const { error: dbError } = await supabase
+            .from('transactions')
+            .insert({
+                user_id: userId,
+                application_id: application.id,
+                amount: amount,
+                description: description,
+                payment_reference: paymentReference,
+                payment_link: rrrLink,
+                status: 'Pending',
+                payer_name: application.applicant_name,
+                payer_email: userProfile.email,
+                payer_phone: userProfile.phone,
+            });
+
+        if (dbError) {
+            throw dbError;
+        }
+
+        revalidatePath('/dashboard/billing');
+        revalidatePath('/admin/applications');
+        revalidatePath(`/admin/applications/${application.id}`);
+
+        return { success: true, rrrLink };
+
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown server error occurred.";
+        console.error('Create General Bill Error:', errorMessage);
+        return { success: false, error: `Failed to create bill: ${errorMessage}` };
+    }
+}
+
+
+/**
  * Verifies a payment status with the Osoftpay API and updates our database.
  */
 export async function verifyPayment(transactionId: number, paymentReference: string): Promise<{ success: boolean; status?: string; error?: string; }> {
     const supabase = await createSupabaseServerClient();
 
     try {
-        const response = await fetch(`https://agency.osoftpay.net/api/CallValidation/${paymentReference}`, {
+        const response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

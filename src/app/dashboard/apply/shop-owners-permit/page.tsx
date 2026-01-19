@@ -93,6 +93,8 @@ const steps = [
   { id: 4, name: "Signature", fields: ['declaration'] as FieldName<ShopOwnersPermitFormValues>[] },
 ];
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function ShopOwnersPermitPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -102,17 +104,17 @@ export default function ShopOwnersPermitPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/shop-owners-permit');
-        } else {
-            setUser(session.user);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/shop-owners-permit');
+      } else {
+        setUser(session.user);
+      }
     };
     checkSession();
   }, [router]);
-  
-  const { register, handleSubmit, control, formState: { errors }, trigger } = useForm<ShopOwnersPermitFormValues>({
+
+  const form = useForm<ShopOwnersPermitFormValues>({
     resolver: zodResolver(shopOwnersPermitSchema),
     mode: "onChange",
     defaultValues: {
@@ -148,13 +150,17 @@ export default function ShopOwnersPermitPage() {
     }
   });
 
- const onSubmit = async (data: ShopOwnersPermitFormValues) => {
+  const { register, handleSubmit, control, formState: { errors }, trigger } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'shop-owners-permit-form');
+
+  const onSubmit = async (data: ShopOwnersPermitFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
-    
+
     const formData = new FormData();
     formData.append('type', "Temporary Shop Owners Permit");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
@@ -162,46 +168,47 @@ export default function ShopOwnersPermitPage() {
     formData.append('userId', user.id);
 
     for (const [key, value] of Object.entries(data)) {
-        if (value instanceof FileList && value.length > 0) {
-            formData.append(key, value[0]);
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList) && !(value instanceof Date)) {
-            for (const [nestedKey, nestedValue] of Object.entries(value)) {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                }
-            }
-        } else if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, value as string);
+      if (value instanceof FileList && value.length > 0) {
+        formData.append(key, value[0]);
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList) && !(value instanceof Date)) {
+        for (const [nestedKey, nestedValue] of Object.entries(value)) {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          }
         }
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, value as string);
+      }
     }
 
     try {
-        const result = await saveApplication(formData);
-        if (result.success) {
-             router.push(`/dashboard/apply/success?id=${result.applicationId}`);
-        } else {
-            throw new Error(result.error || "An unknown error occurred.");
-        }
+      const result = await saveApplication(formData);
+      if (result.success) {
+        clearStorage();
+        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({
           title: "Validation Error",
@@ -221,17 +228,17 @@ export default function ShopOwnersPermitPage() {
       setCurrentStep(prev => prev - 1);
     }
   };
-  
+
   if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
 
@@ -244,12 +251,12 @@ export default function ShopOwnersPermitPage() {
           </CardTitle>
         </CardHeader>
       </Card>
-      
+
       <div className="mb-8 p-2 sm:p-4 border rounded-lg shadow-sm overflow-x-auto">
         <div className="flex items-start w-full min-w-[360px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div className={cn("w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300", currentStep > step.id ? "bg-primary border-primary text-primary-foreground" : currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" : "bg-muted border-border text-muted-foreground")}>
                   {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
@@ -314,10 +321,10 @@ export default function ShopOwnersPermitPage() {
           <Card>
             <CardHeader><CardTitle className="text-lg sm:text-xl">BOX 2: ADDRESS</CardTitle><CardDescription className="text-xs sm:text-sm">All applicants must complete Box 2 in full. This should be your normal residential address.</CardDescription></CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><Label htmlFor="appHouseNo">House No</Label><Input id="appHouseNo" {...register("appHouseNo")} /></div><div><Label htmlFor="appStreetName">Street Name</Label><Input id="appStreetName" {...register("appStreetName")} placeholder="Ahmadu Bello Road"/></div></div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div><Label htmlFor="appDistrict">District</Label><Input id="appDistrict" {...register("appDistrict")} placeholder="Sabon Gari"/></div><div><Label htmlFor="appCityTown">City/Town</Label><Input id="appCityTown" {...register("appCityTown")} placeholder="Zaria"/></div><div><Label htmlFor="appState">State</Label><Input id="appState" {...register("appState")} /></div></div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div><Label htmlFor="appCountry">Country</Label><Input id="appCountry" {...register("appCountry")} /></div><div><Label htmlFor="appPOBox">P.O./P.M.B.</Label><Input id="appPOBox" {...register("appPOBox")} placeholder="040 Zaria"/></div><div><Label htmlFor="appCO">C/O</Label><Input id="appCO" {...register("appCO")} /></div></div>
-              <div><Label htmlFor="appAdditionalAddressInfo">Additional Address Information</Label><Textarea id="appAdditionalAddressInfo" {...register("appAdditionalAddressInfo")} placeholder="G.R.A Res. Estate"/></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><Label htmlFor="appHouseNo">House No</Label><Input id="appHouseNo" {...register("appHouseNo")} /></div><div><Label htmlFor="appStreetName">Street Name</Label><Input id="appStreetName" {...register("appStreetName")} placeholder="Ahmadu Bello Road" /></div></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div><Label htmlFor="appDistrict">District</Label><Input id="appDistrict" {...register("appDistrict")} placeholder="Sabon Gari" /></div><div><Label htmlFor="appCityTown">City/Town</Label><Input id="appCityTown" {...register("appCityTown")} placeholder="Zaria" /></div><div><Label htmlFor="appState">State</Label><Input id="appState" {...register("appState")} /></div></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div><Label htmlFor="appCountry">Country</Label><Input id="appCountry" {...register("appCountry")} /></div><div><Label htmlFor="appPOBox">P.O./P.M.B.</Label><Input id="appPOBox" {...register("appPOBox")} placeholder="040 Zaria" /></div><div><Label htmlFor="appCO">C/O</Label><Input id="appCO" {...register("appCO")} /></div></div>
+              <div><Label htmlFor="appAdditionalAddressInfo">Additional Address Information</Label><Textarea id="appAdditionalAddressInfo" {...register("appAdditionalAddressInfo")} placeholder="G.R.A Res. Estate" /></div>
             </CardContent>
           </Card>
         )}
@@ -342,8 +349,8 @@ export default function ShopOwnersPermitPage() {
             <CardHeader><CardTitle className="text-lg sm:text-xl">BOX 4: SIGNATURE</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30">
-                  <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1"/>)} />
-                  <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
+                <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1" />)} />
+                <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
               </div>
               {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
               <p className="text-sm text-muted-foreground px-1">Applicant Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>

@@ -134,6 +134,8 @@ const steps = [
   { id: 5, name: "Documents & Declaration", fields: ['declaration'] as FieldName<StreetNamingPermitFormValues>[] },
 ];
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function StreetNamingPermitPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -143,17 +145,17 @@ export default function StreetNamingPermitPage() {
 
   useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/street-naming-permit');
-        } else {
-            setUser(session.user);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/street-naming-permit');
+      } else {
+        setUser(session.user);
+      }
     };
     checkSession();
   }, [router]);
 
-  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = useForm<StreetNamingPermitFormValues>({
+  const form = useForm<StreetNamingPermitFormValues>({
     resolver: zodResolver(streetNamingPermitSchema),
     mode: "onChange",
     defaultValues: {
@@ -205,12 +207,16 @@ export default function StreetNamingPermitPage() {
     }
   });
 
+  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'street-naming-permit-form', ['docImageShowingSite', 'docConsentLetter']);
+
   const watchedEducationLevel = watch("educationLevel");
 
   const onSubmit = async (data: StreetNamingPermitFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
     const formData = new FormData();
@@ -220,46 +226,47 @@ export default function StreetNamingPermitPage() {
     formData.append('userId', user.id);
 
     Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof FileList && value.length > 0) {
-            if(value[0].size > 0) formData.append(key, value[0]);
-        } else if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
-            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                }
-            });
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, String(value));
-        }
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) formData.append(key, value[0]);
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
+        Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          }
+        });
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, String(value));
+      }
     });
 
     try {
-        const result = await saveApplication(formData);
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
-        } else {
-            throw new Error(result.error || "An unknown error occurred.");
-        }
+      const result = await saveApplication(formData);
+      if (result.success) {
+        clearStorage();
+        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({
           title: "Validation Error",
@@ -282,14 +289,14 @@ export default function StreetNamingPermitPage() {
 
   if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
 
@@ -318,20 +325,20 @@ export default function StreetNamingPermitPage() {
         <div className="flex items-start w-full min-w-[400px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div
                   className={cn(
                     "w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                     currentStep > step.id ? "bg-primary border-primary text-primary-foreground" :
-                    currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" :
-                    "bg-muted border-border text-muted-foreground"
+                      currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" :
+                        "bg-muted border-border text-muted-foreground"
                   )}
                 >
                   {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
                 <p className={cn(
                   "mt-1 text-[10px] leading-tight sm:text-xs font-medium transition-all duration-300 break-words",
-                   currentStep === step.id ? "text-primary font-semibold" : "text-muted-foreground"
+                  currentStep === step.id ? "text-primary font-semibold" : "text-muted-foreground"
                 )}>{step.name}</p>
               </div>
               {index < steps.length - 1 && (
@@ -388,7 +395,7 @@ export default function StreetNamingPermitPage() {
                 <div><Label htmlFor="stateOfOrigin">State of Origin</Label><Input id="stateOfOrigin" {...register("stateOfOrigin")} /></div>
                 <div><Label htmlFor="localGov">Local Gov.</Label><Input id="localGov" {...register("localGov")} /></div>
               </div>
-               <div><Label htmlFor="children">Children</Label><Input id="children" {...register("children")} /></div>
+              <div><Label htmlFor="children">Children</Label><Input id="children" {...register("children")} /></div>
               <div>
                 <Label>Marital Status*</Label>
                 <Controller name="maritalStatus" control={control} render={({ field }) => (
@@ -495,14 +502,14 @@ export default function StreetNamingPermitPage() {
                 <Label className="text-md font-semibold">Required Documents</Label>
                 <CardDescription className="text-xs sm:text-sm mb-2">Applicants should submit all of the relevant documents, with minimum requirement indicated below. If you have multiple relevant documents, please submit them and tick the documents that you acquire.</CardDescription>
                 <div className="space-y-4 mt-2">
-                    <div className="space-y-1.5">
-                        <Label htmlFor="docImageShowingSite" className="text-sm font-medium">Image showing the site</Label>
-                        <Input id="docImageShowingSite" type="file" {...register("docImageShowingSite")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    </div>
-                    <div className="space-y-1.5">
-                        <Label htmlFor="docConsentLetter" className="text-sm font-medium">Consent/Introduction Letter from Community Head</Label>
-                        <Input id="docConsentLetter" type="file" {...register("docConsentLetter")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                    </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docImageShowingSite" className="text-sm font-medium">Image showing the site</Label>
+                    <Input id="docImageShowingSite" type="file" {...register("docImageShowingSite")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docConsentLetter" className="text-sm font-medium">Consent/Introduction Letter from Community Head</Label>
+                    <Input id="docConsentLetter" type="file" {...register("docConsentLetter")} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                  </div>
                 </div>
               </div>
               <Separator />
@@ -510,8 +517,8 @@ export default function StreetNamingPermitPage() {
                 <Label className="text-md font-semibold">Signature / Declaration</Label>
                 <CardDescription className="text-xs sm:text-sm mb-2">All applicants must affix their signature; the application will not be accepted without signature. In the case of a representative, they must also affix their signature. By checking the box below, you confirm that the information provided is true and accurate.</CardDescription>
                 <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
-                    <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1"/>)} />
-                    <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
+                  <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1" />)} />
+                  <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
                 </div>
                 {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
                 <p className="text-xs text-muted-foreground px-1 mt-2">Applicant Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>
