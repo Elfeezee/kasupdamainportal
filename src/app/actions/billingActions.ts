@@ -1,4 +1,3 @@
-
 'use server';
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -34,9 +33,6 @@ interface GeneralPaymentResponse {
 /**
  * Generates a payment reference from the Osoftpay API and saves the transaction record.
  */
-/**
- * Generates a payment reference from the Osoftpay API and saves the transaction record.
- */
 export async function createBill(
     application: StoredApplication,
     userId: string,
@@ -62,7 +58,7 @@ export async function createBill(
     try {
         const payload = {
             "customer_Name": application.applicant_name,
-            "customer_Phone": userProfile.phone || '08000000000', // Fallback if missing, as API likely requires it
+            "customer_Phone": userProfile.phone || '08000000000',
             "customer_Email": userProfile.email || 'no-email@example.com',
             "originating_State_Code": originatingStateCode,
             "transaction_Amount": amount.toString(),
@@ -262,11 +258,11 @@ export async function verifyPayment(transactionId: number, paymentReference: str
             throw new Error(`Osoftpay validation API responded with status: ${response.status}`);
         }
 
-        const result: OsoftValidationResponse = await response.json();
+        const result: any = await response.json();
         console.log("Osoftpay Validation Response:", result);
 
-        // Check for "Successful" status as per documentation
-        const newStatus = result.payment_Status === 'Successful' ? 'Verified' : 'Pending';
+        const isSuccessful = result.payment_Status === 'Successful' || result.status === '00';
+        const newStatus = isSuccessful ? 'Verified' : 'Pending';
 
         const { error: dbError } = await supabase
             .from('transactions')
@@ -307,18 +303,18 @@ export async function assignDin(
     const supabase = await createSupabaseServerClient();
 
     try {
-        // Check if the DIN application fee has been paid
+        // Check if the application fee has been paid
         const { data: transaction, error: transactionError } = await supabase
             .from('transactions')
             .select('status')
             .eq('application_id', applicationId)
-            .eq('description', 'DIN Application Fee')
+            .eq('description', 'Approval Fees For Building Plan')
             .order('created_at', { ascending: false })
             .limit(1)
             .single();
 
         if (transactionError || !transaction || transaction.status !== 'Verified') {
-            return { success: false, error: "Payment for DIN application has not been verified." };
+            return { success: false, error: "Payment for this application has not been verified." };
         }
 
         // Generate DIN and update records
@@ -348,5 +344,53 @@ export async function assignDin(
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         console.error('Assign DIN Error:', errorMessage);
         return { success: false, error: `Failed to assign DIN: ${errorMessage}` };
+    }   
+}
+
+/**
+ * Assigns a KBP number to an application after successful payment.
+ * This is an admin-only action.
+ */
+export async function assignKbp(
+    applicationId: string,
+    kbpNumber: string
+): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createSupabaseServerClient();
+
+    try {
+        // Check if the application fee has been paid
+        const { data: transaction, error: transactionError } = await supabase
+            .from('transactions')
+            .select('status')
+            .eq('application_id', applicationId)
+            .eq('description', 'Approval Fees For Building Plan')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (transactionError || !transaction || transaction.status !== 'Verified') {
+            return { success: false, error: "Payment for this application has not been verified." };
+        }
+
+        // Update application with KBP number and set status to Approved
+        const { error: appUpdateError } = await supabase
+            .from('applications')
+            .update({ 
+                original_permit_id: kbpNumber, 
+                status: 'Approved',
+                rejection_reason: null 
+            })
+            .eq('id', applicationId);
+
+        if (appUpdateError) throw appUpdateError;
+
+        revalidatePath('/admin/applications');
+        revalidatePath(`/admin/applications/${applicationId}`);
+        
+        return { success: true };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        console.error('Assign KBP Error:', errorMessage);
+        return { success: false, error: `Failed to assign KBP: ${errorMessage}` };
     }
 }

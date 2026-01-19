@@ -26,7 +26,7 @@ import ApplicationDetails from './ApplicationDetails';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { updateApplicationData } from '@/app/actions/adminActions';
-import { assignDin } from '@/app/actions/billingActions';
+import { assignDin, assignKbp } from '@/app/actions/billingActions';
 
 
 // A more complete type definition that reflects the new schema
@@ -204,11 +204,7 @@ export default function ManageApplicationsPage() {
     setIsAssigningKbp(true);
 
     try {
-      const result = await updateApplicationData(kbpApp.id, {
-        original_permit_id: kbpNumber,
-        status: 'Approved',
-        rejection_reason: null
-      });
+      const result = await assignKbp(kbpApp.id, kbpNumber);
 
       if (result.success) {
         toast({ title: "KBP Assigned & Approved", description: `KBP number ${kbpNumber} has been assigned and the application is approved.` });
