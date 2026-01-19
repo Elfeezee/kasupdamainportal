@@ -153,13 +153,24 @@ export async function createGeneralBill(
 
     // 2. Call Osoftpay GeneralPayments API
     try {
+        // Sanitize phone number: remove non-digits and ensure it's 11 digits starting with 0
+        let sanitizedPhone = (userProfile.phone || '08000000000').replace(/\D/g, '');
+        if (sanitizedPhone.startsWith('234')) {
+            sanitizedPhone = '0' + sanitizedPhone.slice(3);
+        }
+        if (sanitizedPhone.length > 11) {
+            sanitizedPhone = sanitizedPhone.slice(-11);
+        } else if (sanitizedPhone.length < 11) {
+            sanitizedPhone = sanitizedPhone.padStart(11, '0');
+        }
+
         const payload = {
             "Payment_Item": description,
             "Payer_Name": application.applicant_name,
-            "Payer_Phone": userProfile.phone || '08000000000',
+            "Payer_Phone": sanitizedPhone,
             "Payer_Email": userProfile.email || 'no-email@example.com',
             "Description": description,
-            "Total_Price": amount.toString(),
+            "Total_Price": amount.toFixed(2),
             "Platform": "PayKaduna"
         };
 
