@@ -148,6 +148,8 @@ const orgRequiredDocs = [
 ];
 
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 const steps = [
   { id: 1, name: "Organisation Details", fields: ['orgName', 'orgPhone', 'ceoFirstName', 'ceoSurname'] as FieldName<BpoPermitApplicationFormValues>[] },
   { id: 2, name: "Organisation Address", fields: [] as FieldName<BpoPermitApplicationFormValues>[] },
@@ -175,7 +177,7 @@ export default function CommercialIndustrialOtherPermitPage() {
     checkSession();
   }, [router]);
 
-  const { register, handleSubmit, control, formState: { errors }, trigger } = useForm<BpoPermitApplicationFormValues>({
+  const form = useForm<BpoPermitApplicationFormValues>({
     resolver: zodResolver(bpoPermitApplicationSchema),
     mode: "onChange",
     defaultValues: {
@@ -221,6 +223,12 @@ export default function CommercialIndustrialOtherPermitPage() {
     }
   });
 
+  const { register, handleSubmit, control, formState: { errors }, trigger } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'commercial-building-permit-form', [
+    'docLandTitle', 'docKadgisAcknowledgement', 'docSar', 'docWorkingDrawings', 'docCalculationSheet', 'docBuildersDoc', 'docSoilTest', 'docPdfDrawings', 'docApplicantId', 'docRepId', 'docUtilityBill', 'docQualityAssurance', 'docKepaEiaCert'
+  ] as any);
+
   const onSubmit = async (data: BpoPermitApplicationFormValues) => {
     if (!user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
@@ -258,6 +266,7 @@ export default function CommercialIndustrialOtherPermitPage() {
       const result = await saveApplication(formData);
 
       if (result.success) {
+        clearStorage(); // Clear persistence on success
         if (result.error) {
           toast({
             title: "Application Saved with Issues",
@@ -287,7 +296,7 @@ export default function CommercialIndustrialOtherPermitPage() {
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({
           title: "Validation Error",

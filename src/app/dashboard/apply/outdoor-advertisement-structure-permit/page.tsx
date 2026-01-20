@@ -43,21 +43,21 @@ const representativeIdOptions = [
 ];
 
 const requiredDocsList = [
-    { id: "docKasupdaLicense" as const, label: "KASUPDA License to Practice Outdoor Advertisement" },
-    { id: "docSoilInvestigation" as const, label: "Soil Investigation Report" },
-    { id: "docCorporateArconLicense" as const, label: "Corporate ARCON License" },
-    { id: "docTelecommunicationDesigns" as const, label: "Telecommunication Designs" },
-    { id: "docSiteAnalysisReport" as const, label: "Site Analysis Report (SAR)" },
-    { id: "docLeaseAgreement" as const, label: "Lease Agreement Letter" },
-    { id: "docFireServiceReport" as const, label: "Fire Service Report" },
-    { id: "docPoliceReport" as const, label: "Police Report" },
-    { id: "docArchitecturalDrawing" as const, label: "One Hard and One Soft Copy of Architectural drawing and details of proposed installations" },
-    { id: "docTaxClearance" as const, label: "Copy of Tax Clearance Certificate" },
-    { id: "docSiteLocationType" as const, label: "Site Location & Type of Installation with Coordinates" },
-    { id: "docKepaEiaApproval" as const, label: "KEPA EIA Approval Certificate" },
-    { id: "docStructuralWorkDrawings" as const, label: "Structural Work Drawings and Details" },
-    { id: "docProofOfOutrightPurchase" as const, label: "Proof of Outright Purchase" },
-    { id: "docConsentLetter" as const, label: "Consent Letter" },
+  { id: "docKasupdaLicense" as const, label: "KASUPDA License to Practice Outdoor Advertisement" },
+  { id: "docSoilInvestigation" as const, label: "Soil Investigation Report" },
+  { id: "docCorporateArconLicense" as const, label: "Corporate ARCON License" },
+  { id: "docTelecommunicationDesigns" as const, label: "Telecommunication Designs" },
+  { id: "docSiteAnalysisReport" as const, label: "Site Analysis Report (SAR)" },
+  { id: "docLeaseAgreement" as const, label: "Lease Agreement Letter" },
+  { id: "docFireServiceReport" as const, label: "Fire Service Report" },
+  { id: "docPoliceReport" as const, label: "Police Report" },
+  { id: "docArchitecturalDrawing" as const, label: "One Hard and One Soft Copy of Architectural drawing and details of proposed installations" },
+  { id: "docTaxClearance" as const, label: "Copy of Tax Clearance Certificate" },
+  { id: "docSiteLocationType" as const, label: "Site Location & Type of Installation with Coordinates" },
+  { id: "docKepaEiaApproval" as const, label: "KEPA EIA Approval Certificate" },
+  { id: "docStructuralWorkDrawings" as const, label: "Structural Work Drawings and Details" },
+  { id: "docProofOfOutrightPurchase" as const, label: "Proof of Outright Purchase" },
+  { id: "docConsentLetter" as const, label: "Consent Letter" },
 ];
 
 
@@ -101,7 +101,7 @@ const outdoorStructurePermitSchema = z.object({ // Renamed schema to reflect con
     message: "At least one identification type must be selected for the representative.",
   }),
   repIdNumber: z.string().min(1, "Representative ID Number is required"),
-  
+
   // Box 4: Required Documents
   ...Object.fromEntries(requiredDocsList.map(doc => [doc.id, z.any().optional()])),
 
@@ -110,14 +110,14 @@ const outdoorStructurePermitSchema = z.object({ // Renamed schema to reflect con
     message: "You must agree to the declaration to submit the application."
   })
 }).refine(data => {
-    if (data.boardInstallations.othersSpecify) {
-      return !!data.boardInstallationOthersText?.trim();
-    }
-    return true;
-  }, {
-    message: "Specify 'Others' for board installation",
-    path: ["boardInstallationOthersText"],
-  })
+  if (data.boardInstallations.othersSpecify) {
+    return !!data.boardInstallationOthersText?.trim();
+  }
+  return true;
+}, {
+  message: "Specify 'Others' for board installation",
+  path: ["boardInstallationOthersText"],
+})
   .refine(data => {
     if (data.siteTypeOfLand === "Private") {
       return !!data.siteProofOfOwnership?.trim();
@@ -138,6 +138,8 @@ const steps = [
   { id: 4, name: "Documents & Declaration", fields: ['declaration'] as FieldName<OutdoorStructurePermitFormValues>[] },
 ];
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function OutdoorStructurePermitPage() { // Renamed component, though file name is the same
   const { toast } = useToast();
   const router = useRouter();
@@ -147,17 +149,17 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
 
   useEffect(() => {
     const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-structure-permit');
-        } else {
-            setUser(session.user);
-        }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-structure-permit');
+      } else {
+        setUser(session.user);
+      }
     };
     checkSession();
   }, [router]);
-  
-  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = useForm<OutdoorStructurePermitFormValues>({
+
+  const form = useForm<OutdoorStructurePermitFormValues>({
     resolver: zodResolver(outdoorStructurePermitSchema),
     mode: "onChange",
     defaultValues: {
@@ -193,13 +195,17 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
     }
   });
 
-  const watchedBoardInstallations = watch("boardInstallations.othersSpecify" as any); 
+  const { register, handleSubmit, control, formState: { errors }, trigger, watch } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'outdoor-structure-permit-form', requiredDocsList.map(doc => doc.id));
+
+  const watchedBoardInstallations = watch("boardInstallations.othersSpecify" as any);
   const watchedTypeOfLand = watch("siteTypeOfLand");
 
- const onSubmit = async (data: OutdoorStructurePermitFormValues) => {
+  const onSubmit = async (data: OutdoorStructurePermitFormValues) => {
     if (!user) {
-        toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
-        return;
+      toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
+      return;
     }
     setIsSubmitting(true);
     const formData = new FormData();
@@ -208,47 +214,47 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
     formData.append('userId', user.id);
 
     Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof FileList && value.length > 0) {
-            if (value[0].size > 0) {
-                formData.append(key, value[0]);
-            }
-        } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
-            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-                if (typeof nestedValue === 'boolean' && nestedValue) {
-                    formData.append(`${key}.${nestedKey}`, 'on');
-                }
-            });
-        } else if (typeof value === 'boolean' && value) {
-            formData.append(key, 'on');
-        } else if (value) {
-            formData.append(key, String(value));
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) {
+          formData.append(key, value[0]);
         }
+      } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
+        Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+          if (typeof nestedValue === 'boolean' && nestedValue) {
+            formData.append(`${key}.${nestedKey}`, 'on');
+          }
+        });
+      } else if (typeof value === 'boolean' && value) {
+        formData.append(key, 'on');
+      } else if (value) {
+        formData.append(key, String(value));
+      }
     });
 
     try {
-        const result = await saveApplication(formData);
-        if (result.success) {
-            router.push(`/dashboard/apply/success?id=${result.applicationId}`);
-        } else {
-            throw new Error(result.error || "An unknown error occurred.");
-        }
+      const result = await saveApplication(formData);
+      if (result.success) {
+        clearStorage();
+        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+      } else {
+        throw new Error(result.error || "An unknown error occurred.");
+      }
     } catch (error) {
-        console.error("Submission failed:", error);
-        toast({
-            title: "Submission Failed",
-            description: error instanceof Error ? error.message : "Could not submit the application.",
-            variant: "destructive",
-        });
+      console.error("Submission failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "Could not submit the application.",
+        variant: "destructive",
+      });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
-
 
   const handleNextStep = async () => {
     const currentStepConfig = steps.find(step => step.id === currentStep);
     if (currentStepConfig && currentStepConfig.fields.length > 0) {
-      const isValid = await trigger(currentStepConfig.fields);
+      const isValid = await trigger(currentStepConfig.fields as any);
       if (!isValid) {
         toast({
           title: "Validation Error",
@@ -259,26 +265,26 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
       }
     }
     if (currentStep === 1 && watchedBoardInstallations && !watch('boardInstallationOthersText')?.trim()) {
-        await trigger('boardInstallationOthersText'); 
-        if (errors.boardInstallationOthersText) {
-             toast({
-                title: "Validation Error",
-                description: "Please specify 'Others' for board installation.",
-                variant: "destructive",
-            });
-            return;
-        }
+      await trigger('boardInstallationOthersText');
+      if (errors.boardInstallationOthersText) {
+        toast({
+          title: "Validation Error",
+          description: "Please specify 'Others' for board installation.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
-    if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()){
-        await trigger('siteProofOfOwnership');
-        if(errors.siteProofOfOwnership){
-            toast({
-                title: "Validation Error",
-                description: "Proof of Ownership is required for Private land.",
-                variant: "destructive",
-            });
-            return;
-        }
+    if (currentStep === 2 && watchedTypeOfLand === "Private" && !watch('siteProofOfOwnership')?.trim()) {
+      await trigger('siteProofOfOwnership');
+      if (errors.siteProofOfOwnership) {
+        toast({
+          title: "Validation Error",
+          description: "Proof of Ownership is required for Private land.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     if (currentStep < steps.length) {
@@ -291,20 +297,20 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
       setCurrentStep(prev => prev - 1);
     }
   };
-  
-    if (!user) {
+
+  if (!user) {
     return (
-        <div className="container mx-auto px-2 sm:px-4 py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Loading...</CardTitle>
-                    <CardDescription>Verifying user session...</CardDescription>
-                </CardHeader>
-            </Card>
-        </div>
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>Verifying user session...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
-  
+
   return (
     <div className="container mx-auto px-2 sm:px-4 py-8">
       <Card className="mb-6">
@@ -326,7 +332,7 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
         <div className="flex items-start w-full min-w-[360px] sm:min-w-full">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{width: `${100 / steps.length}%`}}>
+              <div className="flex flex-col items-center text-center px-0.5 sm:px-1 py-1 flex-shrink-0" style={{ width: `${100 / steps.length}%` }}>
                 <div className={cn("w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300", currentStep > step.id ? "bg-primary border-primary text-primary-foreground" : currentStep === step.id ? "bg-primary/20 border-primary text-primary scale-110" : "bg-muted border-border text-muted-foreground")}>
                   {currentStep > step.id ? <CheckIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : step.id}
                 </div>
@@ -436,42 +442,42 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
                     </div>
                   ))}
                 </div>
-                 {errors.repIdentificationType && <p className="text-destructive text-xs mt-1">{errors.repIdentificationType.message || (errors.repIdentificationType as any)?.root?.message}</p>}
+                {errors.repIdentificationType && <p className="text-destructive text-xs mt-1">{errors.repIdentificationType.message || (errors.repIdentificationType as any)?.root?.message}</p>}
               </div>
               <div><Label htmlFor="repIdNumber">ID Number*</Label><Input id="repIdNumber" {...register("repIdNumber")} />{errors.repIdNumber && <p className="text-destructive text-xs mt-1">{errors.repIdNumber.message}</p>}</div>
             </CardContent>
           </Card>
         )}
-        
+
         {currentStep === 4 && (
           <Card>
             <CardHeader><CardTitle className="text-lg sm:text-xl">BOX 4 & 5: REQUIRED DOCUMENTS & SIGNATURE</CardTitle></CardHeader>
             <CardContent className="space-y-6">
-                <div>
-                    <Label className="text-md font-semibold">BOX 4: Required Documents</Label>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                        {requiredDocsList.map(doc => (
-                            <div key={doc.id} className="space-y-1.5">
-                                <Label htmlFor={doc.id} className="text-sm font-medium">{doc.label}</Label>
-                                <Input id={doc.id} type="file" {...register(doc.id as FieldName<OutdoorStructurePermitFormValues>)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
-                            </div>
-                        ))}
+              <div>
+                <Label className="text-md font-semibold">BOX 4: Required Documents</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                  {requiredDocsList.map(doc => (
+                    <div key={doc.id} className="space-y-1.5">
+                      <Label htmlFor={doc.id} className="text-sm font-medium">{doc.label}</Label>
+                      <Input id={doc.id} type="file" {...register(doc.id as any)} className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
                     </div>
+                  ))}
                 </div>
-                <Separator />
-                <div>
-                    <Label className="text-md font-semibold">BOX 5: Signature</Label>
-                    <CardDescription className="text-xs sm:text-sm mb-2">All applicants must affix their signature; the application will not be accepted without a signature. In the case of a representative, they must also affix their signature.</CardDescription>
-                    <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
-                        <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1"/>)} />
-                        <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
-                    </div>
-                    {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
-                    <div className="mt-2 px-1 text-xs text-muted-foreground space-y-1">
-                        <p>Applicant's Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>
-                        <p>Representative's Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span></p>
-                    </div>
+              </div>
+              <Separator />
+              <div>
+                <Label className="text-md font-semibold">BOX 5: Signature</Label>
+                <CardDescription className="text-xs sm:text-sm mb-2">All applicants must affix their signature; the application will not be accepted without a signature. In the case of a representative, they must also affix their signature.</CardDescription>
+                <div className="flex items-start space-x-2 p-4 border rounded-md bg-muted/30 mt-2">
+                  <Controller name="declaration" control={control} render={({ field }) => (<Checkbox id="declaration" checked={!!field.value} onCheckedChange={field.onChange} className="mt-1" />)} />
+                  <Label htmlFor="declaration" className="font-normal text-sm leading-snug">I, the applicant or duly authorized representative, declare that the information provided in this application and any attached documents is true, correct, and complete to the best of my knowledge and belief. I understand that any false statement may result in the rejection of this application or revocation of any permit granted.</Label>
                 </div>
+                {errors.declaration && <p className="text-destructive text-xs mt-1 px-1">{errors.declaration.message}</p>}
+                <div className="mt-2 px-1 text-xs text-muted-foreground space-y-1">
+                  <p>Applicant's Signature: <span className="font-medium">[Digital acceptance via checkbox]</span></p>
+                  <p>Representative's Signature: <span className="font-medium">[Digital acceptance via checkbox, if representative details filled]</span></p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

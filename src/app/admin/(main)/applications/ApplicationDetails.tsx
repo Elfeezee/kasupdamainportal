@@ -3,11 +3,59 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Download } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format, parseISO } from 'date-fns';
+
+import { getSignedUrl } from '@/app/actions/applicationActions';
+import { useToast } from '@/hooks/use-toast';
+
+const FileDownloadLink = ({ url }: { url: string }) => {
+    const { toast } = useToast();
+    const [isGenerating, setIsGenerating] = React.useState(false);
+
+    const handleDownload = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsGenerating(true);
+        try {
+            // Extract path from URL
+            // Format: .../storage/v1/object/public/application_documents/PATH
+            const parts = url.split('/application_documents/');
+            if (parts.length < 2) {
+                throw new Error('Invalid file URL format');
+            }
+            const path = parts[1];
+
+            const result = await getSignedUrl(path);
+            if (result.success && result.url) {
+                window.open(result.url, '_blank');
+            } else {
+                throw new Error(result.error || 'Failed to generate link');
+            }
+        } catch (error: any) {
+            toast({
+                title: "Download Failed",
+                description: error.message || "Could not open the file.",
+                variant: "destructive"
+            });
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    return (
+        <button
+            onClick={handleDownload}
+            disabled={isGenerating}
+            className="text-primary hover:underline flex items-center gap-2 text-sm font-medium disabled:opacity-50"
+        >
+            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            Download File
+        </button>
+    );
+};
 
 const renderFieldValue = (
     key: string,
@@ -67,11 +115,7 @@ const renderFieldValue = (
     }
 
     if (key.endsWith('_url') && typeof value === 'string' && value) {
-        return (
-            <a href={value} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-2">
-                <Download className="h-4 w-4" /> Download File
-            </a>
-        );
+        return <FileDownloadLink url={value} />;
     }
 
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {

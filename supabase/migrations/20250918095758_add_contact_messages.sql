@@ -1,4 +1,4 @@
--- Create the table for contact form submissions
+                                          -- Create the table for contact form submissions
 CREATE TABLE
   contact_messages (
     id SERIAL PRIMARY KEY,

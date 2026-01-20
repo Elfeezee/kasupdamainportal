@@ -3,7 +3,7 @@
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
-import { createBill } from './billingActions';
+import { createBill, createGeneralBill } from './billingActions';
 
 /**
  * A robust function to convert form data keys from form-friendly names
@@ -315,9 +315,9 @@ export async function saveApplication(
         // Automatically create a bill based on application type
         let billingResult;
         if (type === 'DIN Application') {
-            billingResult = await createBill(insertedData, userId, 5000, 'DIN Application Fee', 'KDSG-KASUPDA');
+            billingResult = await createGeneralBill(insertedData, userId, 5000, 'Approval Fees For Building Plan');
         } else {
-            billingResult = await createBill(insertedData, userId, 10000, 'Permit Application Processing Fee', 'KDSG-KASUPDA');
+            billingResult = await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
         }
 
         if (!billingResult.success) {
@@ -354,4 +354,35 @@ export async function saveApplication(
 
         return { success: false, error: `Failed to save application: ${errorMessage}` };
     }
+}
+
+/**
+ * Generates a signed URL for a private file in the application_documents bucket.
+ * 
+ * @param path The relative path to the file in the bucket.
+ * @returns The signed URL or an error.
+ */
+export async function getSignedUrl(path: string): Promise<{ success: boolean; url?: string; error?: string }> {
+    const supabase = await createSupabaseServerClient();
+
+    // Verify authentication
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        return { success: false, error: 'Not authenticated' };
+    }
+
+    // Check if user is admin or the owner of the file
+    // The storage policy we added handles the actual permission check, 
+    // but we can also do a quick check here if needed.
+
+    const { data, error } = await supabase.storage
+        .from('application_documents')
+        .createSignedUrl(path, 3600); // 1 hour expiry
+
+    if (error) {
+        console.error('Error creating signed URL:', error);
+        return { success: false, error: error.message };
+    }
+
+    return { success: true, url: data.signedUrl };
 }

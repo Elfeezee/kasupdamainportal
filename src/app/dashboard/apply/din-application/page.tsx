@@ -52,8 +52,10 @@ const dinApplicationSchema = z.object({
 
 type DinApplicationFormValues = z.infer<typeof dinApplicationSchema>;
 
-function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSubmit: (data: DinApplicationFormValues) => void, isSubmitting: boolean }) {
-  const { register, handleSubmit, control, formState: { errors } } = useForm<DinApplicationFormValues>({
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
+function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSubmit: (data: DinApplicationFormValues, clearStorage: () => void) => void, isSubmitting: boolean }) {
+  const form = useForm<DinApplicationFormValues>({
     resolver: zodResolver(dinApplicationSchema),
     mode: "onChange",
     defaultValues: {
@@ -70,6 +72,10 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
     }
   });
 
+  const { register, handleSubmit, control, formState: { errors } } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'din-application-form', ['doc_permit', 'doc_co']);
+
   return (
     <Card className="max-w-3xl mx-auto">
       <CardHeader>
@@ -81,7 +87,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
           Complete this form to apply for a new KASUPDA DIN. You will be required to make a payment of ₦5,000 to complete the process.
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data) => onSubmit(data, clearStorage))}>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -223,7 +229,7 @@ export default function DinApplicationPage() {
     checkUser();
   }, [router, toast]);
 
-  const onSubmit = async (data: DinApplicationFormValues) => {
+  const onSubmit = async (data: DinApplicationFormValues, clearStorage: () => void) => {
     if (!user) {
       toast({ title: "Error", description: "You must be logged in to proceed.", variant: "destructive" });
       return;
@@ -253,6 +259,7 @@ export default function DinApplicationPage() {
       const result = await saveApplication(formData);
 
       if (result.success) {
+        clearStorage();
         if (result.error) {
           toast({
             title: "Application Saved with Issues",

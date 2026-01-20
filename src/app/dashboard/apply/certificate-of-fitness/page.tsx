@@ -70,6 +70,8 @@ function LoadingSkeleton() {
   );
 }
 
+import { useFormPersistence } from '@/hooks/use-form-persistence';
+
 export default function CertificateOfFitnessPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -77,10 +79,14 @@ export default function CertificateOfFitnessPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FitnessCertificateFormValues>({
+  const form = useForm<FitnessCertificateFormValues>({
     resolver: zodResolver(fitnessCertificateSchema),
     mode: "onChange",
   });
+
+  const { register, handleSubmit, formState: { errors } } = form;
+
+  const { clearStorage } = useFormPersistence(form, 'certificate-of-fitness-form', ['doc_building_permit', 'doc_co']);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -119,6 +125,7 @@ export default function CertificateOfFitnessPage() {
       const result = await saveApplication(formData);
 
       if (result.success) {
+        clearStorage();
         if (result.error) {
           toast({
             title: "Application Saved with Issues",

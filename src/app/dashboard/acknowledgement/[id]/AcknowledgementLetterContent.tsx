@@ -95,8 +95,8 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
     const applicantName = flattenedData.applicant_name;
     const submissionDate = flattenedData.created_at ? format(parseISO(flattenedData.created_at), 'dd-MMM-yyyy') : 'N/A';
     const representativeName = [flattenedData.rep_first_name, flattenedData.rep_middle_name, flattenedData.rep_surname].filter(Boolean).join(' ');
-    const applicantAddress = [flattenedData.appHouseNo, flattenedData.appStreetName, flattenedData.appDistrict, flattenedData.appCityTown, flattenedData.appState].filter(Boolean).join(', ');
-    const developmentDescription = flattenedData.type?.replace(/ permit/i, '').replace(/\(.*\)/i, '').trim();
+    const applicantAddress = [flattenedData.app_house_no, flattenedData.app_street_name, flattenedData.app_district, flattenedData.app_city_town, flattenedData.app_state].filter(Boolean).join(', ');
+    const developmentDescription = flattenedData.land_use || flattenedData.type?.replace(/ permit/i, '').replace(/\(.*\)/i, '').trim();
 
     const receivedDocuments = Object.keys(flattenedData)
         .filter(key => key.endsWith('_url') && flattenedData[key] && documentChecklistMap[key])
@@ -138,7 +138,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     </div>
 
                     <div className="space-y-1 text-[11px] leading-relaxed">
-                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plotDistrict || '[District not provided]'} in LGA {flattenedData.plotLGA || '[LGA not provided]'} more accurately described as {flattenedData.plotDescriptionAddress}.</p>
+                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plot_district || '[District not provided]'} in LGA {flattenedData.plot_lga || '[LGA not provided]'} more accurately described as {flattenedData.plot_description_address || flattenedData.plot_address || 'N/A'}.</p>
                         <p>Description of the development is: {developmentDescription}</p>
                     </div>
 

@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { CheckCircle2, Clock, Loader2, Copy, AlertTriangle } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { CheckCircle2, Clock, Loader2, Copy, AlertTriangle, ExternalLink } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { verifyPayment } from '@/app/actions/billingActions';
@@ -17,6 +18,7 @@ export interface Transaction {
     amount: number;
     description: string;
     payment_reference: string;
+    payment_link?: string;
     status: 'Pending' | 'Verified' | 'Failed';
 }
 
@@ -52,6 +54,14 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
         setIsPaymentInfoOpen(true);
     };
 
+    const handlePayNow = (transaction: Transaction) => {
+        if (transaction.payment_link) {
+            window.open(transaction.payment_link, '_blank');
+        } else {
+            openPaymentInfo(transaction);
+        }
+    };
+
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         toast({ title: 'Copied!', description: 'Payment reference copied to clipboard.' });
@@ -67,7 +77,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                     description: `Payment status is now: ${result.status}`,
                 });
                 // Optimistically update the UI
-                setTransactions(prev => 
+                setTransactions(prev =>
                     prev.map(t => t.id === transaction.id ? { ...t, status: result.status as Transaction['status'] } : t)
                 );
             } else {
@@ -109,7 +119,13 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                                 <TableCell className="text-right space-x-2">
                                     {t.status === 'Pending' && (
                                         <>
-                                            <Button size="sm" onClick={() => openPaymentInfo(t)}>Pay Now</Button>
+                                            <Button size="sm" onClick={() => handlePayNow(t)}>
+                                                {t.payment_link ? (
+                                                    <span className="flex items-center gap-1">
+                                                        Pay Online <ExternalLink className="h-3 w-3" />
+                                                    </span>
+                                                ) : 'Pay Now'}
+                                            </Button>
                                             <Button
                                                 size="sm"
                                                 variant="outline"
@@ -120,9 +136,9 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                                             </Button>
                                         </>
                                     )}
-                                     {t.status === 'Verified' && (
-                                         <Button size="sm" variant="outline" disabled>View Receipt</Button>
-                                     )}
+                                    {t.status === 'Verified' && (
+                                        <Button size="sm" variant="outline" disabled>View Receipt</Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -151,15 +167,20 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                         <div>
                             <h4 className="font-semibold mb-2">How to Pay:</h4>
                             <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                                {selectedTransaction?.payment_link && (
+                                    <li>
+                                        <strong>Online (Remita):</strong> <a href={selectedTransaction.payment_link} target="_blank" rel="noopener noreferrer" className="text-primary underline inline-flex items-center gap-1">Click here to pay online <ExternalLink className="h-3 w-3" /></a>
+                                    </li>
+                                )}
                                 <li>
                                     <strong>Bank Branch (Paydirect):</strong> Visit any bank, tell the cashier you want to pay on "Kaduna State Collection - OSOFT" via Paydirect, and provide the reference number.
                                 </li>
-                                 <li>
+                                <li>
                                     <strong>Online (Quickteller):</strong> Go to Quickteller, search for "Kaduna State Collection - OSOFT" under pay bills, enter the reference number, and follow the steps to pay.
                                 </li>
                             </ul>
                         </div>
-                         <p className="text-sm text-muted-foreground pt-2">After payment, click the "Verify" button on the billing page to confirm your transaction status.</p>
+                        <p className="text-sm text-muted-foreground pt-2">After payment, click the "Verify" button on the billing page to confirm your transaction status.</p>
                     </div>
                     <DialogFooter>
                         <Button onClick={() => setIsPaymentInfoOpen(false)}>Close</Button>
