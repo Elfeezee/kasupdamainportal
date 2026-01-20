@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -7,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { CheckCircle2, Clock, Loader2, Copy, AlertTriangle, ExternalLink } from 'lucide-react';
+import { CheckCircle2, Clock, Loader2, Copy, AlertTriangle, ExternalLink, FileText } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { verifyPayment } from '@/app/actions/billingActions';
+import Receipt from '@/components/billing/Receipt';
 
 export interface Transaction {
     id: number;
@@ -20,6 +20,10 @@ export interface Transaction {
     payment_reference: string;
     payment_link?: string;
     status: 'Pending' | 'Verified' | 'Failed';
+    payer_name: string;
+    payer_email: string;
+    payer_phone: string;
+    application_id: string;
 }
 
 interface StatusBadgeProps {
@@ -33,7 +37,8 @@ const statusConfig: Record<Transaction['status'], { variant: 'secondary' | 'defa
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-    const { variant, icon: Icon, text } = statusConfig[status];
+    const config = statusConfig[status] || statusConfig.Pending;
+    const { variant, icon: Icon, text } = config;
     return (
         <Badge variant={variant} className="capitalize flex items-center gap-1.5">
             <Icon className="h-3 w-3" />
@@ -47,11 +52,17 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
     const [transactions, setTransactions] = useState(initialTransactions);
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
     const [isPaymentInfoOpen, setIsPaymentInfoOpen] = useState(false);
+    const [isReceiptOpen, setIsReceiptOpen] = useState(false);
     const [isVerifying, setIsVerifying] = useState<number | null>(null);
 
     const openPaymentInfo = (transaction: Transaction) => {
         setSelectedTransaction(transaction);
         setIsPaymentInfoOpen(true);
+    };
+
+    const openReceipt = (transaction: Transaction) => {
+        setSelectedTransaction(transaction);
+        setIsReceiptOpen(true);
     };
 
     const handlePayNow = (transaction: Transaction) => {
@@ -96,7 +107,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
 
     return (
         <>
-            <div className="border rounded-md">
+            <div className="border rounded-md overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -111,7 +122,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                     <TableBody>
                         {transactions.map((t) => (
                             <TableRow key={t.id}>
-                                <TableCell>{format(parseISO(t.created_at), 'dd MMM, yyyy')}</TableCell>
+                                <TableCell className="whitespace-nowrap">{format(parseISO(t.created_at), 'dd MMM, yyyy')}</TableCell>
                                 <TableCell>{t.description}</TableCell>
                                 <TableCell className="font-medium">{t.amount.toLocaleString()}</TableCell>
                                 <TableCell className="font-mono text-xs">{t.payment_reference}</TableCell>
@@ -137,7 +148,9 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                                         </>
                                     )}
                                     {t.status === 'Verified' && (
-                                        <Button size="sm" variant="outline" disabled>View Receipt</Button>
+                                        <Button size="sm" variant="outline" onClick={() => openReceipt(t)} className="gap-2">
+                                            <FileText className="h-4 w-4" /> View Receipt
+                                        </Button>
                                     )}
                                 </TableCell>
                             </TableRow>
@@ -185,6 +198,18 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                     <DialogFooter>
                         <Button onClick={() => setIsPaymentInfoOpen(false)}>Close</Button>
                     </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Receipt Dialog */}
+            <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
+                <DialogContent className="max-w-4xl p-0 overflow-hidden bg-slate-50">
+                    <DialogHeader className="p-6 bg-white border-b">
+                        <DialogTitle>Official Payment Receipt</DialogTitle>
+                    </DialogHeader>
+                    <div className="max-h-[80vh] overflow-y-auto p-6">
+                        {selectedTransaction && <Receipt transaction={selectedTransaction} />}
+                    </div>
                 </DialogContent>
             </Dialog>
         </>

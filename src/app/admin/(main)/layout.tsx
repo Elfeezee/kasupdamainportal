@@ -35,7 +35,7 @@ export default function AdminDashboardLayout({
         .select('role')
         .eq('uid', user.id)
         .single();
-      
+
       if (profileError || !userProfile) {
         console.error('Profile Error:', profileError?.message || 'User profile not found.');
         toast({ title: 'Access Denied', description: 'Could not verify your user role.', variant: 'destructive' });
@@ -44,14 +44,15 @@ export default function AdminDashboardLayout({
         return;
       }
 
-      if (userProfile && userProfile.role === 'Admin') {
+      const allowedRoles = ['Admin', 'Super Admin', 'Finance'];
+      if (userProfile && allowedRoles.includes(userProfile.role)) {
         setIsVerified(true);
       } else {
-        toast({ title: 'Access Denied', description: 'You do not have admin privileges.', variant: 'destructive' });
+        toast({ title: 'Access Denied', description: 'You do not have administrative privileges.', variant: 'destructive' });
         await supabase.auth.signOut();
         router.replace('/admin/login');
       }
-      
+
       setLoading(false); // Set loading to false after all checks are done
     };
 
@@ -62,8 +63,8 @@ export default function AdminDashboardLayout({
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-muted">
         <div className="flex flex-col items-center gap-2">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-muted-foreground">Verifying admin credentials...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Verifying admin credentials...</p>
         </div>
       </div>
     );
@@ -76,18 +77,18 @@ export default function AdminDashboardLayout({
 
 
   return (
-      <SidebarProvider>
-        <div className="flex min-h-[calc(100vh-var(--header-height,60px)-var(--footer-height,60px))]">
-          <Sidebar 
-            collapsible="icon" 
-            className="border-r"
-          >
-            <AdminSidebar />
-          </Sidebar>
-          <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted/30">
-            {children}
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
+    <SidebarProvider>
+      <div className="flex min-h-[calc(100vh-var(--header-height,60px)-var(--footer-height,60px))]">
+        <Sidebar
+          collapsible="icon"
+          className="border-r"
+        >
+          <AdminSidebar />
+        </Sidebar>
+        <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted/30">
+          {children}
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }

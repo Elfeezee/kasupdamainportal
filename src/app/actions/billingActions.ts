@@ -16,11 +16,6 @@ interface OsoftPayResponse {
     };
 }
 
-interface OsoftValidationResponse {
-    payment_Status: 'Successful' | 'Pending' | 'Failed';
-    [key: string]: any;
-}
-
 interface GeneralPaymentResponse {
     status: string;
     message: string;
@@ -28,7 +23,6 @@ interface GeneralPaymentResponse {
     amount: string;
     rrrLink: string;
 }
-
 
 /**
  * Generates a payment reference from the Osoftpay API and saves the transaction record.
@@ -42,7 +36,6 @@ export async function createBill(
 ): Promise<{ success: boolean; error?: string; }> {
     const supabase = await createSupabaseServerClient();
 
-    // 1. Get user details for payment
     const { data: userProfile, error: profileError } = await supabase
         .from('users')
         .select('phone, email')
@@ -50,11 +43,9 @@ export async function createBill(
         .single();
 
     if (profileError || !userProfile) {
-        console.error("Error fetching user profile for billing:", profileError);
         return { success: false, error: "Could not retrieve user details for billing." };
     }
 
-    // 2. Call Osoftpay API to generate payment reference
     try {
         const payload = {
             "customer_Name": application.applicant_name,
@@ -65,32 +56,19 @@ export async function createBill(
             "payment_Item_Name": description
         };
 
-        console.log("Osoftpay Request Payload:", JSON.stringify(payload, null, 2));
-
         const response = await fetch('https://agency.osoftpay.net/api/AgencyCustomers', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Osoftpay API Error Body:', errorBody);
-            throw new Error(`Osoftpay API responded with status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Osoftpay API error: ${response.status}`);
 
         const result: OsoftPayResponse = await response.json();
-        console.log("Osoftpay Response:", result);
-
         if (result.status !== '00' || !result.data?.paymentReference) {
-            throw new Error(result.message || 'Failed to generate payment reference from Osoftpay.');
+            throw new Error(result.message || 'Failed to generate reference.');
         }
 
-        const paymentReference = result.data.paymentReference;
-
-        // 3. Save transaction to our database
         const { error: dbError } = await supabase
             .from('transactions')
             .insert({
@@ -98,34 +76,24 @@ export async function createBill(
                 application_id: application.id,
                 amount: amount,
                 description: description,
-                payment_reference: paymentReference,
+                payment_reference: result.data.paymentReference,
                 status: 'Pending',
                 payer_name: application.applicant_name,
                 payer_email: userProfile.email,
                 payer_phone: userProfile.phone,
             });
 
-        if (dbError) {
-            throw dbError;
-        }
+        if (dbError) throw dbError;
 
         revalidatePath('/dashboard/billing');
-        revalidatePath('/admin/applications');
-        revalidatePath(`/admin/applications/${application.id}`);
-
         return { success: true };
-
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "An unknown server error occurred.";
-        console.error('Create Bill Error:', errorMessage);
-        return { success: false, error: `Failed to create bill: ${errorMessage}` };
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }
 
-
 /**
- * Generates a payment reference from the Osoftpay GeneralPayments API and saves the transaction record.
- * This version does not use state code and returns an RRR link.
+ * Generates a payment reference from the Osoftpay GeneralPayments API.
  */
 export async function createGeneralBill(
     application: StoredApplication,
@@ -135,7 +103,6 @@ export async function createGeneralBill(
 ): Promise<{ success: boolean; error?: string; rrrLink?: string }> {
     const supabase = await createSupabaseServerClient();
 
-    // 1. Get user details for payment
     const { data: userProfile, error: profileError } = await supabase
         .from('users')
         .select('phone, email')
@@ -143,22 +110,13 @@ export async function createGeneralBill(
         .single();
 
     if (profileError || !userProfile) {
-        console.error("Error fetching user profile for billing:", profileError);
-        return { success: false, error: "Could not retrieve user details for billing." };
+        return { success: false, error: "Could not retrieve user details." };
     }
 
-    // 2. Call Osoftpay GeneralPayments API
     try {
-        // Sanitize phone number: remove non-digits and ensure it's 11 digits starting with 0
         let sanitizedPhone = (userProfile.phone || '08000000000').replace(/\D/g, '');
-        if (sanitizedPhone.startsWith('234')) {
-            sanitizedPhone = '0' + sanitizedPhone.slice(3);
-        }
-        if (sanitizedPhone.length > 11) {
-            sanitizedPhone = sanitizedPhone.slice(-11);
-        } else if (sanitizedPhone.length < 11) {
-            sanitizedPhone = sanitizedPhone.padStart(11, '0');
-        }
+        if (sanitizedPhone.startsWith('234')) sanitizedPhone = '0' + sanitizedPhone.slice(3);
+        sanitizedPhone = sanitizedPhone.slice(-11).padStart(11, '0');
 
         const payload = {
             "Payment_Item": description,
@@ -170,33 +128,19 @@ export async function createGeneralBill(
             "Platform": "PayKaduna"
         };
 
-        console.log("Osoftpay General Request Payload:", JSON.stringify(payload, null, 2));
-
         const response = await fetch('https://kasupda.osoftpay.net/api/GeneralPayments', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Osoftpay General API Error Body:', errorBody);
-            throw new Error(`Osoftpay General API responded with status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Osoftpay General API error: ${response.status}`);
 
         const result: GeneralPaymentResponse = await response.json();
-        console.log("Osoftpay General Response:", result);
-
         if (result.status !== '00' || !result.reference) {
-            throw new Error(result.message || 'Failed to generate payment reference from Osoftpay.');
+            throw new Error(result.message || 'Failed to generate reference.');
         }
 
-        const paymentReference = result.reference;
-        const rrrLink = result.rrrLink;
-
-        // 3. Save transaction to our database
         const { error: dbError } = await supabase
             .from('transactions')
             .insert({
@@ -204,63 +148,34 @@ export async function createGeneralBill(
                 application_id: application.id,
                 amount: amount,
                 description: description,
-                payment_reference: paymentReference,
-                payment_link: rrrLink,
+                payment_reference: result.reference,
+                payment_link: result.rrrLink,
                 status: 'Pending',
                 payer_name: application.applicant_name,
                 payer_email: userProfile.email,
                 payer_phone: userProfile.phone,
             });
 
-        if (dbError) {
-            throw dbError;
-        }
+        if (dbError) throw dbError;
 
         revalidatePath('/dashboard/billing');
-        revalidatePath('/admin/applications');
-        revalidatePath(`/admin/applications/${application.id}`);
-
-        return { success: true, rrrLink };
-
-    } catch (error: any) {
-        let errorMessage = "An unknown server error occurred.";
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        } else if (error && typeof error === 'object' && error.message) {
-            errorMessage = error.message;
-        } else if (typeof error === 'string') {
-            errorMessage = error;
-        }
-
-        console.error('Create General Bill Error:', error);
-        return { success: false, error: `Failed to create bill: ${errorMessage}` };
+        return { success: true, rrrLink: result.rrrLink };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }
 
-
 /**
- * Verifies a payment status with the Osoftpay API and updates our database.
+ * Verifies a payment status.
  */
 export async function verifyPayment(transactionId: number, paymentReference: string): Promise<{ success: boolean; status?: string; error?: string; }> {
     const supabase = await createSupabaseServerClient();
 
     try {
-        const response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Osoftpay Validation API Error Body:', errorBody);
-            throw new Error(`Osoftpay validation API responded with status: ${response.status}`);
-        }
+        const response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`);
+        if (!response.ok) throw new Error(`Validation API error: ${response.status}`);
 
         const result: any = await response.json();
-        console.log("Osoftpay Validation Response:", result);
-
         const isSuccessful = result.payment_Status === 'Successful' || result.status === '00';
         const newStatus = isSuccessful ? 'Verified' : 'Pending';
 
@@ -269,41 +184,22 @@ export async function verifyPayment(transactionId: number, paymentReference: str
             .update({ status: newStatus, last_verified_at: new Date().toISOString() })
             .eq('id', transactionId);
 
-        if (dbError) {
-            throw dbError;
-        }
+        if (dbError) throw dbError;
 
         revalidatePath('/dashboard/billing');
-
         return { success: true, status: newStatus };
-
-    } catch (error: any) {
-        let errorMessage = "An unknown server error occurred.";
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        } else if (error && typeof error === 'object' && error.message) {
-            errorMessage = error.message;
-        } else if (typeof error === 'string') {
-            errorMessage = error;
-        }
-
-        console.error('Verify Payment Error:', error);
-        return { success: false, error: `Failed to verify payment: ${errorMessage}` };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }
 
 /**
- * Assigns a DIN to a user and application after successful payment.
- * This is an admin-only action.
+ * Assigns a DIN.
  */
-export async function assignDin(
-    applicationId: string,
-    userId: string
-): Promise<{ success: boolean; error?: string }> {
+export async function assignDin(applicationId: string, userId: string): Promise<{ success: boolean; error?: string }> {
     const supabase = await createSupabaseServerClient();
 
     try {
-        // Check if the application fee has been paid
         const { data: transaction, error: transactionError } = await supabase
             .from('transactions')
             .select('status')
@@ -314,10 +210,9 @@ export async function assignDin(
             .single();
 
         if (transactionError || !transaction || transaction.status !== 'Verified') {
-            return { success: false, error: "Payment for this application has not been verified." };
+            return { success: false, error: "Payment not verified." };
         }
 
-        // Generate DIN and update records
         const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
 
         const { error: appUpdateError } = await supabase
@@ -335,30 +230,19 @@ export async function assignDin(
         if (userUpdateError) throw userUpdateError;
 
         revalidatePath('/admin/applications');
-        revalidatePath(`/admin/applications/${applicationId}`);
-        revalidatePath('/admin/din-applications');
-        revalidatePath('/dashboard/my-dins');
-
         return { success: true };
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        console.error('Assign DIN Error:', errorMessage);
-        return { success: false, error: `Failed to assign DIN: ${errorMessage}` };
-    }   
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    }
 }
 
 /**
- * Assigns a KBP number to an application after successful payment.
- * This is an admin-only action.
+ * Assigns a KBP number.
  */
-export async function assignKbp(
-    applicationId: string,
-    kbpNumber: string
-): Promise<{ success: boolean; error?: string }> {
+export async function assignKbp(applicationId: string, kbpNumber: string): Promise<{ success: boolean; error?: string }> {
     const supabase = await createSupabaseServerClient();
 
     try {
-        // Check if the application fee has been paid
         const { data: transaction, error: transactionError } = await supabase
             .from('transactions')
             .select('status')
@@ -369,28 +253,42 @@ export async function assignKbp(
             .single();
 
         if (transactionError || !transaction || transaction.status !== 'Verified') {
-            return { success: false, error: "Payment for this application has not been verified." };
+            return { success: false, error: "Payment not verified." };
         }
 
-        // Update application with KBP number and set status to Approved
         const { error: appUpdateError } = await supabase
             .from('applications')
-            .update({ 
-                original_permit_id: kbpNumber, 
-                status: 'Approved',
-                rejection_reason: null 
-            })
+            .update({ original_permit_id: kbpNumber, status: 'Approved', rejection_reason: null })
             .eq('id', applicationId);
 
         if (appUpdateError) throw appUpdateError;
 
         revalidatePath('/admin/applications');
-        revalidatePath(`/admin/applications/${applicationId}`);
-        
         return { success: true };
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        console.error('Assign KBP Error:', errorMessage);
-        return { success: false, error: `Failed to assign KBP: ${errorMessage}` };
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
+}
+
+/**
+ * Fetches all transactions.
+ */
+export async function getTransactions(status?: string): Promise<any[]> {
+    const supabase = await createSupabaseServerClient();
+    let query = supabase.from('transactions').select('*, applications(type)').order('created_at', { ascending: false });
+    if (status) query = query.eq('status', status);
+
+    const { data, error } = await query;
+    if (error) return [];
+    return data || [];
+}
+
+/**
+ * Fetches a single transaction.
+ */
+export async function getTransactionById(id: number): Promise<any | null> {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.from('transactions').select('*, applications(*)').eq('id', id).single();
+    if (error) return null;
+    return data;
 }

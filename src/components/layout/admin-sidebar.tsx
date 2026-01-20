@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -41,10 +40,11 @@ const adminNavItems = [
   { href: '/admin/permit-applications', label: 'Permit Applications', icon: Building },
   { href: '/admin/din-applications', label: 'DIN Applications', icon: Fingerprint },
   { href: '/admin/stage-approvals', label: 'Stage Approvals', icon: ClipboardCheck },
-  { href: '/admin/users', label: 'Users', icon: Users },
+  { href: '/admin/finance', label: 'Finance', icon: Landmark },
+  { href: '/admin/users', label: 'User Management', icon: Users, superAdminOnly: true },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
   { href: '/admin/status', label: 'System Status', icon: Server },
-  { href: '/admin/settings', label: 'Settings', icon: Settings, disabled: true },
+  { href: '/admin/settings', label: 'Settings', icon: Settings, superAdminOnly: true },
 ];
 
 export default function AdminSidebar() {
@@ -53,8 +53,18 @@ export default function AdminSidebar() {
   const { toast } = useToast();
   const { state, setOpenMobile } = useSidebar();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchUserRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('users').select('role').eq('uid', user.id).single();
+        if (data) setUserRole(data.role);
+      }
+    };
+    fetchUserRole();
+
     const fetchUnreadCount = async () => {
       try {
         const { count, error } = await supabase
@@ -68,7 +78,7 @@ export default function AdminSidebar() {
         console.error("Error fetching unread message count:", error);
       }
     };
-    
+
     fetchUnreadCount();
 
     // Set up a real-time subscription
@@ -119,25 +129,30 @@ export default function AdminSidebar() {
 
       <SidebarContent className="flex-1 p-2">
         <SidebarMenu>
-          {adminNavItems.map((item) => (
-            <SidebarMenuItem key={item.label}>
-              <SidebarMenuButton
-                onClick={() => handleNavigation(item.href, item.label, item.disabled)}
-                isActive={pathname.startsWith(item.href)}
-                tooltip={state === 'collapsed' ? item.label : undefined}
-                aria-disabled={item.disabled}
-                className={cn("relative", item.disabled && "opacity-50 cursor-not-allowed")}
-              >
-                <item.icon className="h-5 w-5" />
-                <span className={cn(state === 'collapsed' && "hidden")}>{item.label}</span>
-                 {item.href === '/admin/messages' && unreadCount > 0 && (
+          {adminNavItems.map((item) => {
+            // Hide super admin only items if user is not super admin
+            if (item.superAdminOnly && userRole !== 'Super Admin') return null;
+
+            return (
+              <SidebarMenuItem key={item.label}>
+                <SidebarMenuButton
+                  onClick={() => handleNavigation(item.href, item.label, item.disabled)}
+                  isActive={pathname.startsWith(item.href)}
+                  tooltip={state === 'collapsed' ? item.label : undefined}
+                  aria-disabled={item.disabled}
+                  className={cn("relative", item.disabled && "opacity-50 cursor-not-allowed")}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span className={cn(state === 'collapsed' && "hidden")}>{item.label}</span>
+                  {item.href === '/admin/messages' && unreadCount > 0 && (
                     <Badge className={cn("absolute right-2 transition-all duration-300", state === 'collapsed' && "top-0 right-0 h-4 w-4 p-0 justify-center")}>
-                        {unreadCount > 9 ? '9+' : unreadCount}
+                      {unreadCount > 9 ? '9+' : unreadCount}
                     </Badge>
-                )}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+                  )}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
 
