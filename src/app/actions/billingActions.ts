@@ -172,7 +172,13 @@ export async function verifyPayment(transactionId: number, paymentReference: str
     const supabase = await createSupabaseServerClient();
 
     try {
-        const response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`);
+        let response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`);
+
+        // If 404, try the alternative agency endpoint
+        if (response.status === 404) {
+            response = await fetch(`https://agency.osoftpay.net/api/CallValidation/${paymentReference}`);
+        }
+
         if (!response.ok) throw new Error(`Validation API error: ${response.status}`);
 
         const result: any = await response.json();
@@ -190,7 +196,7 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         if (dbError) throw dbError;
 
         // Automatic DIN Generation Logic
-        if (isSuccessful && transaction && transaction.description === 'DIN Application Fee') {
+        if (isSuccessful && transaction && (transaction.description === 'DIN Application Fee' || (transaction.description === 'Approval Fees For Building Plan' && transaction.amount === 5000))) {
             const applicationId = transaction.application_id;
             const userId = transaction.user_id;
             const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
