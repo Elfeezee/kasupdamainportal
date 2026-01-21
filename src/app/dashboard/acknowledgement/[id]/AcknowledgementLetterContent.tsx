@@ -91,11 +91,21 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
     const { data, ...rest } = applicationData;
     const flattenedData = { ...rest, ...(typeof data === 'object' && data !== null ? data : {}) };
 
+    const isDinApp = flattenedData.type === 'DIN Application';
     const applicationId = flattenedData.original_permit_id || flattenedData.din || `KSP${String(flattenedData.id).padStart(3, '0')}`;
     const applicantName = flattenedData.applicant_name;
     const submissionDate = flattenedData.created_at ? format(parseISO(flattenedData.created_at), 'dd-MMM-yyyy') : 'N/A';
+
+    // DIN specific fields or fallbacks
+    const applicantAddress = isDinApp
+        ? flattenedData.applicantAddress
+        : [flattenedData.app_house_no, flattenedData.app_street_name, flattenedData.app_district, flattenedData.app_city_town, flattenedData.app_state].filter(Boolean).join(', ');
+
+    const plotAddress = isDinApp
+        ? flattenedData.plotAddress
+        : (flattenedData.plot_description_address || flattenedData.plot_address || 'N/A');
+
     const representativeName = [flattenedData.rep_first_name, flattenedData.rep_middle_name, flattenedData.rep_surname].filter(Boolean).join(' ');
-    const applicantAddress = [flattenedData.app_house_no, flattenedData.app_street_name, flattenedData.app_district, flattenedData.app_city_town, flattenedData.app_state].filter(Boolean).join(', ');
     const developmentDescription = flattenedData.land_use || flattenedData.type?.replace(/ permit/i, '').replace(/\(.*\)/i, '').trim();
 
     const receivedDocuments = Object.keys(flattenedData)
@@ -109,6 +119,107 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
         type: flattenedData.type
     });
 
+    if (isDinApp) {
+        return (
+            <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1050px] p-12 relative print:min-h-full border-[12px] border-double border-primary/20">
+                {/* Watermark */}
+                <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={400} height={400} className="opacity-[0.03] grayscale" />
+                </div>
+
+                {/* QR Code */}
+                <div className="absolute top-12 right-12 z-20">
+                    <QRCodeSVG value={qrValue} size={100} />
+                </div>
+
+                <div className="relative z-10 flex flex-col flex-grow">
+                    <header className="pb-6 mb-8 text-center border-b-2 border-primary/10">
+                        <Image src="/image/logo.png" alt="KASUPDA Logo" width={80} height={80} className="mx-auto mb-4" />
+                        <h1 className="text-xl font-black text-primary tracking-tighter uppercase">KADUNA STATE GOVERNMENT</h1>
+                        <h2 className="text-lg font-bold text-slate-800 tracking-tight">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY (KASUPDA)</h2>
+                        <div className="mt-4 inline-block bg-primary text-white px-6 py-2 rounded-full font-bold text-sm tracking-widest uppercase">
+                            DIN ACKNOWLEDGEMENT LETTER
+                        </div>
+                    </header>
+
+                    <main className="flex-grow space-y-8">
+                        {/* DIN Number Box */}
+                        <div className="bg-slate-50 border-2 border-primary/20 p-6 rounded-2xl text-center shadow-sm">
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Development Identification Number (DIN)</p>
+                            <p className="text-4xl font-black text-primary tracking-widest">{flattenedData.din || 'PENDING'}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-12">
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Applicant Information</h3>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-slate-900">{applicantName}</p>
+                                        <p className="text-xs text-slate-600 leading-relaxed">{applicantAddress}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Property Information</h3>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-bold text-slate-800">Plot Address:</p>
+                                        <p className="text-xs text-slate-600 leading-relaxed">{plotAddress}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Application Details</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between border-b border-slate-100 pb-1">
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">KBP Number:</span>
+                                            <span className="text-xs font-bold text-slate-900">{flattenedData.kbpNumber || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-slate-100 pb-1">
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">KDL Number:</span>
+                                            <span className="text-xs font-bold text-slate-900">{flattenedData.kdlNumber || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-slate-100 pb-1">
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">Date Issued:</span>
+                                            <span className="text-xs font-bold text-slate-900">{submissionDate}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-12 p-6 bg-primary/5 rounded-xl border border-primary/10">
+                            <p className="text-xs leading-relaxed text-slate-700 italic">
+                                This document serves as an official acknowledgement of your Development Identification Number (DIN).
+                                The DIN is a mandatory requirement for all development activities within Kaduna State.
+                                Please quote this number in all future correspondences with the Authority regarding this property.
+                            </p>
+                        </div>
+                    </main>
+
+                    <footer className="mt-auto pt-12 border-t border-slate-100">
+                        <div className="flex justify-between items-end mb-12">
+                            <div className="text-center">
+                                <div className="w-48 border-b-2 border-slate-900 mb-2"></div>
+                                <p className="text-[10px] font-bold text-slate-900 uppercase">Director General, KASUPDA</p>
+                            </div>
+                            <div className="text-right">
+                                <Image src="/image/logo.png" alt="KASUPDA Seal" width={60} height={60} className="opacity-20 grayscale ml-auto" />
+                                <p className="text-[8px] font-bold text-slate-400 uppercase mt-2">Official Digital Seal</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-900 text-white p-4 rounded-lg flex justify-between items-center text-[8px] font-bold tracking-widest uppercase">
+                            <p>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</p>
+                            <p>WWW.KASUPDA.KDSG.GOV.NG</p>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        );
+    }
+
+    // Default layout for other applications
     return (
         <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1050px] p-8 relative print:min-h-full">
 
@@ -138,7 +249,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     </div>
 
                     <div className="space-y-1 text-[11px] leading-relaxed">
-                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plot_district || '[District not provided]'} in LGA {flattenedData.plot_lga || '[LGA not provided]'} more accurately described as {flattenedData.plot_description_address || flattenedData.plot_address || 'N/A'}.</p>
+                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plot_district || '[District not provided]'} in LGA {flattenedData.plot_lga || '[LGA not provided]'} more accurately described as {plotAddress}.</p>
                         <p>Description of the development is: {developmentDescription}</p>
                     </div>
 

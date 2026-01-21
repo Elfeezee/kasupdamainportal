@@ -99,7 +99,7 @@ async function MyApplicationsPageComponent() {
               <CardContent className="space-y-3 flex-grow flex flex-col">
                 <div className="flex-grow space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    <strong>File Number:</strong> {app.original_permit_id || 'Pending Admin Review'}
+                    <strong>File Number / DIN:</strong> {app.original_permit_id || app.din || 'Pending Admin Review'}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     <strong>Application ID:</strong> {app.id}
@@ -124,7 +124,7 @@ async function MyApplicationsPageComponent() {
                 )}
               </CardContent>
               <CardFooter className="border-t pt-4 flex flex-col sm:flex-row gap-2">
-                {app.original_permit_id && (
+                {(app.original_permit_id || app.din) && (
                   <Button asChild variant="secondary" className="w-full">
                     <Link href={`/dashboard/acknowledgement/${app.id}`}>
                       <FileSpreadsheet className="mr-2 h-4 w-4" />

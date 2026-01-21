@@ -26,7 +26,7 @@ import ApplicationDetails from './ApplicationDetails';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { updateApplicationData } from '@/app/actions/adminActions';
-import { assignDin, assignKbp } from '@/app/actions/billingActions';
+import { assignKbp } from '@/app/actions/billingActions';
 
 
 // A more complete type definition that reflects the new schema
@@ -154,27 +154,21 @@ export default function ManageApplicationsPage() {
 
   const handleFileNumberAssign = async () => {
     if (!ackApp || !ackFileNumber.trim()) {
-      toast({ title: "Error", description: "File number / DIN cannot be empty.", variant: "destructive" });
+      toast({ title: "Error", description: "File number cannot be empty.", variant: "destructive" });
       return;
     }
     setIsSendingAck(true);
 
     try {
-      let result;
-      // If it's a DIN application, call the specific assign DIN action
-      if (ackApp.type === 'DIN Application') {
-        result = await assignDin(ackApp.id, ackApp.user_id);
-      } else {
-        // For other applications, just update the permit ID
-        result = await updateApplicationData(ackApp.id, { original_permit_id: ackFileNumber });
-      }
+      // For non-DIN applications, update the permit ID
+      const result = await updateApplicationData(ackApp.id, { original_permit_id: ackFileNumber });
 
       if (result.success) {
-        toast({ title: "Assignment Successful", description: `The number has been assigned to the application.` });
+        toast({ title: "Assignment Successful", description: `The file number has been assigned to the application.` });
         // Optimistically update the UI
         setApplications(prev => prev.map(app =>
           app.id === ackApp.id
-            ? { ...app, original_permit_id: ackApp.type !== 'DIN Application' ? ackFileNumber : app.original_permit_id, din: ackApp.type === 'DIN Application' ? `DIN${String(app.id).padStart(3, '0')}` : app.din, status: ackApp.type === 'DIN Application' ? 'Approved' : app.status }
+            ? { ...app, original_permit_id: ackFileNumber }
             : app
         ));
         setIsAckDialogOpen(false);
@@ -308,9 +302,11 @@ export default function ManageApplicationsPage() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openAckDialog(app)}>
-                                <Send className="mr-2 h-4 w-4" /> Assign File No. / DIN
-                              </DropdownMenuItem>
+                              {app.type !== 'DIN Application' && (
+                                <DropdownMenuItem onClick={() => openAckDialog(app)}>
+                                  <Send className="mr-2 h-4 w-4" /> Assign File No.
+                                </DropdownMenuItem>
+                              )}
                               {app.type !== 'DIN Application' && (
                                 <DropdownMenuItem onClick={() => openKbpDialog(app)}>
                                   <Building className="mr-2 h-4 w-4" /> Assign KBP & Approve
@@ -361,40 +357,29 @@ export default function ManageApplicationsPage() {
       <Dialog open={isAckDialogOpen} onOpenChange={setIsAckDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Assign File Number or DIN</DialogTitle>
+            <DialogTitle>Assign File Number</DialogTitle>
             <DialogDescription>
-              {ackApp?.type === 'DIN Application'
-                ? "Click the button to generate and assign the official DIN for this paid application."
-                : "Enter the official File Number for this application. This will be sent to the user."
-              }
+              Enter the official File Number for this application. This will be sent to the user.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            {ackApp?.type === 'DIN Application' ? (
-              <div className='text-center p-4 bg-muted rounded-md'>
-                <p className='text-sm text-muted-foreground'>Ready to generate DIN for:</p>
-                <p className='font-semibold'>{ackApp.applicant_name}</p>
-                <p className='text-xs font-mono'>App ID: {ackApp.id}</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="file-number" className="text-right">
-                  File Number
-                </Label>
-                <Input
-                  id="file-number"
-                  value={ackFileNumber}
-                  onChange={(e) => setAckFileNumber(e.target.value)}
-                  className="col-span-3"
-                  placeholder="e.g., KSP12345"
-                />
-              </div>
-            )}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="file-number" className="text-right">
+                File Number
+              </Label>
+              <Input
+                id="file-number"
+                value={ackFileNumber}
+                onChange={(e) => setAckFileNumber(e.target.value)}
+                className="col-span-3"
+                placeholder="e.g., KSP12345"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAckDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleFileNumberAssign} disabled={isSendingAck || (ackApp?.type !== 'DIN Application' && !ackFileNumber.trim())}>
-              {isSendingAck ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Assigning...</> : (ackApp?.type === 'DIN Application' ? <><Fingerprint className="mr-2 h-4 w-4" />Assign DIN</> : "Assign Number")}
+            <Button onClick={handleFileNumberAssign} disabled={isSendingAck || !ackFileNumber.trim()}>
+              {isSendingAck ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Assigning...</> : "Assign Number"}
             </Button>
           </DialogFooter>
         </DialogContent>

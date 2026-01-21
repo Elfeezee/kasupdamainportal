@@ -41,7 +41,7 @@ const adminNavItems = [
   { href: '/admin/din-applications', label: 'DIN Applications', icon: Fingerprint },
   { href: '/admin/stage-approvals', label: 'Stage Approvals', icon: ClipboardCheck },
   { href: '/admin/users', label: 'User Management', icon: Users, allowedRoles: ['Super Admin'] },
-  { href: '/admin/finance', label: 'Finance', icon: Landmark, allowedRoles: ['Super Admin', 'Finance'] },
+  { href: '/admin/finance/dashboard', label: 'Finance', icon: Landmark, allowedRoles: ['Super Admin', 'Finance'] },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
   { href: '/admin/status', label: 'System Status', icon: Server },
   { href: '/admin/settings', label: 'Settings', icon: Settings, allowedRoles: ['Super Admin'] },

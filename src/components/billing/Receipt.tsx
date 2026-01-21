@@ -31,17 +31,17 @@ export default function Receipt({ transaction }: ReceiptProps) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4 sm:p-8 bg-white text-slate-900 print:p-0 print:shadow-none">
+        <div className="max-w-3xl mx-auto p-4 sm:p-8 bg-white text-slate-900 print:p-0 print:shadow-none print-container">
             <div className="flex justify-between items-start mb-8 print:hidden">
                 <h2 className="text-2xl font-bold text-slate-800">Payment Receipt</h2>
                 <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                        <Printer className="h-4 w-4" /> Print
+                        <Printer className="h-4 w-4" /> Print Receipt
                     </Button>
                 </div>
             </div>
 
-            <Card className="border-2 border-slate-200 shadow-xl overflow-hidden print:border-none print:shadow-none">
+            <Card className="border-2 border-slate-200 shadow-xl overflow-hidden print:border-none print:shadow-none print:m-0">
                 {/* Header with Logo/Branding */}
                 <div className="bg-primary/5 border-b-2 border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div className="flex items-center gap-3">

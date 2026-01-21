@@ -166,7 +166,7 @@ export async function createGeneralBill(
 }
 
 /**
- * Verifies a payment status.
+ * Verifies a payment status and handles automatic DIN assignment.
  */
 export async function verifyPayment(transactionId: number, paymentReference: string): Promise<{ success: boolean; status?: string; error?: string; }> {
     const supabase = await createSupabaseServerClient();
@@ -179,58 +179,40 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         const isSuccessful = result.payment_Status === 'Successful' || result.status === '00';
         const newStatus = isSuccessful ? 'Verified' : 'Pending';
 
-        const { error: dbError } = await supabase
+        // Update transaction status
+        const { data: transaction, error: dbError } = await supabase
             .from('transactions')
             .update({ status: newStatus, last_verified_at: new Date().toISOString() })
-            .eq('id', transactionId);
+            .eq('id', transactionId)
+            .select('*, applications(*)')
+            .single();
 
         if (dbError) throw dbError;
 
-        revalidatePath('/dashboard/billing');
-        return { success: true, status: newStatus };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
-    }
-}
+        // Automatic DIN Generation Logic
+        if (isSuccessful && transaction && transaction.description === 'DIN Application Fee') {
+            const applicationId = transaction.application_id;
+            const userId = transaction.user_id;
+            const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
 
-/**
- * Assigns a DIN.
- */
-export async function assignDin(applicationId: string, userId: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
+            // Update application status and DIN
+            await supabase
+                .from('applications')
+                .update({ din: finalDin, status: 'Approved' })
+                .eq('id', applicationId);
 
-    try {
-        const { data: transaction, error: transactionError } = await supabase
-            .from('transactions')
-            .select('status')
-            .eq('application_id', applicationId)
-            .eq('description', 'Approval Fees For Building Plan')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            // Update user profile with DIN
+            await supabase
+                .from('users')
+                .update({ din: finalDin })
+                .eq('uid', userId);
 
-        if (transactionError || !transaction || transaction.status !== 'Verified') {
-            return { success: false, error: "Payment not verified." };
+            revalidatePath('/admin/applications');
         }
 
-        const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
-
-        const { error: appUpdateError } = await supabase
-            .from('applications')
-            .update({ din: finalDin, status: 'Approved' })
-            .eq('id', applicationId);
-
-        if (appUpdateError) throw appUpdateError;
-
-        const { error: userUpdateError } = await supabase
-            .from('users')
-            .update({ din: finalDin })
-            .eq('uid', userId);
-
-        if (userUpdateError) throw userUpdateError;
-
-        revalidatePath('/admin/applications');
-        return { success: true };
+        revalidatePath('/dashboard/billing');
+        revalidatePath('/admin/finance');
+        return { success: true, status: newStatus };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
