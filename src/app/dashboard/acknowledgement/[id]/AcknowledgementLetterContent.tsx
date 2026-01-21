@@ -127,9 +127,9 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={400} height={400} className="opacity-[0.03] grayscale" />
                 </div>
 
-                {/* QR Code */}
-                <div className="absolute top-12 right-12 z-20">
-                    <QRCodeSVG value={qrValue} size={100} />
+                {/* QR Code positioned at top right */}
+                <div className="absolute top-12 right-12 z-20 bg-white p-1 border border-slate-100 rounded shadow-sm">
+                    <QRCodeSVG value={qrValue} size={90} />
                 </div>
 
                 <div className="relative z-10 flex flex-col flex-grow">
@@ -137,9 +137,6 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                         <Image src="/image/logo.png" alt="KASUPDA Logo" width={80} height={80} className="mx-auto mb-4" />
                         <h1 className="text-xl font-black text-primary tracking-tighter uppercase">KADUNA STATE GOVERNMENT</h1>
                         <h2 className="text-lg font-bold text-slate-800 tracking-tight">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY (KASUPDA)</h2>
-                        <div className="mt-4 inline-block bg-primary text-white px-6 py-2 rounded-full font-bold text-sm tracking-widest uppercase">
-                            DIN ACKNOWLEDGEMENT LETTER
-                        </div>
                     </header>
 
                     <main className="flex-grow space-y-8">
@@ -228,8 +225,8 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
             </div>
 
             {/* QR Code positioned at top right */}
-            <div className="absolute top-8 right-8 z-20">
-                <QRCodeSVG value={qrValue} size={80} />
+            <div className="absolute top-8 right-8 z-20 bg-white p-1 border border-slate-200 rounded">
+                <QRCodeSVG value={qrValue} size={70} />
             </div>
 
             <div className="relative z-10 flex flex-col flex-grow">

@@ -193,7 +193,7 @@ export async function verifyPayment(transactionId: number, paymentReference: str
             .select('*, applications(*)')
             .single();
 
-        if (dbError) throw dbError;
+        if (dbError) throw new Error(dbError.message);
 
         // Automatic DIN Generation Logic
         if (isSuccessful && transaction && (transaction.description === 'DIN Application Fee' || (transaction.description === 'Approval Fees For Building Plan' && transaction.amount === 5000))) {
@@ -202,16 +202,20 @@ export async function verifyPayment(transactionId: number, paymentReference: str
             const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
 
             // Update application status and DIN
-            await supabase
+            const { error: appUpdateError } = await supabase
                 .from('applications')
                 .update({ din: finalDin, status: 'Approved' })
                 .eq('id', applicationId);
 
+            if (appUpdateError) console.error("App update error:", appUpdateError);
+
             // Update user profile with DIN
-            await supabase
+            const { error: userUpdateError } = await supabase
                 .from('users')
                 .update({ din: finalDin })
                 .eq('uid', userId);
+
+            if (userUpdateError) console.error("User update error:", userUpdateError);
 
             revalidatePath('/admin/applications');
         }
@@ -219,8 +223,15 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         revalidatePath('/dashboard/billing');
         revalidatePath('/admin/finance');
         return { success: true, status: newStatus };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    } catch (error: any) {
+        console.error("Verification error:", error);
+
+        // Provide a more user-friendly message for 404s
+        if (error.message?.includes('404')) {
+            return { success: false, error: "Payment record not found. This usually means the payment hasn't been made yet or the reference is incorrect." };
+        }
+
+        return { success: false, error: error.message || "Unknown error" };
     }
 }
 

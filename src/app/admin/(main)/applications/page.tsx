@@ -91,13 +91,20 @@ export default function ManageApplicationsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
+      // Fetch applications that have at least one verified transaction
+      // We use !inner to only return applications that have a matching transaction with status 'Verified'
       const { data, error } = await supabase
         .from('applications')
-        .select('*')
+        .select('*, transactions!inner(status)')
+        .eq('transactions.status', 'Verified')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setApplications(data as StoredApplication[]);
+
+      // Filter unique applications (in case of multiple verified transactions for one app)
+      const uniqueApps = Array.from(new Map(data.map((app: any) => [app.id, app])).values());
+
+      setApplications(uniqueApps as StoredApplication[]);
     } catch (error) {
       console.error("Error fetching applications from Supabase:", error);
       toast({ title: "Error", description: "Failed to load applications.", variant: "destructive" });
@@ -312,10 +319,14 @@ export default function ManageApplicationsPage() {
                                   <Building className="mr-2 h-4 w-4" /> Assign KBP & Approve
                                 </DropdownMenuItem>
                               )}
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Approved')}>Approve</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Rejected')}>Reject</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Inprogress')}>Set to Inprogress</DropdownMenuItem>
+                              {app.type !== 'DIN Application' && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Approved')}>Approve</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Rejected')}>Reject</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Inprogress')}>Set to Inprogress</DropdownMenuItem>
+                                </>
+                              )}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openDeleteDialog(app); }} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
                             </DropdownMenuContent>
