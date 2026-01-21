@@ -99,7 +99,7 @@ async function MyApplicationsPageComponent() {
               <CardContent className="space-y-3 flex-grow flex flex-col">
                 <div className="flex-grow space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    <strong>{app.type === 'DIN Application' ? 'DIN' : 'File NO.'}:</strong> {app.original_permit_id || app.din || 'Pending Admin Review'}
+                    <strong>{app.type === 'DIN Application' ? 'DIN' : 'File NO.'}:</strong> {app.original_permit_id || app.din || (app.type === 'Stage Approval Application' && app.data?.kbp_number) || 'Pending Admin Review'}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     <strong>Application ID:</strong> {app.id}
