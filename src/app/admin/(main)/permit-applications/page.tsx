@@ -80,10 +80,32 @@ export default function PermitApplicationsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
+      // Step 1: Fetch all verified transactions to get application IDs
+      const { data: verifiedTransactions, error: txError } = await supabase
+        .from('transactions')
+        .select('application_id')
+        .eq('status', 'Verified');
+
+      if (txError) throw txError;
+
+      // Step 2: Get unique application IDs from verified transactions
+      const verifiedAppIds = [...new Set(
+        verifiedTransactions
+          ?.map(tx => tx.application_id)
+          .filter(id => id != null) || []
+      )];
+
+      if (verifiedAppIds.length === 0) {
+        setApplications([]);
+        return;
+      }
+
+      // Step 3: Fetch only permit applications that have verified payments
       const { data, error } = await supabase
         .from('applications')
         .select('*')
         .in('type', PERMIT_TYPES)
+        .in('id', verifiedAppIds)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

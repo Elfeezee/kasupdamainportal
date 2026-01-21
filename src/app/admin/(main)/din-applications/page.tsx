@@ -32,8 +32,8 @@ const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
   return {
     variant: (
       status === 'Approved' ? 'default' :
-      status === 'Rejected' ? 'destructive' :
-      'secondary'
+        status === 'Rejected' ? 'destructive' :
+          'secondary'
     ) as "default" | "destructive" | "secondary" | "outline" | null | undefined,
   };
 };
@@ -57,14 +57,36 @@ export default function DinApplicationsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [applicationToDelete, setApplicationToDelete] = useState<StoredApplication | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
-  
+
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
+      // Step 1: Fetch all verified transactions to get application IDs
+      const { data: verifiedTransactions, error: txError } = await supabase
+        .from('transactions')
+        .select('application_id')
+        .eq('status', 'Verified');
+
+      if (txError) throw txError;
+
+      // Step 2: Get unique application IDs from verified transactions
+      const verifiedAppIds = [...new Set(
+        verifiedTransactions
+          ?.map(tx => tx.application_id)
+          .filter(id => id != null) || []
+      )];
+
+      if (verifiedAppIds.length === 0) {
+        setApplications([]);
+        return;
+      }
+
+      // Step 3: Fetch only DIN applications that have verified payments
       const { data, error } = await supabase
         .from('applications')
         .select('*')
         .eq('type', 'DIN Application')
+        .in('id', verifiedAppIds)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -89,39 +111,39 @@ export default function DinApplicationsPage() {
   const handleDelete = async () => {
     if (!applicationToDelete) return;
     try {
-        const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
-        if (error) throw error;
-        setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
-        toast({ title: "Application Deleted", description: `Application for DIN (${applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
+      const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
+      if (error) throw error;
+      setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
+      toast({ title: "Application Deleted", description: `Application for DIN (${applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
     } catch (error) {
-        toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
     } finally {
-        setIsDeleteDialogOpen(false);
-        setApplicationToDelete(null);
+      setIsDeleteDialogOpen(false);
+      setApplicationToDelete(null);
     }
   };
 
   const handleStatusChange = async (appId: string, newStatus: ApplicationStatus) => {
     if (newStatus === 'Rejected') {
-        router.push(`/admin/applications/${appId}`);
-        toast({ title: "Reason Required", description: "Please provide a reason for rejection on the details page.", variant: "destructive" });
-        return;
+      router.push(`/admin/applications/${appId}`);
+      toast({ title: "Reason Required", description: "Please provide a reason for rejection on the details page.", variant: "destructive" });
+      return;
     }
-     try {
-        const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', appId);
-        if (error) throw error;
-        setApplications(prevApps => prevApps.map(app => app.id === appId ? { ...app, status: newStatus } : app));
-        toast({ title: `Application ${newStatus}`, description: `The application (ID: ${appId}) has been marked as ${newStatus}.` });
+    try {
+      const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', appId);
+      if (error) throw error;
+      setApplications(prevApps => prevApps.map(app => app.id === appId ? { ...app, status: newStatus } : app));
+      toast({ title: `Application ${newStatus}`, description: `The application (ID: ${appId}) has been marked as ${newStatus}.` });
     } catch (error) {
-        toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }
   };
 
   const filteredApplications = applications.filter(app => {
-    const termMatch = searchTerm.trim() === '' || 
-        (app.applicant_name && app.applicant_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (app.din && app.din.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        app.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    const termMatch = searchTerm.trim() === '' ||
+      (app.applicant_name && app.applicant_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (app.din && app.din.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      app.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
     const statusMatch = true; // DINs are always 'Approved' but let's keep this for consistency if logic changes
     return termMatch && statusMatch;
   });
@@ -149,7 +171,7 @@ export default function DinApplicationsPage() {
               <Input placeholder="Search by DIN, applicant, or ID..." className="pl-10" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
           </div>
-          
+
           <div className="border rounded-md">
             <Table>
               <TableHeader>
@@ -164,46 +186,46 @@ export default function DinApplicationsPage() {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                    <TableRow><TableCell colSpan={6} className="h-24 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin" /></TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} className="h-24 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin" /></TableCell></TableRow>
                 ) : filteredApplications.length > 0 ? (
                   filteredApplications.map((app) => (
-                     <Fragment key={app.id}>
-                        <TableRow className="cursor-pointer" onClick={() => toggleRow(app.id)}>
-                            <TableCell className="px-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    {expandedRow === app.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                                </Button>
-                            </TableCell>
-                            <TableCell className="font-mono font-medium">{app.din || 'N/A'}</TableCell>
-                            <TableCell>{app.applicant_name}</TableCell>
-                            <TableCell>{app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
-                            <TableCell><StatusBadge status={app.status as ApplicationStatus} /></TableCell>
-                            <TableCell className="text-right">
-                               <DropdownMenu>
-                                <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}><span className="sr-only">Open menu</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                   <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
-                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => openDeleteDialog(app)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
+                    <Fragment key={app.id}>
+                      <TableRow className="cursor-pointer" onClick={() => toggleRow(app.id)}>
+                        <TableCell className="px-2">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            {expandedRow === app.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </Button>
+                        </TableCell>
+                        <TableCell className="font-mono font-medium">{app.din || 'N/A'}</TableCell>
+                        <TableCell>{app.applicant_name}</TableCell>
+                        <TableCell>{app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
+                        <TableCell><StatusBadge status={app.status as ApplicationStatus} /></TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}><span className="sr-only">Open menu</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => openDeleteDialog(app)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                      {expandedRow === app.id && (
+                        <TableRow>
+                          <TableCell colSpan={6} className="p-0">
+                            <div className="bg-muted/50 p-4">
+                              <ApplicationDetails
+                                application={app}
+                                isEditing={false}
+                                editedData={{}}
+                                onInputChange={() => { }}
+                              />
+                            </div>
+                          </TableCell>
                         </TableRow>
-                        {expandedRow === app.id && (
-                            <TableRow>
-                                <TableCell colSpan={6} className="p-0">
-                                    <div className="bg-muted/50 p-4">
-                                        <ApplicationDetails
-                                            application={app}
-                                            isEditing={false}
-                                            editedData={{}}
-                                            onInputChange={() => {}}
-                                        />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )}
+                      )}
                     </Fragment>
                   ))
                 ) : (
