@@ -40,11 +40,11 @@ const adminNavItems = [
   { href: '/admin/permit-applications', label: 'Permit Applications', icon: Building },
   { href: '/admin/din-applications', label: 'DIN Applications', icon: Fingerprint },
   { href: '/admin/stage-approvals', label: 'Stage Approvals', icon: ClipboardCheck },
-  { href: '/admin/finance', label: 'Finance', icon: Landmark },
-  { href: '/admin/users', label: 'User Management', icon: Users, superAdminOnly: true },
+  { href: '/admin/users', label: 'User Management', icon: Users, allowedRoles: ['Super Admin'] },
+  { href: '/admin/finance', label: 'Finance', icon: Landmark, allowedRoles: ['Super Admin', 'Finance'] },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
   { href: '/admin/status', label: 'System Status', icon: Server },
-  { href: '/admin/settings', label: 'Settings', icon: Settings, superAdminOnly: true },
+  { href: '/admin/settings', label: 'Settings', icon: Settings, allowedRoles: ['Super Admin'] },
 ];
 
 export default function AdminSidebar() {
@@ -104,15 +104,8 @@ export default function AdminSidebar() {
     toast({ title: 'Exiting Admin View', description: 'Returning to your user dashboard.' });
   };
 
-  const handleNavigation = (href: string, label: string, disabled?: boolean) => {
+  const handleNavigation = (href: string, label: string) => {
     setOpenMobile(false);
-    if (disabled) {
-      toast({
-        title: 'Feature Pending',
-        description: `${label} is not yet implemented.`,
-      });
-      return;
-    }
     router.push(href);
   };
 
@@ -130,17 +123,18 @@ export default function AdminSidebar() {
       <SidebarContent className="flex-1 p-2">
         <SidebarMenu>
           {adminNavItems.map((item) => {
-            // Hide super admin only items if user is not super admin
-            if (item.superAdminOnly && userRole !== 'Super Admin') return null;
+            // Role-based visibility check
+            if (item.allowedRoles && (!userRole || !item.allowedRoles.includes(userRole))) {
+              return null;
+            }
 
             return (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
-                  onClick={() => handleNavigation(item.href, item.label, item.disabled)}
+                  onClick={() => handleNavigation(item.href, item.label)}
                   isActive={pathname.startsWith(item.href)}
                   tooltip={state === 'collapsed' ? item.label : undefined}
-                  aria-disabled={item.disabled}
-                  className={cn("relative", item.disabled && "opacity-50 cursor-not-allowed")}
+                  className="relative"
                 >
                   <item.icon className="h-5 w-5" />
                   <span className={cn(state === 'collapsed' && "hidden")}>{item.label}</span>

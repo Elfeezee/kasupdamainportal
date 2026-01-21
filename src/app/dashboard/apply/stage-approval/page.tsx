@@ -24,25 +24,30 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 const stageApprovalSchema = z.object({
-  // Box 1: Applicant Details
-  din: z.string().min(1, "DIN is required"),
-  originalPermitId: z.string().min(1, "Original Permit ID is required"),
+  // Box 1: Applicant & Site Details
+  firstName: z.string().min(1, "First Name is required"),
+  middleName: z.string().optional(),
+  surname: z.string().min(1, "Surname is required"),
+  applicantAddress: z.string().min(1, "Applicant Address is required"),
+  plotAddress: z.string().min(1, "Plot Address is required"),
 
-  // Box 2: Project Details
-  kbpNumber: z.string().optional(),
-  kdlNumber: z.string().optional(),
-  docCO: z.any()
+  // Box 2: Project Details & Documents
+  kbpNumber: z.string().min(1, "KBP Number is required"),
+  kdlNumber: z.string().min(1, "KDL Number / KADGIS File Number is required"),
+  doc_co: z.any()
+    .refine((files) => files?.length > 0, "C of O Document is required")
     .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
-    ).optional(),
-  docBuildingPermit: z.any()
+    ),
+  doc_building_permit: z.any()
+    .refine((files) => files?.length > 0, "Building Permit Document is required")
     .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
       (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
-    ).optional(),
+    ),
 
   // Box 3: Declaration
   declaration: z.boolean().refine(val => val === true, {
@@ -53,8 +58,8 @@ const stageApprovalSchema = z.object({
 type StageApprovalFormValues = z.infer<typeof stageApprovalSchema>;
 
 const steps = [
-  { id: 1, name: "Project Details", fields: ['din', 'originalPermitId'] as FieldName<StageApprovalFormValues>[] },
-  { id: 2, name: "Documents", fields: [] as FieldName<StageApprovalFormValues>[] },
+  { id: 1, name: "Applicant Details", fields: ['firstName', 'middleName', 'surname', 'applicantAddress', 'plotAddress'] as FieldName<StageApprovalFormValues>[] },
+  { id: 2, name: "Project Documents", fields: ['kbpNumber', 'kdlNumber', 'doc_co', 'doc_building_permit'] as FieldName<StageApprovalFormValues>[] },
   { id: 3, name: "Declaration", fields: ['declaration'] as FieldName<StageApprovalFormValues>[] },
 ];
 
@@ -107,7 +112,7 @@ export default function StageApprovalPage() {
 
   const { register, handleSubmit, control, formState: { errors }, trigger } = form;
 
-  const { clearStorage } = useFormPersistence(form, 'stage-approval-form', ['docCO', 'docBuildingPermit']);
+  const { clearStorage } = useFormPersistence(form, 'stage-approval-form', ['doc_co', 'doc_building_permit']);
 
   const onSubmit = async (data: StageApprovalFormValues) => {
     if (!user) {
@@ -118,12 +123,12 @@ export default function StageApprovalPage() {
 
     const formData = new FormData();
     formData.append('type', "Stage Approval Application");
-    const applicantName = user.user_metadata?.full_name || user.email || 'KASUPDA Applicant';
+    const applicantName = `${data.firstName} ${data.surname}`;
     formData.append('applicantName', applicantName);
     formData.append('userId', user.id);
 
     Object.entries(data).forEach(([key, value]) => {
-      if (key === 'docCO' || key === 'docBuildingPermit') {
+      if (key === 'doc_co' || key === 'doc_building_permit') {
         if (value instanceof FileList && value.length > 0 && value[0].size > 0) {
           formData.append(key, value[0]);
         }
@@ -232,17 +237,44 @@ export default function StageApprovalPage() {
           <CardContent className="space-y-8">
             {currentStep === 1 && (
               <section>
-                <h3 className="text-lg font-semibold text-primary border-b pb-2 mb-4">Box 1: Project Details</h3>
+                <h3 className="text-lg font-semibold text-primary border-b pb-2 mb-4">Box 1: Applicant Details</h3>
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="din">Your Development Identification Number (DIN)*</Label>
-                    <Input id="din" {...register("din")} placeholder="Enter your DIN" />
-                    {errors.din && <p className="text-destructive text-xs mt-1">{errors.din.message}</p>}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="firstName">First Name*</Label>
+                      <Input id="firstName" {...register("firstName")} placeholder="Admin" />
+                      {errors.firstName && <p className="text-destructive text-xs mt-1">{errors.firstName.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="middleName">Middle Name</Label>
+                      <Input id="middleName" {...register("middleName")} placeholder="" />
+                      {errors.middleName && <p className="text-destructive text-xs mt-1">{errors.middleName.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="surname">Surname*</Label>
+                      <Input id="surname" {...register("surname")} placeholder="" />
+                      {errors.surname && <p className="text-destructive text-xs mt-1">{errors.surname.message}</p>}
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="originalPermitId">Original Building Permit ID*</Label>
-                    <Input id="originalPermitId" {...register("originalPermitId")} placeholder="Enter the ID of your approved building permit" />
-                    {errors.originalPermitId && <p className="text-destructive text-xs mt-1">{errors.originalPermitId.message}</p>}
+                    <Label htmlFor="applicantAddress">Applicant Address*</Label>
+                    <textarea
+                      id="applicantAddress"
+                      {...register("applicantAddress")}
+                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Enter applicant address"
+                    />
+                    {errors.applicantAddress && <p className="text-destructive text-xs mt-1">{errors.applicantAddress.message}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="plotAddress">Plot Address*</Label>
+                    <textarea
+                      id="plotAddress"
+                      {...register("plotAddress")}
+                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Enter plot address"
+                    />
+                    {errors.plotAddress && <p className="text-destructive text-xs mt-1">{errors.plotAddress.message}</p>}
                   </div>
                 </div>
               </section>
@@ -253,32 +285,34 @@ export default function StageApprovalPage() {
                 <h3 className="text-lg font-semibold text-primary border-b pb-2 mb-4">Box 2: Project Documents</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="kbpNumber">KBP Number (if available)</Label>
+                    <Label htmlFor="kbpNumber">KBP Number*</Label>
                     <Input id="kbpNumber" {...register("kbpNumber")} placeholder="Enter the KBP number" />
+                    {errors.kbpNumber && <p className="text-destructive text-xs mt-1">{errors.kbpNumber.message}</p>}
                   </div>
                   <div>
-                    <Label htmlFor="kdlNumber">KDL Number / KADGIS File Number</Label>
+                    <Label htmlFor="kdlNumber">KDL Number / KADGIS File Number*</Label>
                     <Input id="kdlNumber" {...register("kdlNumber")} placeholder="Enter the KDL or KADGIS File Number" />
+                    {errors.kdlNumber && <p className="text-destructive text-xs mt-1">{errors.kdlNumber.message}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="docCO">Copy of C of O Document (Optional)</Label>
+                    <Label htmlFor="doc_co">Copy of C of O Document*</Label>
                     <Input
-                      id="docCO"
+                      id="doc_co"
                       type="file"
-                      {...register("docCO")}
+                      {...register("doc_co")}
                       className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                     />
-                    {errors.docCO && <p className="text-destructive text-xs mt-1">{errors.docCO.message as string}</p>}
+                    {errors.doc_co && <p className="text-destructive text-xs mt-1">{errors.doc_co.message as string}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="docBuildingPermit">Copy of Building Permit Document (Optional)</Label>
+                    <Label htmlFor="doc_building_permit">Copy of Building Permit Document*</Label>
                     <Input
-                      id="docBuildingPermit"
+                      id="doc_building_permit"
                       type="file"
-                      {...register("docBuildingPermit")}
+                      {...register("doc_building_permit")}
                       className="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                     />
-                    {errors.docBuildingPermit && <p className="text-destructive text-xs mt-1">{errors.docBuildingPermit.message as string}</p>}
+                    {errors.doc_building_permit && <p className="text-destructive text-xs mt-1">{errors.doc_building_permit.message as string}</p>}
                   </div>
                 </div>
               </section>

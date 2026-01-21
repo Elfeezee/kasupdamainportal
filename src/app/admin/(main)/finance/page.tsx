@@ -13,6 +13,8 @@ import { useToast } from '@/hooks/use-toast';
 import { format, parseISO } from 'date-fns';
 import { getTransactions } from '@/app/actions/billingActions';
 import Receipt from '@/components/billing/Receipt';
+import { supabase } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 type TransactionStatus = 'Verified' | 'Pending' | 'Failed';
 
@@ -50,13 +52,34 @@ const StatusBadge = ({ status }: { status: TransactionStatus }) => {
 export default function FinancePage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | TransactionStatus>('Verified'); // Default to Verified as requested
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('users').select('role').eq('uid', user.id).single();
+        if (data && (data.role === 'Super Admin' || data.role === 'Finance')) {
+          setRoleLoading(false);
+        } else {
+          toast({ title: "Access Denied", description: "You do not have permission to view finance transactions.", variant: "destructive" });
+          router.push('/admin/dashboard');
+        }
+      } else {
+        router.push('/admin/login');
+      }
+    };
+    checkRole();
+  }, [router, toast]);
 
   const loadTransactions = useCallback(async () => {
+    if (roleLoading) return;
     setLoading(true);
     try {
       const data = await getTransactions(statusFilter === 'All' ? undefined : statusFilter);
@@ -67,11 +90,19 @@ export default function FinancePage() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, toast]);
+  }, [statusFilter, toast, roleLoading]);
 
   useEffect(() => {
     loadTransactions();
   }, [loadTransactions]);
+
+  if (roleLoading) {
+    return (
+      <div className="flex h-[400px] w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const filteredTransactions = transactions.filter(t =>
     t.payment_reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
