@@ -17,7 +17,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Award, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 const fitnessCertificateSchema = z.object({
