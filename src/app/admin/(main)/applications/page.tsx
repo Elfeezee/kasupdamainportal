@@ -91,20 +91,36 @@ export default function ManageApplicationsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch applications that have at least one verified transaction
-      // We use !inner to only return applications that have a matching transaction with status 'Verified'
-      const { data, error } = await supabase
+      // Step 1: Fetch all verified transactions to get application IDs
+      const { data: verifiedTransactions, error: txError } = await supabase
+        .from('transactions')
+        .select('application_id')
+        .eq('status', 'Verified');
+
+      if (txError) throw txError;
+
+      // Step 2: Get unique application IDs from verified transactions
+      const verifiedAppIds = [...new Set(
+        verifiedTransactions
+          ?.map(tx => tx.application_id)
+          .filter(id => id != null) || []
+      )];
+
+      if (verifiedAppIds.length === 0) {
+        setApplications([]);
+        return;
+      }
+
+      // Step 3: Fetch only applications that have verified payments
+      const { data: apps, error: appError } = await supabase
         .from('applications')
-        .select('*, transactions!inner(status)')
-        .eq('transactions.status', 'Verified')
+        .select('*')
+        .in('id', verifiedAppIds)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (appError) throw appError;
 
-      // Filter unique applications (in case of multiple verified transactions for one app)
-      const uniqueApps = Array.from(new Map(data.map((app: any) => [app.id, app])).values());
-
-      setApplications(uniqueApps as StoredApplication[]);
+      setApplications(apps as StoredApplication[]);
     } catch (error) {
       console.error("Error fetching applications from Supabase:", error);
       toast({ title: "Error", description: "Failed to load applications.", variant: "destructive" });
