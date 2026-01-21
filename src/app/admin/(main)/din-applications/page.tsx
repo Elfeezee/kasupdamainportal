@@ -26,6 +26,8 @@ import { supabase } from '@/lib/supabase/client';
 import ApplicationDetails from '../applications/ApplicationDetails';
 import type { StoredApplication } from '../applications/page';
 
+import { generateDin } from '@/app/actions/billingActions';
+
 type ApplicationStatus = 'Inprogress' | 'Approved' | 'Rejected';
 
 const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
@@ -139,6 +141,20 @@ export default function DinApplicationsPage() {
     }
   };
 
+  const handleGenerateDin = async (app: StoredApplication) => {
+    try {
+      const result = await generateDin(app.id);
+      if (result.success) {
+        toast({ title: "DIN Generated", description: "DIN has been successfully generated for this application." });
+        loadApplications();
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Failed to generate DIN", variant: "destructive" });
+    }
+  };
+
   const filteredApplications = applications.filter(app => {
     const termMatch = searchTerm.trim() === '' ||
       (app.applicant_name && app.applicant_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -206,6 +222,15 @@ export default function DinApplicationsPage() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
+
+                              {!app.din && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleGenerateDin(app)}><Fingerprint className="mr-2 h-4 w-4" /> Generate DIN</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleStatusChange(app.id, 'Rejected')}><span className="text-destructive flex items-center"><Trash2 className="mr-2 h-4 w-4" /> Reject Application</span></DropdownMenuItem>
+                                </>
+                              )}
+
                               <DropdownMenuSeparator />
                               <DropdownMenuItem onClick={() => openDeleteDialog(app)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
                             </DropdownMenuContent>

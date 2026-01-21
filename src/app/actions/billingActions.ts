@@ -195,8 +195,8 @@ export async function verifyPayment(transactionId: number, paymentReference: str
 
         if (dbError) throw new Error(dbError.message);
 
-        // Automatic DIN Generation Logic
-        if (isSuccessful && transaction && (transaction.description === 'DIN Application Fee' || (transaction.description === 'Approval Fees For Building Plan' && transaction.amount === 5000))) {
+        // Automatic DIN Generation Logic REMOVED - Admin must now manually generate DIN
+        if (false && isSuccessful && transaction && (transaction.description === 'DIN Application Fee' || (transaction.description === 'Approval Fees For Building Plan' && transaction.amount === 5000))) {
             const applicationId = transaction.application_id;
             const userId = transaction.user_id;
             const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
@@ -290,4 +290,48 @@ export async function getTransactionById(id: number): Promise<any | null> {
     const { data, error } = await supabase.from('transactions').select('*, applications(*)').eq('id', id).single();
     if (error) return null;
     return data;
+}
+
+/**
+ * Manually generates a DIN for an application.
+ */
+export async function generateDin(applicationId: string): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createSupabaseServerClient();
+
+    try {
+        // Fetch application to get user_id and ensure it exists
+        const { data: application, error: appError } = await supabase
+            .from('applications')
+            .select('user_id, id')
+            .eq('id', applicationId)
+            .single();
+
+        if (appError || !application) {
+            return { success: false, error: "Application not found." };
+        }
+
+        const finalDin = `DIN${String(application.id).padStart(3, '0')}`;
+
+        // Update application status and DIN
+        const { error: appUpdateError } = await supabase
+            .from('applications')
+            .update({ din: finalDin, status: 'Approved', rejection_reason: null })
+            .eq('id', applicationId);
+
+        if (appUpdateError) throw appUpdateError;
+
+        // Update user profile with DIN
+        const { error: userUpdateError } = await supabase
+            .from('users')
+            .update({ din: finalDin })
+            .eq('uid', application.user_id);
+
+        if (userUpdateError) console.error("User update error:", userUpdateError);
+
+        revalidatePath('/admin/applications');
+        revalidatePath('/admin/din-applications');
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    }
 }
