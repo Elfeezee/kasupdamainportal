@@ -17,14 +17,14 @@ import { supabase } from '@/lib/supabase/client';
 import { Award, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 const fitnessCertificateSchema = z.object({
   applicantName: z.string().min(2, "Applicant name is required"),
   doc_building_permit: z.any()
     .refine((files) => files?.length == 1, "Building Permit is required.")
-    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
     .refine(
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."

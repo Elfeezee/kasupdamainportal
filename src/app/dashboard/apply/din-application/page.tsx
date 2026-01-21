@@ -19,7 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { Textarea } from '@/components/ui/textarea';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 // Zod schema based on the new, simplified requirements
@@ -33,7 +33,7 @@ const dinApplicationSchema = z.object({
   kdlNumber: z.string().min(1, "KDL Number is required"),
   doc_permit: z.any()
     .refine((files) => files?.length == 1, "Permit document is required.")
-    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
     .refine(
       (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."

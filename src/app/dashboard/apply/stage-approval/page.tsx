@@ -20,7 +20,7 @@ import { ChevronLeft, ChevronRight, ClipboardCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
 
 const stageApprovalSchema = z.object({
@@ -36,7 +36,7 @@ const stageApprovalSchema = z.object({
   kdlNumber: z.string().min(1, "KDL Number / KADGIS File Number is required"),
   doc_co: z.any()
     .refine((files) => files?.length > 0, "C of O Document is required")
-    .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
     .refine(
       (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .pdf files are accepted."
