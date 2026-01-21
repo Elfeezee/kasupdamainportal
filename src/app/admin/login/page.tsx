@@ -22,19 +22,21 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     const checkUser = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const { data: userProfile } = await supabase
-                .from('users')
-                .select('role')
-                .eq('uid', user.id)
-                .single();
-            if (userProfile?.role === 'Admin') {
-                router.replace('/admin/dashboard');
-            } else if (userProfile?.role === 'Finance') {
-                router.replace('/admin/finance/dashboard');
-            }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userProfile, error: profileError } = await supabase
+          .from('users')
+          .select('role')
+          .eq('uid', user.id)
+          .single();
+
+        const role = userProfile?.role;
+        if (role === 'Admin' || role === 'Super Admin') {
+          router.replace('/admin/dashboard');
+        } else if (role === 'Finance') {
+          router.replace('/admin/finance/dashboard');
         }
+      }
     };
     checkUser();
   }, [router]);
@@ -51,27 +53,30 @@ export default function AdminLoginPage() {
       });
 
       if (authError) throw authError;
-      
+
       if (authData.user) {
         const { data: userProfile, error: profileError } = await supabase
-            .from('users')
-            .select('role')
-            .eq('uid', authData.user.id)
-            .single();
+          .from('users')
+          .select('role')
+          .eq('uid', authData.user.id)
+          .single();
 
-        if (profileError) throw new Error("Could not verify user role.");
-        
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          throw new Error("Could not verify user role. Please ensure your account is properly set up.");
+        }
+
         const userRole = userProfile?.role;
-        
-        if (role === 'Admin' && userRole === 'Admin') {
-            toast({ title: 'Admin Login Successful!', description: 'Redirecting to the admin dashboard...' });
-            router.replace('/admin/dashboard');
-        } else if (role === 'Finance' && (userRole === 'Finance' || userRole === 'Admin')) {
-            toast({ title: 'Finance Login Successful!', description: 'Redirecting to the finance dashboard...' });
-            router.replace('/admin/finance/dashboard');
+
+        if (role === 'Admin' && (userRole === 'Admin' || userRole === 'Super Admin')) {
+          toast({ title: 'Login Successful!', description: 'Redirecting to the admin dashboard...' });
+          router.replace('/admin/dashboard');
+        } else if (role === 'Finance' && (userRole === 'Finance' || userRole === 'Admin' || userRole === 'Super Admin')) {
+          toast({ title: 'Login Successful!', description: 'Redirecting to the finance dashboard...' });
+          router.replace('/admin/finance/dashboard');
         } else {
-            await supabase.auth.signOut();
-            throw new Error(`Access Denied. Your account does not have ${role} privileges.`);
+          await supabase.auth.signOut();
+          throw new Error(`Access Denied. Your account does not have ${role} privileges.`);
         }
       }
 
@@ -93,7 +98,7 @@ export default function AdminLoginPage() {
     <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-screen bg-muted/40">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-            <ShieldAlert className="mx-auto h-10 w-10 text-primary" />
+          <ShieldAlert className="mx-auto h-10 w-10 text-primary" />
           <CardTitle className="text-3xl font-bold text-primary">Restricted Access</CardTitle>
           <CardDescription>Select your role to access the KASUPDA admin panels.</CardDescription>
         </CardHeader>
@@ -115,7 +120,7 @@ export default function AdminLoginPage() {
                 </div>
                 {error && <p className="text-destructive text-sm text-center font-medium">{error}</p>}
                 <Button type="submit" className="w-full text-lg py-3" disabled={isSubmitting}>
-                    {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin"/> Authenticating...</> : 'Login as Admin'}
+                  {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Authenticating...</> : 'Login as Admin'}
                 </Button>
               </form>
             </TabsContent>
@@ -131,7 +136,7 @@ export default function AdminLoginPage() {
                 </div>
                 {error && <p className="text-destructive text-sm text-center font-medium">{error}</p>}
                 <Button type="submit" className="w-full text-lg py-3" disabled={isSubmitting}>
-                     {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin"/> Authenticating...</> : 'Login as Finance'}
+                  {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Authenticating...</> : 'Login as Finance'}
                 </Button>
               </form>
             </TabsContent>
