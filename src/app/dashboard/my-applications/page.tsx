@@ -221,9 +221,13 @@ async function MyApplicationsPageComponent() {
                         <Award className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">File / Permit No.</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                          {app.type === 'DIN Application' ? 'DIN No.' : 'File / Permit No.'}
+                        </p>
                         <p className="font-semibold text-slate-800 mt-0.5">
-                          {app.original_permit_id || app.din || (app.type === 'Stage Approval Application' && app.data?.kbp_number) || 'Pending processing...'}
+                          {app.type === 'DIN Application' && app.status !== 'Approved'
+                            ? 'Pending approval...'
+                            : (app.original_permit_id || app.din || (app.type === 'Stage Approval Application' && app.data?.kbp_number) || 'Pending processing...')}
                         </p>
                       </div>
                     </div>

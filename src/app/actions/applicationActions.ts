@@ -300,31 +300,7 @@ export async function saveApplication(
         }
     }
 
-    // DIN Generation logic
-    if (type === 'DIN Application') {
-        try {
-            const { count } = await supabase
-                .from('applications')
-                .select('*', { count: 'exact', head: true })
-                .eq('type', 'DIN Application');
-
-            const serialNumber = (count || 0) + 1;
-            const paddedSN = String(serialNumber).padStart(4, '0');
-
-            const pc = (dbPayload.data.postal_code || '800271').padStart(6, '0');
-            const lg = (dbPayload.data.lga_code || '00').padStart(2, '0');
-            const wd = (dbPayload.data.ward_code || '00').padStart(2, '0');
-            const st = (dbPayload.data.street_code || '000').padStart(3, '0');
-            const pl = (dbPayload.data.plot_number || '000').padStart(3, '0');
-
-            dbPayload.din = `DIN-${pc}-${lg}-${wd}-${st}-${pl}-${paddedSN}`;
-            // Store details in JSONB for reference
-            dbPayload.data.serial_number = paddedSN;
-            dbPayload.data.generated_din = dbPayload.din;
-        } catch (err) {
-            console.error("Critical: DIN Generation failed. Proceeding without DIN.", err);
-        }
-    }
+    // DIN Generation removed from here - moved to admin approval step in adminActions.ts
 
     try {
         const { data: insertedData, error: dbError } = await supabase
