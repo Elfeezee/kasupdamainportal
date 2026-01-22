@@ -315,9 +315,9 @@ export async function saveApplication(
         // Automatically create a bill based on application type
         let billingResult;
         if (type === 'DIN Application') {
-            billingResult = await createGeneralBill(insertedData, userId, 5000, 'DIN Application Fee');
+            billingResult = await createGeneralBill(insertedData, userId, 5000, 'Approval Fees For Building Plan');
         } else {
-            billingResult = await createGeneralBill(insertedData, userId, 10000, 'Building Permit Application Fee');
+            billingResult = await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
         }
 
         if (!billingResult.success) {

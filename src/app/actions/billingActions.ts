@@ -124,7 +124,7 @@ export async function createGeneralBill(
             "Payer_Phone": sanitizedPhone,
             "Payer_Email": userProfile.email || 'no-email@example.com',
             "Description": description,
-            "Total_Price": amount.toString(),
+            "Total_Price": amount.toFixed(2),
             "Platform": "PayKaduna"
         };
 
