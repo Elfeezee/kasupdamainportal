@@ -124,9 +124,11 @@ export async function createGeneralBill(
             "Payer_Phone": sanitizedPhone,
             "Payer_Email": userProfile.email || 'no-email@example.com',
             "Description": description,
-            "Total_Price": amount.toFixed(2),
+            "Total_Price": amount.toString(),
             "Platform": "PayKaduna"
         };
+
+        console.log("Sending payload to Osoftpay:", JSON.stringify(payload));
 
         const response = await fetch('https://kasupda.osoftpay.net/api/GeneralPayments', {
             method: 'POST',
@@ -134,7 +136,11 @@ export async function createGeneralBill(
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) throw new Error(`Osoftpay General API error: ${response.status}`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Osoftpay General API error details: ${errorText}`);
+            throw new Error(`Osoftpay General API error: ${response.status} - ${errorText.substring(0, 100)}`);
+        }
 
         const result: GeneralPaymentResponse = await response.json();
         if (result.status !== '00' || !result.reference) {
