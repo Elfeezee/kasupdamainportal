@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Clock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -125,14 +125,20 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                 {/* Inner decorative border */}
                 <div className="absolute inset-3 border-2 border-[#2F5233]/20 pointer-events-none z-0" />
 
-                {/* Watermark */}
+                {/* Watermark/Pending State Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
                     <Image src="/image/logo.png" alt="KASUPDA Watermark" width={500} height={500} className="opacity-[0.04] grayscale scale-110" />
                     {applicationData.status !== 'Approved' && (
-                        <div className="absolute inset-0 flex items-center justify-center rotate-[35deg] opacity-[0.07]">
-                            <p className="text-8xl font-black text-slate-900 border-[10px] border-slate-900 px-12 py-6 rounded-3xl uppercase tracking-widest whitespace-nowrap">
-                                NOT FOR OFFICIAL USE
-                            </p>
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/95 z-50 pointer-events-auto">
+                            <div className="text-center p-8 border-4 border-dashed border-slate-200 rounded-3xl max-w-sm">
+                                <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Clock className="h-8 w-8 text-slate-400" />
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-800 mb-2">Verification in Progress</h3>
+                                <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                                    Your official DIN certificate is currently being processed. You will be notified once the Authority has verified and approved your application.
+                                </p>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -144,7 +150,6 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                             <Image src="/image/logo.png" alt="KASUPDA Logo" width={96} height={96} className="object-contain" />
                         </div>
                         <div className="text-center flex-1 mt-2">
-                            <h1 className="text-xl font-black text-[#2F5233] tracking-[0.15em] uppercase leading-tight">KADUNA STATE GOVERNMENT</h1>
                             <h2 className="text-sm font-extrabold text-[#2F5233] tracking-widest uppercase mt-1">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
                             <h3 className="text-xs font-bold text-slate-700 tracking-normal uppercase">(KASUPDA)</h3>
                         </div>
@@ -188,7 +193,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                                     </h5>
                                     <div className="space-y-2 pl-2 border-l-2 border-[#2F5233]/20">
                                         <div>
-                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Plot Address</p>
+                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Plot Description</p>
                                             <p className="text-[11px] text-slate-700 font-bold leading-relaxed">
                                                 {plotAddress}
                                             </p>
@@ -324,13 +329,13 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                             </div>
                         </div>
                     </div>
-                    <div className="pt-4 space-y-1">
-                        <h4 className="font-bold text-[10px] grayscale">Disclaimer:</h4>
-                        <div className="leading-snug text-[8px] space-y-0.5 grayscale-0">
+                    <div className="pt-4 space-y-2">
+                        <h4 className="font-bold text-base text-red-600">Disclaimer:</h4>
+                        <div className="leading-snug text-sm space-y-1 text-red-600 font-bold">
                             <p>i. Please note that this acknowledgement does not constitute an approval or permit for development.</p>
                             <p>ii. This acknowledgement also does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
                             <p>iii. This acknowledgement must be presented at the time of collection of the Development Permit.</p>
-                            <p className="text-red-600 font-bold">iv. Applicants are required to promptly notify the Authority of any change in contact address or other vital information contained in the original application.</p>
+                            <p>iv. Applicants are required to promptly notify the Authority of any change in contact address or other vital information contained in the original application.</p>
                         </div>
                     </div>
                     <div className="text-center text-[8px] font-semibold text-black leading-snug pt-1 border-t mt-2">
