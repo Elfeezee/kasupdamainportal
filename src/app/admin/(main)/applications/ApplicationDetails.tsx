@@ -1,59 +1,123 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Download, Loader2 } from 'lucide-react';
+import { Download, Loader2, FileText, User, MapPin, Briefcase, Eye } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format, parseISO } from 'date-fns';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getSignedUrl } from '@/app/actions/applicationActions';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
-const FileDownloadLink = ({ url }: { url: string }) => {
+const FilePreviewModal = ({ url, isOpen, onClose, fileName }: { url: string | null, isOpen: boolean, onClose: () => void, fileName: string }) => {
+    return (
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0">
+                <DialogHeader className="p-4 border-b">
+                    <DialogTitle className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-primary" />
+                        Previewing: {fileName}
+                    </DialogTitle>
+                </DialogHeader>
+                <div className="flex-1 bg-slate-100 relative overflow-hidden">
+                    {url ? (
+                        <iframe
+                            src={url}
+                            className="w-full h-full border-0"
+                            title="Document Preview"
+                        />
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                            <Loader2 className="h-8 w-8 animate-spin mr-2" /> Loading preview...
+                        </div>
+                    )}
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const FileActionButtons = ({ url, fileName }: { url: string, fileName: string }) => {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = React.useState(false);
+    const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+    const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
-    const handleDownload = async (e: React.MouseEvent) => {
-        e.preventDefault();
+    const generateUrl = async () => {
         setIsGenerating(true);
         try {
             // Extract path from URL
-            // Format: .../storage/v1/object/public/application_documents/PATH
             const parts = url.split('/application_documents/');
-            if (parts.length < 2) {
-                throw new Error('Invalid file URL format');
-            }
+            if (parts.length < 2) throw new Error('Invalid file URL format');
             const path = parts[1];
 
             const result = await getSignedUrl(path);
             if (result.success && result.url) {
-                window.open(result.url, '_blank');
+                return result.url;
             } else {
                 throw new Error(result.error || 'Failed to generate link');
             }
         } catch (error: any) {
             toast({
-                title: "Download Failed",
-                description: error.message || "Could not open the file.",
+                title: "Error",
+                description: error.message || "Could not access the file.",
                 variant: "destructive"
             });
+            return null;
         } finally {
             setIsGenerating(false);
         }
     };
 
+    const handleDownload = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        const signedUrl = await generateUrl();
+        if (signedUrl) window.open(signedUrl, '_blank');
+    };
+
+    const handlePreview = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsPreviewOpen(true);
+        const signedUrl = await generateUrl();
+        if (signedUrl) setPreviewUrl(signedUrl);
+    };
+
     return (
-        <button
-            onClick={handleDownload}
-            disabled={isGenerating}
-            className="text-primary hover:underline flex items-center gap-2 text-sm font-medium disabled:opacity-50"
-        >
-            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            Download File
-        </button>
+        <>
+            <div className="flex items-center gap-2 mt-1">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePreview}
+                    disabled={isGenerating}
+                    className="h-8 text-xs"
+                >
+                    <Eye className="h-3 w-3 mr-1.5" /> Preview
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleDownload}
+                    disabled={isGenerating}
+                    className="h-8 text-xs text-primary"
+                >
+                    {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3 mr-1.5" />}
+                    Download
+                </Button>
+            </div>
+            <FilePreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                url={previewUrl}
+                fileName={fileName}
+            />
+        </>
     );
 };
 
@@ -64,23 +128,9 @@ const renderFieldValue = (
     editedData: Record<string, any>,
     onInputChange: (key: string, value: string | boolean) => void
 ) => {
-    // Skip internal fields from rendering
-    if (['id', 'user_id', 'created_at', 'rejection_reason'].includes(key) && key !== 'original_permit_id') {
-        return null;
-    }
-
-    if (key === 'original_permit_id' && !isEditing && !value) {
-        return <p className="text-sm text-muted-foreground italic">Not yet assigned</p>;
-    }
-
-
-    // If a field ends with '_url' but the value is null or empty, don't render it.
-    if (key.endsWith('_url') && !value) {
-        return null;
-    }
-
-    // Standardize 'on' to true for consistency
-    if (value === 'on') value = true;
+    // Skip internal fields and URLs from simple rendering
+    if (['id', 'user_id', 'created_at', 'rejection_reason', 'data'].includes(key)) return null;
+    if (key.endsWith('_url')) return null;
 
     // --- Edit Mode ---
     if (isEditing) {
@@ -88,41 +138,46 @@ const renderFieldValue = (
         if (typeof value === 'boolean') {
             return (
                 <Checkbox
-                    className="w-6 h-6"
+                    className="w-5 h-5 mt-1"
                     checked={!!currentEditedValue}
                     onCheckedChange={(checked) => onInputChange(key, !!checked)}
                 />
             );
         }
-        if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
+        if (key.toLowerCase().includes('date') && typeof value === 'string') {
+            // Try to parse date for input value
+            let dateVal = '';
+            try {
+                if (currentEditedValue && !isNaN(Date.parse(currentEditedValue))) {
+                    dateVal = format(parseISO(currentEditedValue), 'yyyy-MM-dd');
+                }
+            } catch (e) { }
+
             return (
                 <Input
                     type="date"
-                    value={currentEditedValue ? format(parseISO(currentEditedValue), 'yyyy-MM-dd') : ''}
+                    value={dateVal}
                     onChange={(e) => onInputChange(key, e.target.value)}
+                    className="h-9"
                 />
             );
         }
-        if (key.endsWith('_url') && typeof value === 'string') {
-            return <p className="text-sm text-muted-foreground">[File URL - not editable here]</p>;
-        }
-        return <Input value={currentEditedValue ?? ''} onChange={(e) => onInputChange(key, e.target.value)} />;
+        return <Input value={currentEditedValue ?? ''} onChange={(e) => onInputChange(key, e.target.value)} className="h-9" />;
     }
 
     // --- Display Mode ---
     if (typeof value === 'boolean') {
-        return value ? <Badge>Yes</Badge> : <Badge variant="secondary">No</Badge>;
-    }
-
-    if (key.endsWith('_url') && typeof value === 'string' && value) {
-        return <FileDownloadLink url={value} />;
+        return value ? <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Yes</Badge> : <Badge variant="secondary">No</Badge>;
     }
 
     if (key.toLowerCase().includes('date') && typeof value === 'string' && !isNaN(Date.parse(value))) {
-        return <p className="text-sm text-foreground">{format(parseISO(value), 'PPP')}</p>;
+        return <p className="text-sm font-medium text-slate-700">{format(parseISO(value), 'PPP')}</p>;
     }
 
-    return <p className="text-sm text-foreground">{value || <span className="text-muted-foreground italic">Not provided</span>}</p>;
+    // Empty state
+    if (!value && value !== 0) return <span className="text-sm text-slate-400 italic">Not provided</span>;
+
+    return <p className="text-sm font-medium text-slate-800 break-words">{value}</p>;
 };
 
 interface ApplicationDetailsProps {
@@ -133,52 +188,104 @@ interface ApplicationDetailsProps {
 }
 
 export default function ApplicationDetails({ application, isEditing, editedData, onInputChange }: ApplicationDetailsProps) {
-    // Flatten the 'data' JSONB column if it exists to avoid rendering the object directly
     const { data, ...rest } = application;
-    const flattenedApplication = { ...rest, ...(typeof data === 'object' && data !== null ? data : {}) };
+    const flattenedApp = { ...rest, ...(typeof data === 'object' && data !== null ? data : {}) };
 
-    const sortedKeys = Object.keys(flattenedApplication).sort();
+    // Categorize keys
+    const docKeys = Object.keys(flattenedApp).filter(k => k.endsWith('_url'));
+
+    // Define field groups for tabs
+    const applicantKeys = ['applicant_name', 'title', 'first_name', 'surname', 'phone1', 'email', 'address', 'nationality', 'state_of_origin'];
+    const siteKeys = ['plot_address', 'land_use', 'purpose', 'plot_district', 'plot_lga', 'site_street_name', 'site_city_town', 'coordinates', 'site_coord_lat', 'site_coord_long'];
+    const professionalKeys = ['rep_first_name', 'rep_surname', 'rep_phone1', 'rep_email', 'rep_id_number', 'company_name', 'org_name', 'cac_number', 'tin', 'org_tin'];
+
+    const allKnownKeys = [...docKeys, ...applicantKeys, ...siteKeys, ...professionalKeys, 'id', 'user_id', 'created_at', 'status', 'type'];
+    const otherKeys = Object.keys(flattenedApp).filter(k => !allKnownKeys.includes(k) && !k.endsWith('_url') && !['data', 'rejection_reason'].includes(k));
+
+    const renderFieldGroup = (keys: string[]) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {keys.map(key => {
+                if (flattenedApp[key] === undefined && !isEditing) return null;
+                return (
+                    <div key={key} className="space-y-1.5 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                        <Label className="capitalize text-xs font-bold text-slate-500 tracking-wide block mb-1">
+                            {key.replace(/_/g, ' ').replace('app ', '').replace('org ', '').replace('rep ', '')}
+                        </Label>
+                        {renderFieldValue(key, flattenedApp[key], isEditing, editedData, onInputChange)}
+                    </div>
+                );
+            })}
+        </div>
+    );
 
     return (
-        <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-primary">Application Data</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-                {sortedKeys.map((key) => {
-                    // Always show original_permit_id
-                    if (key === 'original_permit_id') {
-                        const renderedField = renderFieldValue(key, flattenedApplication[key], isEditing, editedData, onInputChange);
-                        return (
-                            <div key={key} className="space-y-1">
-                                <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ')}</Label>
-                                {renderedField}
+        <Tabs defaultValue="applicant" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 lg:w-[600px] mb-6">
+                <TabsTrigger value="applicant" className="gap-2"><User className="h-4 w-4" /> Applicant</TabsTrigger>
+                <TabsTrigger value="site" className="gap-2"><MapPin className="h-4 w-4" /> Site Info</TabsTrigger>
+                <TabsTrigger value="professional" className="gap-2"><Briefcase className="h-4 w-4" /> Professional</TabsTrigger>
+                <TabsTrigger value="documents" className="gap-2"><FileText className="h-4 w-4" /> Documents</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="applicant" className="mt-0">
+                <Card className="border-slate-200 shadow-sm">
+                    <CardContent className="p-6">
+                        {renderFieldGroup([...applicantKeys, ...otherKeys])}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value="site" className="mt-0">
+                <Card className="border-slate-200 shadow-sm">
+                    <CardContent className="p-6">
+                        {renderFieldGroup(siteKeys)}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value="professional" className="mt-0">
+                <Card className="border-slate-200 shadow-sm">
+                    <CardContent className="p-6">
+                        {renderFieldGroup(professionalKeys)}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value="documents" className="mt-0">
+                <Card className="border-slate-200 shadow-sm bg-slate-50/50">
+                    <CardContent className="p-6">
+                        {docKeys.length === 0 ? (
+                            <div className="text-center py-12 text-slate-400">
+                                <FileText className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                                <p>No documents uploaded for this application.</p>
                             </div>
-                        );
-                    }
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {docKeys.map(key => (
+                                    <div key={key} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                                        <div className="flex items-start gap-3">
+                                            <div className="bg-blue-50 p-2.5 rounded-lg text-blue-600 group-hover:bg-blue-100 transition-colors">
+                                                <FileText className="h-5 w-5" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-semibold text-slate-800 truncate capitalize" title={key.replace('doc_', '').replace('_url', '').replace(/_/g, ' ')}>
+                                                    {key.replace('doc_', '').replace('_url', '').replace(/_/g, ' ')}
+                                                </p>
+                                                <p className="text-[10px] text-slate-400 mt-0.5 uppercase tracking-wider">Document</p>
 
-                    const value = flattenedApplication[key];
-                    // Skip null/undefined values unless in edit mode where we might want to add data
-                    if (value === null && !isEditing) return null;
-
-                    const renderedField = renderFieldValue(key, value, isEditing, editedData, onInputChange);
-                    if (!renderedField) return null;
-
-                    // Don't render the plain URL field if we've already rendered it as a download link
-                    if (key.endsWith('_url')) {
-                        const baseKey = key.replace('_url', '');
-                        if (sortedKeys.includes(baseKey)) {
-                            // This logic is tricky, let's just show the link under its own name
-                        }
-                    }
-
-
-                    return (
-                        <div key={key} className="space-y-1">
-                            <Label className="capitalize text-xs text-muted-foreground">{key.replace(/_/g, ' ').replace(' doc ', ' ').replace(' url', '')}</Label>
-                            {renderedField}
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
+                                                <FileActionButtons
+                                                    url={flattenedApp[key]}
+                                                    fileName={key.replace('doc_', '').replace('_url', '').replace(/_/g, ' ')}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+        </Tabs>
     );
 }
