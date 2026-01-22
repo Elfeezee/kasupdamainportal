@@ -85,7 +85,7 @@ export default function AdminDashboardLayout({
         >
           <AdminSidebar />
         </Sidebar>
-        <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted/30">
+        <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted/30 flex flex-col items-center">
           {children}
         </SidebarInset>
       </div>

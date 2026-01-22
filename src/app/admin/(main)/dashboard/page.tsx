@@ -21,9 +21,9 @@ const processApplicationData = (applications: StoredApplication[]) => {
   applications.forEach(app => {
     // Skip if app or app.type is null/undefined
     if (!app || !app.type) {
-        return;
+      return;
     }
-      
+
     if (app.status === 'Approved') {
       stats.approved++;
     } else if (app.status === 'Rejected') {
@@ -46,20 +46,20 @@ const processApplicationData = (applications: StoredApplication[]) => {
       stats.byType[simpleType].inprogress++;
     }
   });
-  
+
   return {
-      overview: [
-        { title: "Total Applications", value: stats.total.toString(), icon: FileText },
-        { title: "Inprogress Applications", value: stats.inprogress.toString(), icon: Clock },
-        { title: "Approved Applications", value: stats.approved.toString(), icon: CheckCircle2 },
-        { title: "Rejected Applications", value: stats.rejected.toString(), icon: XCircle },
-      ],
-      chartData: Object.entries(stats.byType).map(([name, data]) => ({
-          name: name.replace(' Permit', ''),
-          approved: data.approved,
-          inprogress: data.inprogress,
-          rejected: data.rejected
-      }))
+    overview: [
+      { title: "Total Applications", value: stats.total.toString(), icon: FileText },
+      { title: "Inprogress Applications", value: stats.inprogress.toString(), icon: Clock },
+      { title: "Approved Applications", value: stats.approved.toString(), icon: CheckCircle2 },
+      { title: "Rejected Applications", value: stats.rejected.toString(), icon: XCircle },
+    ],
+    chartData: Object.entries(stats.byType).map(([name, data]) => ({
+      name: name.replace(' Permit', ''),
+      approved: data.approved,
+      inprogress: data.inprogress,
+      rejected: data.rejected
+    }))
   };
 };
 
@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
         if (error) {
           throw error;
         }
-        
+
         if (data && data.length > 0) {
           setDashboardData(processApplicationData(data as StoredApplication[]));
         } else {
@@ -104,14 +104,14 @@ export default function AdminDashboardPage() {
         setLoading(false);
       }
     };
-    
+
     getDashboardData();
   }, [toast]);
 
   const overviewCards = dashboardData.overview;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl">
       <div>
         <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
         <p className="text-muted-foreground">System overview and statistics from the database.</p>
@@ -144,28 +144,28 @@ export default function AdminDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="h-[350px] w-full">
-             {loading ? (
-                 <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading chart data...
-                </div>
-             ) : dashboardData.chartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dashboardData.chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="approved" stackId="a" fill="hsl(var(--primary))" name="Approved" />
-                    <Bar dataKey="inprogress" stackId="a" fill="hsl(var(--accent))" name="Inprogress" />
-                    <Bar dataKey="rejected" stackId="a" fill="hsl(var(--destructive))" name="Rejected" />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                    No application data to display.
-                </div>
-              )}
+            {loading ? (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading chart data...
+              </div>
+            ) : dashboardData.chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dashboardData.chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="approved" stackId="a" fill="hsl(var(--primary))" name="Approved" />
+                  <Bar dataKey="inprogress" stackId="a" fill="hsl(var(--accent))" name="Inprogress" />
+                  <Bar dataKey="rejected" stackId="a" fill="hsl(var(--destructive))" name="Rejected" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                No application data to display.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

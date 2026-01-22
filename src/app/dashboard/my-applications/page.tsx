@@ -69,7 +69,7 @@ async function MyApplicationsPageComponent() {
   const applications = await getApplications(user.id);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl mx-auto">
       <CardHeader className="px-0 pt-0">
         <CardTitle className="text-2xl sm:text-3xl font-bold text-primary flex items-center">
           <ListChecks className="mr-3 h-7 w-7" /> My Submitted Applications

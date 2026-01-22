@@ -169,7 +169,7 @@ export default function DinApplicationsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">

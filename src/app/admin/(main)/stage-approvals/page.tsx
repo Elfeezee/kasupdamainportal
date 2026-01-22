@@ -33,8 +33,8 @@ const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
   return {
     variant: (
       status === 'Approved' ? 'default' :
-      status === 'Rejected' ? 'destructive' :
-      'secondary'
+        status === 'Rejected' ? 'destructive' :
+          'secondary'
     ) as "default" | "destructive" | "secondary" | "outline" | null | undefined,
   };
 };
@@ -59,7 +59,7 @@ export default function StageApprovalsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [applicationToDelete, setApplicationToDelete] = useState<StoredApplication | null>(null);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
-  
+
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
@@ -68,7 +68,7 @@ export default function StageApprovalsPage() {
         .select('*')
         .eq('type', 'Stage Approval Application')
         .order('created_at', { ascending: false });
-        
+
       if (error) throw error;
       setApplications(data as StoredApplication[]);
     } catch (error) {
@@ -90,40 +90,40 @@ export default function StageApprovalsPage() {
   const handleDelete = async () => {
     if (!applicationToDelete) return;
     try {
-        const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
-        if (error) throw error;
-        setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
-        toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.id}) has been deleted.` });
+      const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
+      if (error) throw error;
+      setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
+      toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.id}) has been deleted.` });
     } catch (error) {
-        toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
     } finally {
-        setIsDeleteDialogOpen(false);
-        setApplicationToDelete(null);
+      setIsDeleteDialogOpen(false);
+      setApplicationToDelete(null);
     }
   };
 
   const handleStatusChange = async (app: StoredApplication, newStatus: ApplicationStatus) => {
     if (newStatus === 'Rejected') {
-        router.push(`/admin/applications/${app.id}`);
-        toast({ title: "Reason Required", description: "Please provide a reason for rejection on the details page.", variant: "destructive" });
-        return;
+      router.push(`/admin/applications/${app.id}`);
+      toast({ title: "Reason Required", description: "Please provide a reason for rejection on the details page.", variant: "destructive" });
+      return;
     }
-     try {
-        const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', app.id);
-        if (error) throw error;
-        setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
-        toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.id}) has been marked as ${newStatus}.` });
+    try {
+      const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', app.id);
+      if (error) throw error;
+      setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
+      toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.id}) has been marked as ${newStatus}.` });
     } catch (error) {
-        toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }
   };
 
   const filteredApplications = applications.filter(app => {
-    const termMatch = searchTerm.trim() === '' || 
-        (app.applicant_name && app.applicant_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (app.original_permit_id && app.original_permit_id.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (app.din && app.din.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        app.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    const termMatch = searchTerm.trim() === '' ||
+      (app.applicant_name && app.applicant_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (app.original_permit_id && app.original_permit_id.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (app.din && app.din.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      app.id.toString().toLowerCase().includes(searchTerm.toLowerCase());
     const statusMatch = statusFilter === 'All' || app.status === statusFilter;
     return termMatch && statusMatch;
   });
@@ -133,7 +133,7 @@ export default function StageApprovalsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
@@ -161,7 +161,7 @@ export default function StageApprovalsPage() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          
+
           <div className="border rounded-md">
             <Table>
               <TableHeader>
@@ -177,51 +177,51 @@ export default function StageApprovalsPage() {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                    <TableRow><TableCell colSpan={7} className="h-24 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin" /></TableCell></TableRow>
+                  <TableRow><TableCell colSpan={7} className="h-24 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin" /></TableCell></TableRow>
                 ) : filteredApplications.length > 0 ? (
                   filteredApplications.map((app) => (
                     <Fragment key={app.id}>
-                        <TableRow className="cursor-pointer" onClick={() => toggleRow(app.id)}>
-                            <TableCell className="px-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    {expandedRow === app.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                                </Button>
-                            </TableCell>
-                            <TableCell className="font-medium text-xs">{app.id}</TableCell>
-                            <TableCell>{app.applicant_name}</TableCell>
-                            <TableCell className="font-medium text-xs">{app.original_permit_id || 'N/A'}</TableCell>
-                            <TableCell>{app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
-                            <TableCell><StatusBadge status={app.status as ApplicationStatus} /></TableCell>
-                            <TableCell className="text-right">
-                               <DropdownMenu>
-                                <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}><span className="sr-only">Open menu</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Approved')}>Approve</DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Rejected')}>Reject</DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleStatusChange(app, 'Inprogress')}>Set to Inprogress</DropdownMenuItem>
-                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => openDeleteDialog(app)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
+                      <TableRow className="cursor-pointer" onClick={() => toggleRow(app.id)}>
+                        <TableCell className="px-2">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            {expandedRow === app.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </Button>
+                        </TableCell>
+                        <TableCell className="font-medium text-xs">{app.id}</TableCell>
+                        <TableCell>{app.applicant_name}</TableCell>
+                        <TableCell className="font-medium text-xs">{app.original_permit_id || 'N/A'}</TableCell>
+                        <TableCell>{app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
+                        <TableCell><StatusBadge status={app.status as ApplicationStatus} /></TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}><span className="sr-only">Open menu</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/applications/${app.id}`)}><Eye className="mr-2 h-4 w-4" />View / Edit Page</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Approved')}>Approve</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Rejected')}>Reject</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleStatusChange(app, 'Inprogress')}>Set to Inprogress</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => openDeleteDialog(app)} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" /> Delete Application</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                      {expandedRow === app.id && (
+                        <TableRow>
+                          <TableCell colSpan={7} className="p-0">
+                            <div className="bg-muted/50 p-4">
+                              <ApplicationDetails
+                                application={app}
+                                isEditing={false}
+                                editedData={{}}
+                                onInputChange={() => { }}
+                              />
+                            </div>
+                          </TableCell>
                         </TableRow>
-                         {expandedRow === app.id && (
-                            <TableRow>
-                                <TableCell colSpan={7} className="p-0">
-                                    <div className="bg-muted/50 p-4">
-                                        <ApplicationDetails
-                                            application={app}
-                                            isEditing={false}
-                                            editedData={{}}
-                                            onInputChange={() => {}}
-                                        />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )}
+                      )}
                     </Fragment>
                   ))
                 ) : (

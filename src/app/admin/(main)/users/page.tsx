@@ -137,7 +137,7 @@ export default function ManageUsersPage() {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl">
       <Card className="border-none shadow-lg bg-white/50 backdrop-blur-sm">
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

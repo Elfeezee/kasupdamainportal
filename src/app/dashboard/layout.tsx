@@ -54,10 +54,10 @@ export default function DashboardLayout({
           .select('din')
           .eq('uid', session.user.id)
           .maybeSingle();
-        
+
         if (error) {
-            console.error("Error fetching user profile for layout:", error.message || error);
-            // Don't block rendering, just proceed without profile data
+          console.error("Error fetching user profile for layout:", error.message || error);
+          // Don't block rendering, just proceed without profile data
         }
 
         if (profile) {
@@ -67,18 +67,18 @@ export default function DashboardLayout({
       } else if (sessionError) {
         console.error("Session fetch error:", sessionError.message);
       }
-      
+
       setLoading(false);
     };
 
     fetchUserAndProfile();
-    
+
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       if (currentUser) {
         // Re-fetch profile on auth change, e.g., after DIN application
-        fetchUserAndProfile(); 
+        fetchUserAndProfile();
       } else {
         setUserProfile(null);
         setLoading(false);
@@ -98,21 +98,21 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex min-h-[calc(100vh-var(--header-height,60px)-var(--footer-height,60px))]"> {/* Adjusted default heights slightly */}
-        <Sidebar 
-          collapsible="icon" 
+        <Sidebar
+          collapsible="icon"
           className="border-r"
         >
           <DashboardSidebar userProfile={userProfile} setLoading={setLoading} />
         </Sidebar>
-        <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative">
-           {loading ? (
-             <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-                <div className="flex flex-col items-center gap-2 text-primary">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                    <p className="text-sm">Loading Page...</p>
-                </div>
+        <SidebarInset className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative flex flex-col items-center">
+          {loading ? (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+              <div className="flex flex-col items-center gap-2 text-primary">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <p className="text-sm">Loading Page...</p>
+              </div>
             </div>
-           ) : children}
+          ) : children}
         </SidebarInset>
       </div>
     </SidebarProvider>
