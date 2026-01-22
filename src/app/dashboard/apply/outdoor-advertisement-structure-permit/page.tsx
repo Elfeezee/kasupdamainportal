@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
-const phoneRegex = /^\+?[0-9\s-()]+$/;
+const phoneRegex = /^\d{11}$/;
 
 const boardInstallationTypes = [
   { id: "ledDigitalBillboard" as const, label: "LED/Digital Billboard" },
@@ -66,7 +66,7 @@ const outdoorStructurePermitSchema = z.object({ // Renamed schema to reflect con
   // Box 1: Applicant
   companyName: z.string().min(1, "Company Name is required"),
   kasupdaLicenseNo: z.string().optional(),
-  phoneNo: z.string().min(1, "Phone Number is required").regex(phoneRegex, "Invalid phone number format"),
+  phoneNo: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
   emailAddress: z.string().email("Invalid email address").optional().or(z.literal('')),
   ceoNameContact: z.string().min(1, "CEO Name and Contact is required"),
   apconRegNo: z.string().optional(),
@@ -92,8 +92,8 @@ const outdoorStructurePermitSchema = z.object({ // Renamed schema to reflect con
   repFirstName: z.string().min(1, "Representative First Name is required"),
   repMiddleName: z.string().optional(),
   repSurname: z.string().min(1, "Representative Surname is required"),
-  repPhone1: z.string().min(1, "Representative Phone 1 is required").regex(phoneRegex, "Invalid phone number format"),
-  repPhone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
+  repPhone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   repEmail: z.string().email("Invalid email address").min(1, "Representative Email is required"),
   repIdentificationType: z.object(
     Object.fromEntries(representativeIdOptions.map(type => [type.id, z.boolean().optional()]))

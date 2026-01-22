@@ -58,8 +58,13 @@ const permitApplicationSchema = z.object({
   nationality: z.string().optional().default("Nigerian"),
   stateOfOrigin: z.string().optional(),
   localGov: z.string().optional(),
-  phone1: z.string().min(1, "Phone 1 is required").regex(/^\+?[0-9\s-()]+$/, "Invalid phone number format"),
-  phone2: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
+  phone1: z.string()
+    .length(11, "Phone number must be exactly 11 digits")
+    .regex(/^\d{11}$/, "Phone number must contain only digits"),
+  phone2: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   identificationType: z.object({
     internationalPassport: z.boolean().optional(),
@@ -85,8 +90,14 @@ const permitApplicationSchema = z.object({
   repFirstName: z.string().optional(),
   repMiddleName: z.string().optional(),
   repSurname: z.string().optional(),
-  repPhone1: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
-  repPhone2: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
+  repPhone2: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
   repEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   repIdentificationType: z.object({
     internationalPassport: z.boolean().optional(),

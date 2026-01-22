@@ -24,7 +24,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
-const phoneRegex = /^\+?[0-9\s-()]+$/;
+const phoneRegex = /^\d{11}$/;
 
 const shopOwnersPermitSchema = z.object({
   kopNumber: z.string().optional(),
@@ -40,8 +40,8 @@ const shopOwnersPermitSchema = z.object({
   nationality: z.string().optional().default("Nigerian"),
   stateOfOrigin: z.string().optional(),
   localGov: z.string().optional(),
-  phone1: z.string().min(1, "Phone 1 is required").regex(phoneRegex, "Invalid phone number format"),
-  phone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  phone1: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
+  phone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   identificationType: z.object({
     internationalPassport: z.boolean().optional(),

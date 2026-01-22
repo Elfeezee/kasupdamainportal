@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
-const phoneRegex = /^\+?[0-9\s-()]+$/;
+const phoneRegex = /^\d{11}$/;
 
 const outdoorActivityTypes = [
   { id: "signboard" as const, label: "Signboard", needsSpecify: true, specifyLabel: "Specify Size" },
@@ -52,7 +52,7 @@ const outdoorAdvertisementPermitSchema = z.object({
   kopNumber: z.string().optional(),
   // Box 1: Applicant
   applicantCompanyNameIndividual: z.string().min(1, "Company Name/Individual is required"),
-  applicantPhone: z.string().min(1, "Phone Number is required").regex(phoneRegex, "Invalid phone number format"),
+  applicantPhone: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
   applicantEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   applicantFullNameContact: z.string().min(1, "Full Name and Contact of Applicant is required"),
 
@@ -79,8 +79,8 @@ const outdoorAdvertisementPermitSchema = z.object({
   repFirstName: z.string().optional(),
   repMiddleName: z.string().optional(),
   repSurname: z.string().optional(),
-  repPhone1: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
-  repPhone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
+  repPhone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   repEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   repIdentificationType: z.object(
     Object.fromEntries(representativeIdOptions.map(type => [type.id, z.boolean().optional()]))

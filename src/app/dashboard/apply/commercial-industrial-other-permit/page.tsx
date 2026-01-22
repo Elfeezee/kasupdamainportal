@@ -46,7 +46,9 @@ const bpoPermitApplicationSchema = z.object({
   cacNumber: z.string().optional(),
   dateOfRegistration: z.date().optional(),
   orgTaxIdNumber: z.string().optional(),
-  orgPhone: z.string().min(1, "Organisation phone is required").regex(/^\+?[0-9\s-()]+$/, "Invalid phone number format"),
+  orgPhone: z.string()
+    .length(11, "Phone number must be exactly 11 digits")
+    .regex(/^\d{11}$/, "Phone number must contain only digits"),
   orgEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
 
   // CEO/MD/Chairman Information
@@ -55,7 +57,10 @@ const bpoPermitApplicationSchema = z.object({
   ceoMiddleName: z.string().optional(),
   ceoSurname: z.string().min(1, "CEO/MD Surname is required"),
   ceoDesignation: z.string().optional(),
-  ceoPhone: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
+  ceoPhone: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
   ceoEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   ceoIdentificationType: z.object({
     internationalPassport: z.boolean().optional(),
@@ -81,8 +86,14 @@ const bpoPermitApplicationSchema = z.object({
   repFirstName: z.string().optional(),
   repMiddleName: z.string().optional(),
   repSurname: z.string().optional(),
-  repPhone1: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
-  repPhone2: z.string().regex(/^\+?[0-9\s-()]*$/, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
+  repPhone2: z.string()
+    .regex(/^\d{11}$/, "Phone number must be exactly 11 digits")
+    .optional()
+    .or(z.literal('')),
   repEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   repIdentificationType: z.object({
     internationalPassport: z.boolean().optional(),

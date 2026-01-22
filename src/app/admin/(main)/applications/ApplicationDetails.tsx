@@ -15,26 +15,51 @@ import { getSignedUrl } from '@/app/actions/applicationActions';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
-const FilePreviewModal = ({ url, isOpen, onClose, fileName }: { url: string | null, isOpen: boolean, onClose: () => void, fileName: string }) => {
+const FilePreviewModal = ({ url, isOpen, onClose, fileName, error }: { url: string | null, isOpen: boolean, onClose: () => void, fileName: string, error?: string | null }) => {
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0">
-                <DialogHeader className="p-4 border-b">
-                    <DialogTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-primary" />
-                        Previewing: {fileName}
+            <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 overflow-hidden border-none shadow-2xl rounded-xl">
+                <DialogHeader className="p-5 border-b bg-white">
+                    <DialogTitle className="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                            <FileText className="h-5 w-5" />
+                        </div>
+                        Previewing: <span className="text-blue-600 capitalize font-extrabold tracking-tight">{fileName}</span>
                     </DialogTitle>
                 </DialogHeader>
-                <div className="flex-1 bg-slate-100 relative overflow-hidden">
-                    {url ? (
+                <div className="flex-1 bg-[#F8FAFC] relative overflow-hidden">
+                    {error ? (
+                        <div className="flex flex-col items-center justify-center h-full text-center p-8 animate-in fade-in zoom-in duration-300">
+                            <div className="bg-red-50 p-8 rounded-full mb-6 ring-8 ring-red-50/50">
+                                <FileText className="h-16 w-16 text-red-400 stroke-[1.5px]" />
+                            </div>
+                            <h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">Document Not Found</h3>
+                            <p className="text-slate-500 max-w-md mx-auto mb-8 text-lg font-medium leading-relaxed">
+                                {error || "The requested document either wasn't uploaded by the user or is currently unavailable in the storage."}
+                            </p>
+                            <Button onClick={onClose} variant="outline" className="px-10 py-3 font-bold border-2 hover:bg-slate-50 transition-all rounded-xl">
+                                Close Preview
+                            </Button>
+                        </div>
+                    ) : url ? (
                         <iframe
                             src={url}
-                            className="w-full h-full border-0"
+                            className="w-full h-full border-0 animate-in fade-in duration-500"
                             title="Document Preview"
                         />
                     ) : (
-                        <div className="flex items-center justify-center h-full text-muted-foreground">
-                            <Loader2 className="h-8 w-8 animate-spin mr-2" /> Loading preview...
+                        <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-white/50 backdrop-blur-sm">
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-blue-100 rounded-full blur animate-pulse" />
+                                <Loader2 className="h-16 w-16 animate-spin text-blue-500 relative z-10 stroke-[2px]" />
+                                <div className="absolute inset-0 flex items-center justify-center relative z-10">
+                                    <FileText className="h-6 w-6 text-blue-400" />
+                                </div>
+                            </div>
+                            <p className="text-slate-600 mt-8 font-bold animate-pulse text-xl tracking-wide uppercase italic">
+                                Fetching Secure Preview...
+                            </p>
+                            <p className="text-slate-400 mt-2 font-medium">Please wait while we prepare your document</p>
                         </div>
                     )}
                 </div>
@@ -46,27 +71,43 @@ const FilePreviewModal = ({ url, isOpen, onClose, fileName }: { url: string | nu
 const FileActionButtons = ({ url, fileName }: { url: string, fileName: string }) => {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = React.useState(false);
+    const [loadingError, setLoadingError] = React.useState<string | null>(null);
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
     const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
+    // If no URL is provided, the document wasn't uploaded
+    if (!url) {
+        return (
+            <div className="mt-3">
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 py-1 px-2.5 rounded-lg flex items-center gap-1.5 font-semibold text-[10px] uppercase tracking-wider">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
+                    Not Uploaded
+                </Badge>
+            </div>
+        );
+    }
+
     const generateUrl = async () => {
         setIsGenerating(true);
+        setLoadingError(null);
         try {
             // Extract path from URL
             const parts = url.split('/application_documents/');
-            if (parts.length < 2) throw new Error('Invalid file URL format');
+            if (parts.length < 2) throw new Error('Invalid file URL format stored in database.');
             const path = parts[1];
 
             const result = await getSignedUrl(path);
             if (result.success && result.url) {
                 return result.url;
             } else {
-                throw new Error(result.error || 'Failed to generate link');
+                throw new Error(result.error || 'The file record exists, but the document could not be retrieved from secure storage.');
             }
         } catch (error: any) {
+            const errorMsg = error.message || "Could not access the file.";
+            setLoadingError(errorMsg);
             toast({
-                title: "Error",
-                description: error.message || "Could not access the file.",
+                title: "Document Error",
+                description: errorMsg,
                 variant: "destructive"
             });
             return null;
@@ -84,6 +125,7 @@ const FileActionButtons = ({ url, fileName }: { url: string, fileName: string })
     const handlePreview = async (e: React.MouseEvent) => {
         e.preventDefault();
         setIsPreviewOpen(true);
+        setPreviewUrl(null);
         const signedUrl = await generateUrl();
         if (signedUrl) setPreviewUrl(signedUrl);
     };
@@ -116,6 +158,7 @@ const FileActionButtons = ({ url, fileName }: { url: string, fileName: string })
                 onClose={() => setIsPreviewOpen(false)}
                 url={previewUrl}
                 fileName={fileName}
+                error={loadingError}
             />
         </>
     );

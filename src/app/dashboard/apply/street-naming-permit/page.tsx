@@ -25,7 +25,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
-const phoneRegex = /^\+?[0-9\s-()]+$/;
+const phoneRegex = /^\d{11}$/;
 
 const streetNamingPermitSchema = z.object({
   kopNumber: z.string().optional(),
@@ -45,8 +45,8 @@ const streetNamingPermitSchema = z.object({
   maritalStatus: z.enum(["Single", "Married", "Separated", "Divorced", "Widowed"], { required_error: "Marital status is required" }),
   educationLevel: z.enum(["Primary", "Secondary", "Tertiary", "BachelorDegree", "MasterDegree", "Doctorate", "Other"], { required_error: "Education level is required" }),
   otherEducation: z.string().optional(),
-  phone1: z.string().min(1, "Phone 1 is required").regex(phoneRegex, "Invalid phone number format"),
-  phone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  phone1: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
+  phone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   tin: z.string().optional(),
   identificationType: z.object({
@@ -73,8 +73,8 @@ const streetNamingPermitSchema = z.object({
   repFirstName: z.string().optional(),
   repMiddleName: z.string().optional(),
   repSurname: z.string().optional(),
-  repPhone1: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
-  repPhone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
+  repPhone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   repEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   repIdentificationType: z.object({
     internationalPassport: z.boolean().optional(),

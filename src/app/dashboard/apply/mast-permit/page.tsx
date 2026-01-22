@@ -24,7 +24,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase/client';
 
-const phoneRegex = /^\+?[0-9\s-()]+$/;
+const phoneRegex = /^\d{11}$/;
 
 const ceoIdOptions = [
   { id: "internationalPassport" as const, label: "International Passport" },
@@ -80,14 +80,14 @@ const mastPermitSchema = z.object({
   cacNumber: z.string().optional(),
   dateOfRegistration: z.date().optional(),
   orgTin: z.string().optional(),
-  orgPhone: z.string().min(1, "Organisation phone is required").regex(phoneRegex, "Invalid phone number format"),
+  orgPhone: z.string().length(11, "Phone number must be exactly 11 digits").regex(phoneRegex, "Phone number must contain only digits"),
   orgEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   ceoTitle: z.string().optional(),
   ceoFirstName: z.string().min(1, "CEO First Name is required"),
   ceoMiddleName: z.string().optional(),
   ceoSurname: z.string().min(1, "CEO Surname is required"),
   ceoDesignation: z.string().optional(),
-  ceoPhone: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  ceoPhone: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   ceoEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   ceoIdentificationType: z.object(
     Object.fromEntries(ceoIdOptions.map(opt => [opt.id, z.boolean().optional()]))
@@ -109,8 +109,8 @@ const mastPermitSchema = z.object({
   repFirstName: z.string().optional(),
   repMiddleName: z.string().optional(),
   repSurname: z.string().optional(),
-  repPhone1: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
-  repPhone2: z.string().regex(phoneRegex, "Invalid phone number format").optional().or(z.literal('')),
+  repPhone1: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
+  repPhone2: z.string().regex(phoneRegex, "Phone number must be exactly 11 digits").optional().or(z.literal('')),
   repEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   repIdentificationType: z.object(
     Object.fromEntries(representativeIdOptions.map(opt => [opt.id, z.boolean().optional()]))
