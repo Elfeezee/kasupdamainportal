@@ -36,14 +36,14 @@ export interface StoredApplication {
   user_id: string;
   type: string;
   applicant_name: string;
-  status: 'Inprogress' | 'Approved' | 'Rejected';
+  status: 'Inprogress' | 'Approved' | 'Rejected' | 'Queried';
   rejection_reason?: string;
   din?: string;
   original_permit_id?: string;
   [key: string]: any; // Allow other properties
 }
 
-export type ApplicationStatus = 'Inprogress' | 'Approved' | 'Rejected';
+export type ApplicationStatus = 'Inprogress' | 'Approved' | 'Rejected' | 'Queried';
 
 const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
   return {
@@ -51,7 +51,8 @@ const badgeVariantsForStatus = ({ status }: { status: ApplicationStatus }) => {
       status === 'Approved' ? 'default' :
         status === 'Rejected' ? 'destructive' :
           status === 'Inprogress' ? 'secondary' :
-            'default'
+            status === 'Queried' ? 'outline' :
+              'default'
     ) as "default" | "destructive" | "secondary" | "outline" | null | undefined,
   };
 };

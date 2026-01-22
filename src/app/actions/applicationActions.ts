@@ -3,6 +3,7 @@
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
+import { revalidatePath } from 'next/cache';
 import { createBill, createGeneralBill } from './billingActions';
 
 /**
@@ -385,4 +386,77 @@ export async function getSignedUrl(path: string): Promise<{ success: boolean; ur
     }
 
     return { success: true, url: data.signedUrl };
+}
+
+/**
+ * Updates an application from the user dashboard.
+ * Verifies ownership and allows editing non-sensitive fields.
+ * If status was 'Queried', it resets to 'Inprogress'.
+ */
+export async function updateUserApplication(
+    applicationId: string,
+    updateData: Record<string, any>
+): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    // Verify ownership
+    const { data: app, error: fetchError } = await supabase
+        .from('applications')
+        .select('*')
+        .eq('id', applicationId)
+        .eq('user_id', user.id)
+        .single();
+
+    if (fetchError || !app) {
+        return { success: false, error: 'Application not found or access denied.' };
+    }
+
+    // Allowed top level columns to update directly
+    const topLevelColumns = ['applicant_name', 'phone1', 'email'];
+
+    const dbUpdatePayload: any = {};
+    // Merge existing JSONB data with new updates
+    const currentJsonData = (typeof app.data === 'object' && app.data !== null) ? app.data : {};
+    const dataUpdate: any = { ...currentJsonData };
+
+    for (const [key, value] of Object.entries(updateData)) {
+        // Skip protected fields if they somehow got into the payload
+        if (['id', 'user_id', 'created_at', 'status', 'rejection_reason', 'din', 'original_permit_id'].includes(key)) {
+            continue;
+        }
+
+        if (topLevelColumns.includes(key)) {
+            dbUpdatePayload[key] = value;
+        } else {
+            // Everything else goes into the 'data' JSONB column
+            dataUpdate[key] = value;
+        }
+    }
+
+    dbUpdatePayload.data = dataUpdate;
+
+    // Auto-update status if it was Queried
+    if (app.status === 'Queried') {
+        dbUpdatePayload.status = 'Inprogress'; // Set back to Inprogress for admin review
+    }
+
+    const { error: updateError } = await supabase
+        .from('applications')
+        .update(dbUpdatePayload)
+        .eq('id', applicationId)
+        .eq('user_id', user.id);
+
+    if (updateError) {
+        return { success: false, error: updateError.message };
+    }
+
+    revalidatePath(`/dashboard/my-applications`);
+    revalidatePath(`/dashboard/application-details/${applicationId}`);
+
+    return { success: true };
 }

@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 
+
 // Extended type to include transaction info
 interface ApplicationWithTransaction extends StoredApplication {
   transactions: {
@@ -20,7 +21,7 @@ interface ApplicationWithTransaction extends StoredApplication {
   }[];
 }
 
-type StepStatus = 'completed' | 'current' | 'pending' | 'error';
+type StepStatus = 'completed' | 'current' | 'pending' | 'error' | 'warning';
 
 interface TrackerStepProps {
   label: string;
@@ -37,12 +38,14 @@ const TrackerStep: React.FC<TrackerStepProps> = ({ label, status, date, last }) 
         status === 'completed' && "bg-green-100 border-green-500 text-green-600",
         status === 'current' && "bg-blue-100 border-blue-500 text-blue-600 animate-pulse",
         status === 'pending' && "bg-slate-50 border-slate-200 text-slate-300",
-        status === 'error' && "bg-red-100 border-red-500 text-red-600"
+        status === 'error' && "bg-red-100 border-red-500 text-red-600",
+        status === 'warning' && "bg-orange-100 border-orange-500 text-orange-600"
       )}>
         {status === 'completed' && <CheckCircle2 className="h-4 w-4" />}
         {status === 'current' && <Loader2 className="h-4 w-4 animate-spin" />}
         {status === 'pending' && <Clock className="h-4 w-4" />}
         {status === 'error' && <XCircle className="h-4 w-4" />}
+        {status === 'warning' && <AlertTriangle className="h-4 w-4" />}
       </div>
 
       {!last && (
@@ -57,7 +60,8 @@ const TrackerStep: React.FC<TrackerStepProps> = ({ label, status, date, last }) 
           "text-[10px] sm:text-xs font-bold uppercase tracking-wider",
           status === 'completed' ? "text-green-700" :
             status === 'current' ? "text-blue-700" :
-              status === 'error' ? "text-red-700" : "text-slate-400"
+              status === 'error' ? "text-red-700" :
+                status === 'warning' ? "text-orange-700" : "text-slate-400"
         )}>{label}</p>
         {date && <p className="text-[10px] text-slate-500 mt-0.5">{date}</p>}
       </div>
@@ -69,6 +73,7 @@ const ApplicationTracker = ({ app }: { app: ApplicationWithTransaction }) => {
   const isPaid = app.transactions?.some(t => t.status === 'Verified' || t.status === 'Successful');
   const isApproved = app.status === 'Approved';
   const isRejected = app.status === 'Rejected';
+  const isQueried = app.status === 'Queried';
 
   // Determine steps state
   const steps: { label: string; status: StepStatus; date?: string }[] = [
@@ -83,11 +88,11 @@ const ApplicationTracker = ({ app }: { app: ApplicationWithTransaction }) => {
     },
     {
       label: 'Review',
-      status: isPaid ? (isApproved || isRejected ? 'completed' : 'current') : 'pending'
+      status: isPaid ? (isApproved || isRejected || isQueried ? 'completed' : 'current') : 'pending'
     },
     {
-      label: isRejected ? 'Rejected' : 'Decision',
-      status: isApproved ? 'completed' : (isRejected ? 'error' : 'pending')
+      label: isRejected ? 'Rejected' : isQueried ? 'Action Required' : 'Decision',
+      status: isApproved ? 'completed' : (isRejected ? 'error' : isQueried ? 'warning' : 'pending')
     }
   ];
 
@@ -103,6 +108,7 @@ const ApplicationTracker = ({ app }: { app: ApplicationWithTransaction }) => {
     </div>
   );
 };
+
 
 async function getApplications(userId: string) {
   const supabase = await createSupabaseServerClient();
@@ -169,7 +175,8 @@ async function MyApplicationsPageComponent() {
                 "h-2 w-full",
                 app.status === 'Approved' ? "bg-green-500" :
                   app.status === 'Rejected' ? "bg-red-500" :
-                    "bg-blue-500"
+                    app.status === 'Queried' ? "bg-orange-500" :
+                      "bg-blue-500"
               )} />
 
               <CardHeader className="pb-4 bg-slate-50/50 border-b border-slate-100/50">
@@ -192,9 +199,10 @@ async function MyApplicationsPageComponent() {
                     "px-3 py-1 text-sm font-semibold shadow-none",
                     app.status === 'Approved' ? "bg-green-100 text-green-700 hover:bg-green-100" :
                       app.status === 'Rejected' ? "bg-red-100 text-red-700 hover:bg-red-100" :
-                        "bg-blue-100 text-blue-700 hover:bg-blue-100"
+                        app.status === 'Queried' ? "bg-orange-100 text-orange-700 hover:bg-orange-100" :
+                          "bg-blue-100 text-blue-700 hover:bg-blue-100"
                   )}>
-                    {app.status}
+                    {app.status === 'Queried' ? 'Action Required' : app.status}
                   </Badge>
                 </div>
               </CardHeader>
@@ -244,24 +252,36 @@ async function MyApplicationsPageComponent() {
                   </div>
                 </div>
 
-                {/* Rejection Notice */}
-                {app.status === 'Rejected' && app.rejection_reason && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-100 flex gap-4">
+                {/* Rejection/Query Notice */}
+                {(app.status === 'Rejected' || app.status === 'Queried') && app.rejection_reason && (
+                  <div className={cn(
+                    "p-4 rounded-xl flex gap-4 border",
+                    app.status === 'Rejected' ? "bg-red-50 border-red-100" : "bg-orange-50 border-orange-100"
+                  )}>
                     <div className="bg-white p-2 rounded-full h-fit shadow-sm">
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                      <AlertTriangle className={cn("h-5 w-5", app.status === 'Rejected' ? "text-red-500" : "text-orange-500")} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-red-900 text-sm">Application Rejected</h4>
-                      <p className="text-sm text-red-700/80 mt-1 leading-relaxed">{app.rejection_reason}</p>
+                      <h4 className={cn("font-bold text-sm", app.status === 'Rejected' ? "text-red-900" : "text-orange-900")}>
+                        {app.status === 'Rejected' ? 'Application Rejected' : 'Correction Required'}
+                      </h4>
+                      <p className={cn("text-sm mt-1 leading-relaxed", app.status === 'Rejected' ? "text-red-700/80" : "text-orange-700/80")}>
+                        {app.rejection_reason}
+                      </p>
                     </div>
                   </div>
                 )}
               </CardContent>
 
               <CardFooter className="bg-slate-50/50 p-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
-                <Button asChild variant="outline" className="w-full sm:w-auto border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-white hover:border-slate-300">
+                <Button asChild variant={app.status === 'Queried' ? 'default' : 'outline'} className={cn(
+                  "w-full sm:w-auto",
+                  app.status === 'Queried'
+                    ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200 border-0"
+                    : "border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-white hover:border-slate-300"
+                )}>
                   <Link href={`/dashboard/application-details/${app.id}`}>
-                    View Details
+                    {app.status === 'Queried' ? 'Resolve Query' : 'View Details'}
                   </Link>
                 </Button>
 

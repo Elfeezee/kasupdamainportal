@@ -38,7 +38,7 @@ export async function updateApplicationData(
 // Action to update the status and rejection reason of an application
 export async function updateApplicationStatus(
   applicationId: string,
-  newStatus: 'Inprogress' | 'Approved' | 'Rejected',
+  newStatus: 'Inprogress' | 'Approved' | 'Rejected' | 'Queried',
   rejectionReason: string | null
 ): Promise<{ success: boolean; error?: string }> {
   const supabase = await createSupabaseServerClient();
