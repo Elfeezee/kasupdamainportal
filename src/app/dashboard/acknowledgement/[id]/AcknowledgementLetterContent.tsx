@@ -121,94 +121,141 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
 
     if (isDinApp) {
         return (
-            <div ref={ref} id="letter-to-print" className="bg-white dark:bg-card text-black flex flex-col min-h-[1050px] p-12 relative print:min-h-full border-[12px] border-double border-primary/20">
+            <div ref={ref} id="letter-to-print" className="bg-white text-black flex flex-col min-h-[1050px] p-0 relative print:min-h-full border-[18px] border-[#2F5233] shadow-2xl overflow-hidden mx-auto max-w-[800px]">
+                {/* Inner decorative border */}
+                <div className="absolute inset-3 border-2 border-[#2F5233]/20 pointer-events-none z-0" />
+
                 {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={400} height={400} className="opacity-[0.03] grayscale" />
-                </div>
-
-                {/* QR Code positioned at top right */}
-                <div className="absolute top-12 right-12 z-20 bg-white p-1 border border-slate-100 rounded shadow-sm">
-                    <QRCodeSVG value={qrValue} size={90} />
-                </div>
-
-                <div className="relative z-10 flex flex-col flex-grow">
-                    <header className="pb-6 mb-8 text-center border-b-2 border-primary/10">
-                        <Image src="/image/logo.png" alt="KASUPDA Logo" width={80} height={80} className="mx-auto mb-4" />
-                        <h1 className="text-xl font-black text-primary tracking-tighter uppercase">KADUNA STATE GOVERNMENT</h1>
-                        <h2 className="text-lg font-bold text-slate-800 tracking-tight">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY (KASUPDA)</h2>
-                    </header>
-
-                    <main className="flex-grow space-y-8">
-                        {/* DIN Number Box */}
-                        <div className="bg-slate-50 border-2 border-primary/20 p-6 rounded-2xl text-center shadow-sm">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Development Identification Number (DIN)</p>
-                            <p className="text-4xl font-black text-primary tracking-widest">{flattenedData.din || 'PENDING'}</p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-12">
-                            <div className="space-y-6">
-                                <div>
-                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Applicant Information</h3>
-                                    <div className="space-y-1">
-                                        <p className="text-sm font-bold text-slate-900">{applicantName}</p>
-                                        <p className="text-xs text-slate-600 leading-relaxed">{applicantAddress}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Property Information</h3>
-                                    <div className="space-y-1">
-                                        <p className="text-xs font-bold text-slate-800">Plot Address:</p>
-                                        <p className="text-xs text-slate-600 leading-relaxed">{plotAddress}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-6">
-                                <div>
-                                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Application Details</h3>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between border-b border-slate-100 pb-1">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase">KBP Number:</span>
-                                            <span className="text-xs font-bold text-slate-900">{flattenedData.kbpNumber || 'N/A'}</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-slate-100 pb-1">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase">KDL Number:</span>
-                                            <span className="text-xs font-bold text-slate-900">{flattenedData.kdlNumber || 'N/A'}</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-slate-100 pb-1">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase">Date Issued:</span>
-                                            <span className="text-xs font-bold text-slate-900">{submissionDate}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-12 p-6 bg-primary/5 rounded-xl border border-primary/10">
-                            <p className="text-xs leading-relaxed text-slate-700 italic">
-                                This document serves as an official acknowledgement of your Development Identification Number (DIN).
-                                The DIN is a mandatory requirement for all development activities within Kaduna State.
-                                Please quote this number in all future correspondences with the Authority regarding this property.
+                    <Image src="/image/logo.png" alt="KASUPDA Watermark" width={500} height={500} className="opacity-[0.04] grayscale scale-110" />
+                    {applicationData.status !== 'Approved' && (
+                        <div className="absolute inset-0 flex items-center justify-center rotate-[35deg] opacity-[0.07]">
+                            <p className="text-8xl font-black text-slate-900 border-[10px] border-slate-900 px-12 py-6 rounded-3xl uppercase tracking-widest whitespace-nowrap">
+                                NOT FOR OFFICIAL USE
                             </p>
                         </div>
-                    </main>
+                    )}
+                </div>
 
-                    <footer className="mt-auto pt-12 border-t border-slate-100">
-                        <div className="flex justify-between items-end mb-12">
-                            <div className="text-center">
-                                <div className="w-48 border-b-2 border-slate-900 mb-2"></div>
-                                <p className="text-[10px] font-bold text-slate-900 uppercase">Director General, KASUPDA</p>
-                            </div>
-                            <div className="text-right">
-                                <Image src="/image/logo.png" alt="KASUPDA Seal" width={60} height={60} className="opacity-20 grayscale ml-auto" />
-                                <p className="text-[8px] font-bold text-slate-400 uppercase mt-2">Official Digital Seal</p>
+                <div className="relative z-10 flex flex-col flex-grow p-12">
+                    {/* QR Code and Logo Header */}
+                    <div className="flex justify-between items-start mb-8">
+                        <div className="w-24 h-24 relative">
+                            <Image src="/image/logo.png" alt="KASUPDA Logo" width={96} height={96} className="object-contain" />
+                        </div>
+                        <div className="text-center flex-1 mt-2">
+                            <h1 className="text-xl font-black text-[#2F5233] tracking-[0.15em] uppercase leading-tight">KADUNA STATE GOVERNMENT</h1>
+                            <h2 className="text-sm font-extrabold text-[#2F5233] tracking-widest uppercase mt-1">KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</h2>
+                            <h3 className="text-xs font-bold text-slate-700 tracking-normal uppercase">(KASUPDA)</h3>
+                        </div>
+                        <div className="bg-white p-2 border-2 border-slate-100 rounded-lg shadow-sm">
+                            <QRCodeSVG value={qrValue} size={100} level="H" />
+                        </div>
+                    </div>
+
+                    <div className="flex-grow space-y-10">
+                        {/* Title Section */}
+                        <div className="text-center space-y-2 py-4 border-y border-slate-100/50">
+                            <p className="text-[10px] font-bold text-[#2F5233] uppercase tracking-[0.3em]">DEVELOPMENT IDENTIFICATION NUMBER (DIN)</p>
+                            <div className="bg-[#2F5233]/5 border-2 border-[#2F5233]/10 py-4 px-12 rounded-2xl inline-block group">
+                                <h4 className="text-5xl font-black text-[#2F5233] tracking-[0.1em] drop-shadow-sm">
+                                    {flattenedData.din || 'DIN-800271-PENDING'}
+                                </h4>
                             </div>
                         </div>
 
-                        <div className="bg-slate-900 text-white p-4 rounded-lg flex justify-between items-center text-[8px] font-bold tracking-widest uppercase">
-                            <p>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</p>
-                            <p>WWW.KASUPDA.KDSG.GOV.NG</p>
+                        {/* Information Grid */}
+                        <div className="grid grid-cols-2 gap-x-16 gap-y-12">
+                            {/* Left Column: Applicant & Property */}
+                            <div className="space-y-10">
+                                <section>
+                                    <h5 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <div className="h-[1px] flex-1 bg-slate-100" />
+                                        APPLICANT INFORMATION
+                                    </h5>
+                                    <div className="space-y-1.5 pl-2 border-l-2 border-[#2F5233]/20">
+                                        <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{applicantName}</p>
+                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed max-w-[280px]">
+                                            {applicantAddress}
+                                        </p>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <h5 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <div className="h-[1px] flex-1 bg-slate-100" />
+                                        PROPERTY INFORMATION
+                                    </h5>
+                                    <div className="space-y-2 pl-2 border-l-2 border-[#2F5233]/20">
+                                        <div>
+                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Plot Address</p>
+                                            <p className="text-[11px] text-slate-700 font-bold leading-relaxed">
+                                                {plotAddress}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            {/* Right Column: Application Details */}
+                            <div className="space-y-10">
+                                <section>
+                                    <h5 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <div className="h-[1px] flex-1 bg-slate-100" />
+                                        APPLICATION DETAILS
+                                    </h5>
+                                    <div className="space-y-4 pl-2">
+                                        <div className="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">KBP NUMBER:</span>
+                                            <span className="text-xs font-black text-[#2F5233]">{flattenedData.kbpNumber || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">KDL NUMBER:</span>
+                                            <span className="text-xs font-black text-[#2F5233]">{flattenedData.kdlNumber || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-end border-b border-dashed border-slate-200 pb-1">
+                                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">DATE ISSUED:</span>
+                                            <span className="text-xs font-black text-slate-900">{submissionDate}</span>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100 flex items-start gap-3">
+                                    <div className="bg-[#2F5233] p-1.5 rounded-md text-white">
+                                        <Image src="/image/logo.png" alt="Icon" width={16} height={16} className="invert brightness-0" />
+                                    </div>
+                                    <p className="text-[9px] leading-relaxed text-slate-600 font-medium italic">
+                                        This DIN is a mandatory requirement for all development activities. Please quote this number in all future correspondences.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer Section */}
+                    <footer className="mt-16 pt-10 border-t-2 border-slate-50 flex flex-col items-center">
+                        <div className="flex justify-between items-center w-full mb-12 px-4">
+                            <div className="text-center space-y-1 flex flex-col items-center">
+                                <div className="h-10 w-40 relative">
+                                    {/* Placeholder for Signature */}
+                                    <div className="absolute bottom-0 w-full border-b border-slate-900" />
+                                </div>
+                                <p className="text-[9px] font-black text-slate-900 uppercase tracking-widest pt-2 italic">DIRECTOR GENERAL, KASUPDA</p>
+                            </div>
+
+                            <div className="relative group flex flex-col items-center">
+                                <div className="absolute inset-0 bg-[#2F5233]/5 rounded-full blur-xl group-hover:bg-[#2F5233]/10 transition-all opacity-0" />
+                                <div className="w-20 h-20 border-2 border-[#2F5233]/20 rounded-full flex items-center justify-center p-2 relative z-10">
+                                    <Image src="/image/logo.png" alt="Official Seal" width={64} height={64} className="opacity-20 grayscale brightness-75" />
+                                </div>
+                                <p className="text-[7px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3">OFFICIAL DIGITAL SEAL</p>
+                            </div>
+                        </div>
+
+                        <div className="w-full bg-[#2F5233] text-white py-3 px-8 rounded-xl flex justify-between items-center text-[9px] font-black tracking-[0.2em] uppercase shadow-lg shadow-[#2F5233]/20">
+                            <span>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY</span>
+                            <div className="h-4 w-[1px] bg-white/20" />
+                            <span>WWW.KASUPDA.KDSG.GOV.NG</span>
                         </div>
                     </footer>
                 </div>
@@ -246,8 +293,8 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     </div>
 
                     <div className="space-y-1 text-[11px] leading-relaxed">
-                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plot_district || '[District not provided]'} in LGA {flattenedData.plot_lga || '[LGA not provided]'} more accurately described as {plotAddress}.</p>
-                        <p>Description of the development is: {developmentDescription}</p>
+                        <p>This is to acknowledge the receipt of the application for a new development permit via a KADGIS Acknowledgement Letter, over a property located in District/Area {flattenedData.plot_district || '[District not provided]'} of {flattenedData.plot_lga || '[LGA not provided]'} LGA more accurately described as {plotAddress}.</p>
+                        <p>Description of the Development: {developmentDescription}</p>
                     </div>
 
                     {receivedDocuments.length > 0 && (
@@ -277,9 +324,14 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                             </div>
                         </div>
                     </div>
-                    <div className="pt-4">
-                        <h4 className="font-bold text-[10px]">Disclaimer</h4>
-                        <p className="leading-snug text-[8px]">This acknowledgement does not in any way validate the authenticity of the documents described above. All documents are subject to further verification for authenticity. This acknowledgement must be presented at the time of collection of the Development Permit. Please notify us of any change of contact address or any other vital information contained in your original application. Contact us directly at:</p>
+                    <div className="pt-4 space-y-1">
+                        <h4 className="font-bold text-[10px] grayscale">Disclaimer:</h4>
+                        <div className="leading-snug text-[8px] space-y-0.5 grayscale-0">
+                            <p>i. Please note that this acknowledgement does not constitute an approval or permit for development.</p>
+                            <p>ii. This acknowledgement also does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
+                            <p>iii. This acknowledgement must be presented at the time of collection of the Development Permit.</p>
+                            <p className="text-red-600 font-bold">iv. Applicants are required to promptly notify the Authority of any change in contact address or other vital information contained in the original application.</p>
+                        </div>
                     </div>
                     <div className="text-center text-[8px] font-semibold text-black leading-snug pt-1 border-t mt-2">
                         <p>KADUNA STATE URBAN PLANNING AND DEVELOPMENT AUTHORITY, P.M.B. 2142 KADUNA STATE, NIGERIA</p>
@@ -308,9 +360,9 @@ export default function AcknowledgementLetterContent({ applicationData }: { appl
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to My Applications
                 </Button>
-                <Button onClick={handlePrint} variant="default">
+                <Button onClick={handlePrint} variant="default" className={applicationData.status === 'Approved' ? "bg-green-600 hover:bg-green-700" : ""}>
                     <Download className="mr-2 h-4 w-4" />
-                    Download PDF
+                    {applicationData.status === 'Approved' ? 'Download Official Certificate' : 'Download PDF Acknowledgement'}
                 </Button>
             </div>
 

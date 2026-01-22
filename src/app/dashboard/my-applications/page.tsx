@@ -288,8 +288,17 @@ async function MyApplicationsPageComponent() {
                 {(app.original_permit_id || app.din) && (
                   <Button asChild className="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white shadow-lg shadow-slate-200">
                     <Link href={`/dashboard/acknowledgement/${app.id}`}>
-                      <FileSpreadsheet className="mr-2 h-4 w-4" />
-                      View Acknowledgement
+                      {app.type === 'DIN Application' && app.status === 'Approved' ? (
+                        <>
+                          <Award className="mr-2 h-4 w-4" />
+                          Download Certificate
+                        </>
+                      ) : (
+                        <>
+                          <FileSpreadsheet className="mr-2 h-4 w-4" />
+                          View Acknowledgement
+                        </>
+                      )}
                     </Link>
                   </Button>
                 )}

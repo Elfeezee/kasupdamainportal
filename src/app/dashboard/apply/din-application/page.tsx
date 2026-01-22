@@ -31,6 +31,11 @@ const dinApplicationSchema = z.object({
   plotAddress: z.string().min(1, "Plot Address is required"),
   kbpNumber: z.string().min(1, "KBP Number is required"),
   kdlNumber: z.string().min(1, "KDL Number is required"),
+  postalCode: z.string().min(1, "Postal Code is required").regex(/^\d+$/, "Must be numeric"),
+  lgaCode: z.string().min(1, "LGA Code is required").regex(/^\d+$/, "Must be numeric"),
+  wardCode: z.string().min(1, "Ward Code is required").regex(/^\d+$/, "Must be numeric"),
+  streetCode: z.string().min(1, "Street Code is required").regex(/^\d+$/, "Must be numeric"),
+  plotNumber: z.string().min(1, "Plot Number is required").regex(/^\d+$/, "Must be numeric"),
   doc_permit: z.any()
     .refine((files) => files?.length == 1, "Permit document is required.")
     .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
@@ -66,6 +71,11 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
       plotAddress: "",
       kbpNumber: "",
       kdlNumber: "",
+      postalCode: "800271", // Defaulting based on image
+      lgaCode: "",
+      wardCode: "",
+      streetCode: "",
+      plotNumber: "",
       doc_permit: undefined,
       doc_co: undefined,
       declaration: false,
@@ -129,6 +139,43 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
               <Input id="kdlNumber" {...register("kdlNumber")} />
               {errors.kdlNumber && <p className="text-destructive text-xs mt-1">{errors.kdlNumber.message}</p>}
             </div>
+          </div>
+
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <div className="w-2 h-4 bg-primary rounded-full" />
+              DIN Generation Parameters
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div>
+                <Label htmlFor="postalCode" className="text-[10px] font-bold text-slate-500 uppercase">Postal Code (PC)*</Label>
+                <Input id="postalCode" {...register("postalCode")} placeholder="800271" className="bg-white" />
+                {errors.postalCode && <p className="text-destructive text-[10px] mt-1">{errors.postalCode.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="lgaCode" className="text-[10px] font-bold text-slate-500 uppercase">LGA Code (LG)*</Label>
+                <Input id="lgaCode" {...register("lgaCode")} placeholder="05" className="bg-white" />
+                {errors.lgaCode && <p className="text-destructive text-[10px] mt-1">{errors.lgaCode.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="wardCode" className="text-[10px] font-bold text-slate-500 uppercase">Ward Code (WD)*</Label>
+                <Input id="wardCode" {...register("wardCode")} placeholder="12" className="bg-white" />
+                {errors.wardCode && <p className="text-destructive text-[10px] mt-1">{errors.wardCode.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="streetCode" className="text-[10px] font-bold text-slate-500 uppercase">Street Code (ST)*</Label>
+                <Input id="streetCode" {...register("streetCode")} placeholder="034" className="bg-white" />
+                {errors.streetCode && <p className="text-destructive text-[10px] mt-1">{errors.streetCode.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="plotNumber" className="text-[10px] font-bold text-slate-500 uppercase">Plot Number (PL)*</Label>
+                <Input id="plotNumber" {...register("plotNumber")} placeholder="056" className="bg-white" />
+                {errors.plotNumber && <p className="text-destructive text-[10px] mt-1">{errors.plotNumber.message}</p>}
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-400 italic font-medium">
+              * These codes are used to generate your unique Development Identification Number (DIN).
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

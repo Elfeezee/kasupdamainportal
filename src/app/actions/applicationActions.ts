@@ -200,7 +200,12 @@ function mapKeyToDbField(key: string): string {
         'docStructuralWorkDrawings': 'doc_structural_work_drawings',
         'docImagerySketch': 'doc_imagery_sketch',
         'docSiteLocationInstallationCoordinates': 'doc_site_location_installation_coordinates',
-        'docLeaseAgreementLetter': 'doc_lease_agreement_letter'
+        'docLeaseAgreementLetter': 'doc_lease_agreement_letter',
+        'postalCode': 'postal_code',
+        'lgaCode': 'lga_code',
+        'wardCode': 'ward_code',
+        'streetCode': 'street_code',
+        'plotNumber': 'plot_number'
     };
 
     return mappings[key] || key;
@@ -295,8 +300,31 @@ export async function saveApplication(
         }
     }
 
-    // Clean up empty data fields if necessary, though JSONB handles nulls fine.
-    // We don't need to filter nulls from the 'data' object strictly, but it keeps it clean.
+    // DIN Generation logic
+    if (type === 'DIN Application') {
+        try {
+            const { count } = await supabase
+                .from('applications')
+                .select('*', { count: 'exact', head: true })
+                .eq('type', 'DIN Application');
+
+            const serialNumber = (count || 0) + 1;
+            const paddedSN = String(serialNumber).padStart(4, '0');
+
+            const pc = (dbPayload.data.postal_code || '800271').padStart(6, '0');
+            const lg = (dbPayload.data.lga_code || '00').padStart(2, '0');
+            const wd = (dbPayload.data.ward_code || '00').padStart(2, '0');
+            const st = (dbPayload.data.street_code || '000').padStart(3, '0');
+            const pl = (dbPayload.data.plot_number || '000').padStart(3, '0');
+
+            dbPayload.din = `DIN-${pc}-${lg}-${wd}-${st}-${pl}-${paddedSN}`;
+            // Store details in JSONB for reference
+            dbPayload.data.serial_number = paddedSN;
+            dbPayload.data.generated_din = dbPayload.din;
+        } catch (err) {
+            console.error("Critical: DIN Generation failed. Proceeding without DIN.", err);
+        }
+    }
 
     try {
         const { data: insertedData, error: dbError } = await supabase

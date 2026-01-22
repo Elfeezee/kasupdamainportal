@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Download, Loader2, FileText, User, MapPin, Briefcase, Eye } from 'lucide-react';
+import { Download, Loader2, FileText, User, MapPin, Briefcase, Eye, Fingerprint } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -241,8 +241,9 @@ export default function ApplicationDetails({ application, isEditing, editedData,
     const applicantKeys = ['applicant_name', 'title', 'first_name', 'surname', 'phone1', 'email', 'address', 'nationality', 'state_of_origin'];
     const siteKeys = ['plot_address', 'land_use', 'purpose', 'plot_district', 'plot_lga', 'site_street_name', 'site_city_town', 'coordinates', 'site_coord_lat', 'site_coord_long'];
     const professionalKeys = ['rep_first_name', 'rep_surname', 'rep_phone1', 'rep_email', 'rep_id_number', 'company_name', 'org_name', 'cac_number', 'tin', 'org_tin'];
+    const dinKeys = ['postal_code', 'lga_code', 'ward_code', 'street_code', 'plot_number', 'serial_number', 'generated_din'];
 
-    const allKnownKeys = [...docKeys, ...applicantKeys, ...siteKeys, ...professionalKeys, 'id', 'user_id', 'created_at', 'status', 'type'];
+    const allKnownKeys = [...docKeys, ...applicantKeys, ...siteKeys, ...professionalKeys, ...dinKeys, 'id', 'user_id', 'created_at', 'status', 'type'];
     const otherKeys = Object.keys(flattenedApp).filter(k => !allKnownKeys.includes(k) && !k.endsWith('_url') && !['data', 'rejection_reason'].includes(k));
 
     const renderFieldGroup = (keys: string[]) => (
@@ -280,8 +281,22 @@ export default function ApplicationDetails({ application, isEditing, editedData,
 
             <TabsContent value="site" className="mt-0">
                 <Card className="border-slate-200 shadow-sm">
-                    <CardContent className="p-6">
-                        {renderFieldGroup(siteKeys)}
+                    <CardContent className="p-6 space-y-8">
+                        <section>
+                            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <MapPin className="h-4 w-4" /> Site Location Information
+                            </h3>
+                            {renderFieldGroup(siteKeys)}
+                        </section>
+
+                        {(flattenedApp.postal_code || flattenedApp.generated_din) && (
+                            <section className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h3 className="text-sm font-bold text-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <Fingerprint className="h-4 w-4" /> DIN Generation Parameters
+                                </h3>
+                                {renderFieldGroup(dinKeys)}
+                            </section>
+                        )}
                     </CardContent>
                 </Card>
             </TabsContent>
