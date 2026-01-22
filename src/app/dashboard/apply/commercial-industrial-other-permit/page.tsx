@@ -319,7 +319,7 @@ export default function CommercialIndustrialOtherPermitPage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-2 sm:px-4 py-8">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
         <Card>
           <CardHeader>
             <CardTitle>Loading...</CardTitle>

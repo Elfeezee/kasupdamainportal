@@ -153,15 +153,15 @@ export default function CertificateOfFitnessPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-2 sm:px-4 py-8">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
         <LoadingSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 py-8">
-      <Card className="max-w-2xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
+      <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-3">
             <Award className="h-7 w-7" />

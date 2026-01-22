@@ -186,15 +186,15 @@ export default function StageApprovalPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-2 sm:px-4 py-8">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
         <LoadingSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 py-8">
-      <Card className="max-w-3xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
+      <Card className="max-w-5xl mx-auto">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-3">
             <ClipboardCheck className="h-7 w-7" />

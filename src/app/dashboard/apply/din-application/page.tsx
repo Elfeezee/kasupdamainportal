@@ -77,7 +77,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
   const { clearStorage } = useFormPersistence(form, 'din-application-form', ['doc_permit', 'doc_co']);
 
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-3">
           <Fingerprint className="h-7 w-7" />
@@ -189,7 +189,7 @@ function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSu
 
 function LoadingCard() {
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="max-w-4xl mx-auto">
       <CardHeader>
         <Skeleton className="h-8 w-3/4" />
         <Skeleton className="h-5 w-1/2" />
@@ -285,7 +285,7 @@ export default function DinApplicationPage() {
   };
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 py-8">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
       {loading && <LoadingCard />}
       {!loading && user && (
         <DinApplicationForm user={user} onSubmit={onSubmit} isSubmitting={isSubmitting} />
