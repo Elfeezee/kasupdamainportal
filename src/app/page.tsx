@@ -52,7 +52,7 @@ export default function Home() {
                 <p className="max-w-[700px] mx-auto text-gray-100 md:text-xl">
                   Welcome to the official digital portal of KASUPDA. Discover services, apply for permits, and stay updated on urban planning initiatives in Kaduna.
                 </p>
-                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
                   <Button size="lg" asChild>
                     <Link href="/apply-for-permit">
                       Apply for Permit
@@ -252,7 +252,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -278,7 +278,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col justify-center space-y-4 text-left">
               <h3 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Bldr. Abdurrahman Yahya
+                Bldr. Abdurrahman Yahya Phd.
               </h3>
               <p className="text-muted-foreground md:text-lg">
                 Our Director General, Bldr. Abdurrahman Yahya, is a visionary leader, deeply committed to the advancement and modernization of KASUPDA. With a steadfast dedication to progress, he champions innovative strategies and fosters a culture of excellence within the authority. His tireless efforts are geared towards transforming Kaduna State into a model of sustainable urban development, ensuring a brighter future for all its citizens.

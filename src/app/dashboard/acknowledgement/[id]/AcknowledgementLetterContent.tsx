@@ -230,7 +230,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                                         <Image src="/image/logo.png" alt="Icon" width={16} height={16} className="invert brightness-0" />
                                     </div>
                                     <p className="text-[9px] leading-relaxed text-slate-600 font-medium italic">
-                                        This DIN is a mandatory requirement for all development activities. Please quote this number in all future correspondences.
+                                        This DIN is a mandatory requirement for all developmentPlease quote this number in all future correspondences.
                                     </p>
                                 </div>
                             </div>
@@ -330,11 +330,11 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                         </div>
                     </div>
                     <div className="pt-4 space-y-2">
-                        <h4 className="font-bold text-base text-red-600">Disclaimer:</h4>
+                        <h4 className="font-bold text-base text-red-600">Disclaimer: Please note that this acknowledgement;</h4>
                         <div className="leading-snug text-sm space-y-1 text-red-600 font-bold">
-                            <p>i. Please note that this acknowledgement does not constitute an approval or permit for development.</p>
-                            <p>ii. This acknowledgement also does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
-                            <p>iii. This acknowledgement must be presented at the time of collection of the Development Permit.</p>
+                            <p>i. Does not constitute an approval or permit for development.</p>
+                            <p>ii. Does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
+                            <p>iii. Must be presented at the time of collection of the Development Permit.</p>
                             <p>iv. Applicants are required to promptly notify the Authority of any change in contact address or other vital information contained in the original application.</p>
                         </div>
                     </div>
