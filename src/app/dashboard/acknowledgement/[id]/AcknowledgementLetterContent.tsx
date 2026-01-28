@@ -230,7 +230,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                                         <Image src="/image/logo.png" alt="Icon" width={16} height={16} className="invert brightness-0" />
                                     </div>
                                     <p className="text-[9px] leading-relaxed text-slate-600 font-medium italic">
-                                        This DIN is a mandatory requirement for all developmentPlease quote this number in all future correspondences.
+                                        This DIN is a mandatory requirement for all development. Please quote this number in all future correspondences.
                                     </p>
                                 </div>
                             </div>
