@@ -6,7 +6,7 @@ module.exports = {
       args: 'start',
       env: {
         NODE_ENV: 'production',
-        PORT: '3000',
+        PORT: '4500',
         GOOGLE_APPLICATION_CREDENTIALS: '/var/secrets/firebase-sa.json'
       },
       env_production: {
