@@ -330,8 +330,8 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                         </div>
                     </div>
                     <div className="pt-4 space-y-2">
-                        <h4 className="font-bold text-base text-red-400">Disclaimer: Please note that this acknowledgement;</h4>
-                        <div className="leading-snug text-sm space-y-1 text-red-400 font-bold">
+                        <h4 className="font-bold text-base text-red-600">Disclaimer: Please note that this acknowledgement;</h4>
+                        <div className="leading-snug text-sm space-y-1 text-red-600 font-bold">
                             <p>i. does not constitute an approval or permit for development.</p>
                             <p>ii. does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
                             <p>iii. dust be presented at the time of collection of the Development Permit.</p>
