@@ -16,51 +16,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // This effect runs only on the client
-    const storedTheme = localStorage.getItem('kasupda-theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    let currentTheme = 'light';
-    if (storedTheme) {
-      currentTheme = storedTheme;
-    } else if (systemPrefersDark) {
-      currentTheme = 'dark';
-    }
-
-    setTheme(currentTheme);
+    // Force light mode on mount
+    setTheme('light');
     setMounted(true);
   }, []);
 
   const setTheme = (newTheme: string) => {
-    setThemeState(newTheme);
-    localStorage.setItem('kasupda-theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    // Always force light mode
+    const forcedTheme = 'light';
+    setThemeState(forcedTheme);
+    localStorage.setItem('kasupda-theme', forcedTheme);
+    document.documentElement.classList.remove('dark');
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    // Do nothing or force light
+    setTheme('light');
   };
-  
-  const value = { theme, setTheme, toggleTheme };
 
-  // To prevent hydration mismatch, we can return null or a placeholder on the server/first render
-  if (!mounted) {
-    // You can optionally render a skeleton or nothing here
-    // Returning children directly but wrapped in provider with default value might be one way,
-    // but better to avoid rendering theme-dependent UI until mounted.
-    return (
-       <ThemeContext.Provider value={value}>
-        {/* Render children, but they won't have the correct theme on initial server render. 
-            The `suppressHydrationWarning` on <html> tag is key. */}
-        {children}
-       </ThemeContext.Provider>
-    );
-  }
+  const value = { theme: 'light', setTheme, toggleTheme };
 
   return (
     <ThemeContext.Provider value={value}>

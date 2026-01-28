@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, ChevronDown, Sun, Moon, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon, Award, Beaker } from "lucide-react";
+import { Menu, ChevronDown, LogIn, Home as HomeIcon, MapPin, FileText, Settings, Info, Newspaper, Phone as PhoneIcon, UserPlus, Globe, Search as SearchIcon, X as XIcon, Award, Beaker } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -46,12 +46,12 @@ export default function Header() {
   const [planningOpen, setPlanningOpen] = useState(false);
   const [developmentControlOpen, setDevelopmentControlOpen] = useState(false);
   const [EServiceOpen, setEServiceOpen] = useState(false);
-  
+
   const monitoringHideTimer = useRef<number | null>(null);
   const planningHideTimer = useRef<number | null>(null);
   const developmentControlHideTimer = useRef<number | null>(null);
   const EServiceHideTimer = useRef<number | null>(null);
-  
+
   const [isDesktopSearchInputVisible, setIsDesktopSearchInputVisible] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,7 +80,7 @@ export default function Header() {
   ) => {
     const handleOpen = () => {
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-      otherSetters.forEach(setter => setter(false)); 
+      otherSetters.forEach(setter => setter(false));
       setOpen(true);
     };
     const handleCloseWithDelay = () => {
@@ -98,7 +98,7 @@ export default function Header() {
   const developmentControlHandlers = createMenuHandlers(setDevelopmentControlOpen, developmentControlHideTimer, [setPlanningOpen, setEServiceOpen, setMonitoringOpen]);
   const EServiceHandlers = createMenuHandlers(setEServiceOpen, EServiceHideTimer, [setPlanningOpen, setDevelopmentControlOpen, setMonitoringOpen]);
   const monitoringHandlers = createMenuHandlers(setMonitoringOpen, monitoringHideTimer, [setPlanningOpen, setDevelopmentControlOpen, setEServiceOpen]);
-  
+
   const monitoringSubLinks = [
     {
       label: "Building Control",
@@ -116,7 +116,7 @@ export default function Header() {
       ],
     },
   ];
-  
+
   const allMonitoringLinks = monitoringSubLinks.flatMap(item => item.subLinks || []);
 
   const planningSubLinks = [
@@ -141,7 +141,7 @@ export default function Header() {
     { href: "/dashboard/apply/certificate-of-fitness", label: "Apply for Certificate of Fitness" },
     { href: "#", label: "Lab" },
   ];
-  
+
   const mainNavLinks = [
     { href: "/about", label: "About Us" },
     { href: "/news", label: "News and Publications" },
@@ -161,13 +161,13 @@ export default function Header() {
   const getDropdownTriggerClassName = (currentPathSegment: string, subLinks: { href: string }[], isOpen: boolean) => {
     const isActivePath = subLinks.some(link => pathname === link.href || (link.href !== "#" && pathname.startsWith(link.href))) || pathname.startsWith(currentPathSegment);
     return cn(
-      "transition-colors px-3 py-2 h-auto font-normal text-sm focus-visible:ring-0 focus-visible:ring-offset-0", 
+      "transition-colors px-3 py-2 h-auto font-normal text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
       (isActivePath || isOpen)
         ? "text-primary font-semibold"
         : "text-primary/70 hover:text-primary"
     );
   };
-  
+
   const getDropdownLinkClassName = (href: string) => {
     return cn(
       "text-sm",
@@ -197,7 +197,7 @@ export default function Header() {
     const isActivePath = subLinks.some(link => pathname === link.href);
     return cn(
       "transition-colors py-2 text-base font-normal hover:no-underline px-3",
-      (isActivePath || isAlwaysOpen) 
+      (isActivePath || isAlwaysOpen)
         ? "text-primary font-semibold"
         : "text-primary/70 hover:text-primary"
     );
@@ -253,7 +253,7 @@ export default function Header() {
                 >
                   {planningSubLinks.map((link) => (
                     <DropdownMenuItem key={link.label} asChild>
-                       {link.external ? (
+                      {link.external ? (
                         <a href={link.href} target="_blank" rel="noopener noreferrer" className={getDropdownLinkClassName(link.href)}>{link.label}</a>
                       ) : (
                         <Link href={link.href} className={getDropdownLinkClassName(link.href)}>{link.label}</Link>
@@ -364,7 +364,7 @@ export default function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              
+
               {mainNavLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -376,7 +376,7 @@ export default function Header() {
               ))}
             </nav>
           )}
-          
+
           {isDesktopSearchInputVisible && (
             <form onSubmit={handleDesktopSearchSubmit} className="flex items-center gap-2 ml-auto">
               <Input
@@ -402,7 +402,7 @@ export default function Header() {
           )}
 
           <div className={cn("ml-auto flex items-center gap-2", isDesktopSearchInputVisible && "hidden")}>
-             <Button variant="ghost" size="icon" onClick={() => setIsDesktopSearchInputVisible(true)} className="text-primary/70 hover:text-primary">
+            <Button variant="ghost" size="icon" onClick={() => setIsDesktopSearchInputVisible(true)} className="text-primary/70 hover:text-primary">
               <SearchIcon className="h-5 w-5" />
             </Button>
             <Button variant="outline" size="sm" asChild>
@@ -411,15 +411,6 @@ export default function Header() {
               </Link>
             </Button>
             <Separator orientation="vertical" className="h-6 mx-1" />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="text-primary/70 hover:text-primary"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            </Button>
           </div>
         </div>
 
@@ -432,15 +423,6 @@ export default function Header() {
             </span>
           </Link>
           <div className="flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="text-primary/70 hover:text-primary mr-1"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            </Button>
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -456,9 +438,9 @@ export default function Header() {
                 <SheetHeader className="px-3 pt-6 pb-2 text-left sticky top-0 bg-background z-10">
                   {/* <SheetTitle className="text-lg font-semibold text-primary">Menu</SheetTitle> */}
                 </SheetHeader>
-                <Separator className="my-2 sticky top-[calc(2.5rem+1.5rem)] bg-background z-10"/>
+                <Separator className="my-2 sticky top-[calc(2.5rem+1.5rem)] bg-background z-10" />
                 <div className="flex-grow overflow-y-auto pb-8">
-                  <nav> 
+                  <nav>
                     <Link
                       href="/"
                       className={getMobileLinkClassName("/")}
@@ -472,11 +454,11 @@ export default function Header() {
                         </AccordionTrigger>
                         <AccordionContent className="pl-4 pb-1">
                           {planningSubLinks.map((link) => (
-                             link.external ? (
-                                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href)}>{link.label}</a>
-                              ) : (
-                                <Link key={link.label} href={link.href} className={getMobileSubLinkClassName(link.href)}>{link.label}</Link>
-                              )
+                            link.external ? (
+                              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href)}>{link.label}</a>
+                            ) : (
+                              <Link key={link.label} href={link.href} className={getMobileSubLinkClassName(link.href)}>{link.label}</Link>
+                            )
                           ))}
                         </AccordionContent>
                       </AccordionItem>
@@ -496,12 +478,12 @@ export default function Header() {
                           ))}
                         </AccordionContent>
                       </AccordionItem>
-                       <AccordionItem value="monitoring-compliance" className="border-b-0">
+                      <AccordionItem value="monitoring-compliance" className="border-b-0">
                         <AccordionTrigger className={cn(getMobileAccordionTriggerClassName(allMonitoringLinks), "px-3")}>
                           Monitoring and Compliance
                         </AccordionTrigger>
                         <AccordionContent className="pl-4 pb-1 space-y-2">
-                           {monitoringSubLinks.map((item) => (
+                          {monitoringSubLinks.map((item) => (
                             <div key={item.label}>
                               <p className="font-semibold text-primary/90 px-3 py-1.5 text-sm">{item.label}</p>
                               <div className="pl-4">
@@ -526,17 +508,17 @@ export default function Header() {
                         <AccordionContent className="pl-4 pb-1">
                           {EServiceSubLinks.map((link) => (
                             link.external ? (
-                                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href)}>{link.label}</a>
-                              ) : (
-                                <Link key={link.label} href={link.href} className={getMobileSubLinkClassName(link.href)}>{link.label}</Link>
-                              )
+                              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href)}>{link.label}</a>
+                            ) : (
+                              <Link key={link.label} href={link.href} className={getMobileSubLinkClassName(link.href)}>{link.label}</Link>
+                            )
                           ))}
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
 
                     {mainNavLinks.map((link) => (
-                       <Link
+                      <Link
                         key={link.label}
                         href={link.href}
                         className={getMobileLinkClassName(link.href)}
@@ -546,12 +528,12 @@ export default function Header() {
                     ))}
                     <Separator className="my-4" />
                     <div className="px-3 space-y-2">
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                          <Link href="/login">
-                            <LogIn className="mr-2 h-4 w-4" /> Login
-                          </Link>
-                        </Button>
-                      </div>
+                      <Button variant="outline" className="w-full justify-start" asChild>
+                        <Link href="/login">
+                          <LogIn className="mr-2 h-4 w-4" /> Login
+                        </Link>
+                      </Button>
+                    </div>
                   </nav>
                 </div>
               </SheetContent>
