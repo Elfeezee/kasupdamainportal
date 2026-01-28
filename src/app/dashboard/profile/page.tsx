@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+import { ProfileEditActions } from '@/components/profile/ProfileEditActions';
 
 async function getProfileData() {
     const supabase = await createSupabaseServerClient();
@@ -21,24 +21,25 @@ async function getProfileData() {
         email: user.email || 'N/A',
         phone: user.phone || 'N/A',
         din: 'Not yet assigned',
-        address: 'Not available'
+        address: user.user_metadata?.address || 'Not available'
     };
 
     try {
         const { data: userProfile, error: profileError } = await supabase
             .from('users')
-            .select('din, name, phone')
+            .select('din, name, phone, address')
             .eq('uid', user.id)
             .maybeSingle();
 
         if (profileError) {
-            console.error("Error fetching DIN from profile:", profileError.message);
+            console.error("Error fetching profile from DB:", profileError.message);
         }
 
         if (userProfile) {
             profile.din = userProfile.din || 'Not yet assigned';
-            profile.name = user.user_metadata?.full_name || userProfile.name || profile.name;
+            profile.name = userProfile.name || profile.name;
             profile.phone = userProfile.phone || profile.phone;
+            profile.address = userProfile.address || profile.address;
         }
     } catch (error) {
         console.error("A critical error occurred while fetching profile data:", error);
@@ -56,14 +57,6 @@ const ProfileItem = ({ label, value }: { label: string; value: string | null | u
 
 async function ProfilePageComponent() {
     const profileData = await getProfileData();
-
-    async function handleActionClick(actionName: string) {
-        'use server';
-        // In a real app, this would trigger a server action.
-        // For now, we just log and revalidate.
-        console.log(`${actionName} functionality is not yet implemented.`);
-        revalidatePath('/dashboard/profile');
-    }
 
     return (
         <div className="space-y-8">
@@ -87,14 +80,7 @@ async function ProfilePageComponent() {
                     <ProfileItem label="Phone Number" value={profileData.phone} />
                     <ProfileItem label="Registered Address" value={profileData.address} />
 
-                    <div className="pt-4 flex flex-col sm:flex-row gap-2">
-                        <form action={async () => { 'use server'; handleActionClick("Edit Profile") }}>
-                            <Button type="submit">Edit Profile</Button>
-                        </form>
-                        <form action={async () => { 'use server'; handleActionClick("Change Password") }}>
-                            <Button variant="outline" type="submit">Change Password</Button>
-                        </form>
-                    </div>
+                    <ProfileEditActions userData={profileData} />
                 </CardContent>
             </Card>
         </div>
