@@ -235,7 +235,7 @@ export default function OutdoorStructurePermitPage() { // Renamed component, tho
       const result = await saveApplication(formData);
       if (result.success) {
         clearStorage();
-        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+        router.push(`/dashboard/billing`);
       } else {
         throw new Error(result.error || "An unknown error occurred.");
       }

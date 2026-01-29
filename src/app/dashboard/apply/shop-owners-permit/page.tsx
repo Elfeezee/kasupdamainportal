@@ -189,7 +189,7 @@ export default function ShopOwnersPermitPage() {
       const result = await saveApplication(formData);
       if (result.success) {
         clearStorage();
-        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+        router.push(`/dashboard/billing`);
       } else {
         throw new Error(result.error || "An unknown error occurred.");
       }
