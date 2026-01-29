@@ -111,6 +111,7 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
                 isActive={pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'))}
                 tooltip={state === 'collapsed' ? (item.label) : undefined}
                 aria-disabled={item.disabled}
+                disabled={item.disabled}
                 className={cn(item.disabled && "opacity-50 cursor-not-allowed")}
               >
                 <item.icon className="h-5 w-5" />

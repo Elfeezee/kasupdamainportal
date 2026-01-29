@@ -104,8 +104,8 @@ export default function Header() {
       label: "Building Control",
       isSubTrigger: true,
       subLinks: [
-        { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
-        { href: "/certificate-of-fitness", label: "Certificate of Fitness and Habitation" },
+        { href: "/dashboard/stage-approval", label: "Apply for Stage approval", disabled: true },
+        { href: "/certificate-of-fitness", label: "Certificate of Fitness and Habitation", disabled: true },
       ],
     },
     {
@@ -137,8 +137,8 @@ export default function Header() {
     { href: "/apply-for-permit", label: "Apply for permit" },
     { href: "/dashboard/apply/din-application", label: "Apply for DIN" },
     { href: "https://permit.kasupda.kdsg.gov.ng/", label: "Renew permit", external: true },
-    { href: "/dashboard/stage-approval", label: "Apply for Stage approval" },
-    { href: "/dashboard/apply/certificate-of-fitness", label: "Apply for Certificate of Fitness" },
+    { href: "/dashboard/stage-approval", label: "Apply for Stage approval", disabled: true },
+    { href: "/dashboard/apply/certificate-of-fitness", label: "Apply for Certificate of Fitness", disabled: true },
     { href: "#", label: "Lab" },
   ];
 
@@ -168,10 +168,11 @@ export default function Header() {
     );
   };
 
-  const getDropdownLinkClassName = (href: string) => {
+  const getDropdownLinkClassName = (href: string, disabled?: boolean) => {
     return cn(
-      "text-sm",
-      pathname === href ? "text-primary font-semibold" : "text-primary/90 hover:text-primary"
+      "text-sm w-full transition-opacity",
+      pathname === href ? "text-primary font-semibold" : "text-primary/90 hover:text-primary",
+      disabled && "opacity-50 cursor-not-allowed pointer-events-none"
     );
   };
 
@@ -184,12 +185,13 @@ export default function Header() {
     );
   };
 
-  const getMobileSubLinkClassName = (href: string) => {
+  const getMobileSubLinkClassName = (href: string, disabled?: boolean) => {
     return cn(
-      "block py-1.5 px-3",
+      "block py-1.5 px-3 transition-opacity",
       pathname === href
         ? "text-primary font-semibold"
-        : "text-primary/70 hover:text-primary"
+        : "text-primary/70 hover:text-primary",
+      disabled && "opacity-50 cursor-not-allowed pointer-events-none"
     );
   };
 
@@ -254,9 +256,9 @@ export default function Header() {
                   {planningSubLinks.map((link) => (
                     <DropdownMenuItem key={link.label} asChild>
                       {link.external ? (
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" className={getDropdownLinkClassName(link.href)}>{link.label}</a>
+                        <a href={link.disabled ? "#" : link.href} target="_blank" rel="noopener noreferrer" className={getDropdownLinkClassName(link.href, link.disabled)}>{link.label}</a>
                       ) : (
-                        <Link href={link.href} className={getDropdownLinkClassName(link.href)}>{link.label}</Link>
+                        <Link href={link.disabled ? "#" : link.href} className={getDropdownLinkClassName(link.href, link.disabled)}>{link.label}</Link>
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -316,8 +318,8 @@ export default function Header() {
                         <DropdownMenuPortal>
                           <DropdownMenuSubContent>
                             {item.subLinks.map((subLink) => (
-                              <DropdownMenuItem key={subLink.label} asChild>
-                                <Link href={subLink.href} className={getDropdownLinkClassName(subLink.href)}>
+                              <DropdownMenuItem key={subLink.label} asChild disabled={subLink.disabled}>
+                                <Link href={subLink.disabled ? "#" : subLink.href} className={getDropdownLinkClassName(subLink.href, subLink.disabled)}>
                                   {subLink.label}
                                 </Link>
                               </DropdownMenuItem>
@@ -356,9 +358,9 @@ export default function Header() {
                   {EServiceSubLinks.map((link) => (
                     <DropdownMenuItem key={link.label} asChild>
                       {link.external ? (
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" className={getDropdownLinkClassName(link.href)}>{link.label}</a>
+                        <a href={link.disabled ? "#" : link.href} target="_blank" rel="noopener noreferrer" className={getDropdownLinkClassName(link.href, link.disabled)}>{link.label}</a>
                       ) : (
-                        <Link href={link.href} className={getDropdownLinkClassName(link.href)}>{link.label}</Link>
+                        <Link href={link.disabled ? "#" : link.href} className={getDropdownLinkClassName(link.href, link.disabled)}>{link.label}</Link>
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -490,8 +492,8 @@ export default function Header() {
                                 {item.subLinks.map((subLink) => (
                                   <Link
                                     key={subLink.label}
-                                    href={subLink.href}
-                                    className={getMobileSubLinkClassName(subLink.href)}
+                                    href={subLink.disabled ? "#" : subLink.href}
+                                    className={getMobileSubLinkClassName(subLink.href, subLink.disabled)}
                                   >
                                     {subLink.label}
                                   </Link>
@@ -508,9 +510,9 @@ export default function Header() {
                         <AccordionContent className="pl-4 pb-1">
                           {EServiceSubLinks.map((link) => (
                             link.external ? (
-                              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href)}>{link.label}</a>
+                              <a key={link.label} href={link.disabled ? "#" : link.href} target="_blank" rel="noopener noreferrer" className={getMobileSubLinkClassName(link.href, link.disabled)}>{link.label}</a>
                             ) : (
-                              <Link key={link.label} href={link.href} className={getMobileSubLinkClassName(link.href)}>{link.label}</Link>
+                              <Link key={link.label} href={link.disabled ? "#" : link.href} className={getMobileSubLinkClassName(link.href, link.disabled)}>{link.label}</Link>
                             )
                           ))}
                         </AccordionContent>
