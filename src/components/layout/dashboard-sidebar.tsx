@@ -23,7 +23,7 @@ import {
   FolderArchive,
   LogOut,
   Fingerprint,
-  ClipboardCheck, 
+  ClipboardCheck,
   BookUser,
   Award,
   Landmark,
@@ -34,8 +34,8 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase/client';
 
 interface DashboardSidebarProps {
-    userProfile: { din: string | null } | null;
-    setLoading: (loading: boolean) => void;
+  userProfile: { din: string | null } | null;
+  setLoading: (loading: boolean) => void;
 }
 
 export default function DashboardSidebar({ userProfile, setLoading }: DashboardSidebarProps) {
@@ -43,18 +43,18 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
   const router = useRouter();
   const { toast } = useToast();
   const { state, setOpenMobile } = useSidebar();
-  
+
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { 
-      href: '/dashboard/apply/din-application', 
-      label: 'Apply for DIN', 
-      icon: Fingerprint 
+    {
+      href: '/dashboard/apply/din-application',
+      label: 'Apply for DIN',
+      icon: Fingerprint
     },
     { href: '/dashboard/my-dins', label: 'My DINs', icon: BookUser },
     { href: '/dashboard/apply', label: 'Apply for Permit', icon: FilePlus2, disabled: false },
-    { href: '/dashboard/stage-approval', label: 'Apply for Stage Approval', icon: ClipboardCheck, disabled: false },
-    { href: '/dashboard/apply/certificate-of-fitness', label: 'Apply for Certificate of Fitness', icon: Award, disabled: false },
+    { href: '/dashboard/stage-approval', label: 'Apply for Stage Approval', icon: ClipboardCheck, disabled: true },
+    { href: '/dashboard/apply/certificate-of-fitness', label: 'Apply for Certificate of Fitness', icon: Award, disabled: true },
     { href: '/dashboard/my-applications', label: 'My Applications', icon: ListChecks },
     { href: '/dashboard/billing', label: 'Billing & Payments', icon: Landmark },
     { href: '/dashboard/profile', label: 'My Profile', icon: UserCircle2, disabled: false },
@@ -82,7 +82,7 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
       });
       return;
     }
-    
+
     // If the path is the same, don't trigger loading
     if (pathname === href) return;
 
