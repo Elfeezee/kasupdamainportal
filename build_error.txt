@@ -1,0 +1,173 @@
+
+> nextn@0.1.0 build
+> next build
+
+   ▲ Next.js 15.2.8
+   - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./src/components/profile/ProfileEditActions.tsx
+Attempted import error: 'toast' is not exported from '@/hooks/use-toast' (imported as 'toast').
+
+Import trace for requested module:
+./src/components/profile/ProfileEditActions.tsx
+
+./node_modules/@opentelemetry/sdk-node/build/src/TracerProviderWithEnvExporter.js
+Module not found: Can't resolve '@opentelemetry/exporter-jaeger' in '/root/kasupdamainportal/node_modules/@opentelemetry/sdk-node/build/src'
+
+Import trace for requested module:
+./node_modules/@opentelemetry/sdk-node/build/src/TracerProviderWithEnvExporter.js
+./node_modules/@opentelemetry/sdk-node/build/src/sdk.js
+./node_modules/@opentelemetry/sdk-node/build/src/index.js
+./node_modules/@genkit-ai/core/lib/tracing.js
+./node_modules/genkit/lib/tracing.js
+./node_modules/@genkit-ai/googleai/lib/gemini.js
+./node_modules/@genkit-ai/googleai/lib/index.mjs
+./src/ai/genkit.ts
+./src/ai/flows/chat.ts
+
+./node_modules/handlebars/lib/index.js
+require.extensions is not supported by webpack. Use a loader instead.
+
+Import trace for requested module:
+./node_modules/handlebars/lib/index.js
+./node_modules/dotprompt/dist/index.js
+./node_modules/@genkit-ai/core/lib/registry.js
+./node_modules/genkit/lib/registry.js
+./node_modules/genkit/lib/genkit.js
+./node_modules/genkit/lib/index.mjs
+./src/ai/genkit.ts
+./src/ai/flows/chat.ts
+
+./node_modules/handlebars/lib/index.js
+require.extensions is not supported by webpack. Use a loader instead.
+
+Import trace for requested module:
+./node_modules/handlebars/lib/index.js
+./node_modules/dotprompt/dist/index.js
+./node_modules/@genkit-ai/core/lib/registry.js
+./node_modules/genkit/lib/registry.js
+./node_modules/genkit/lib/genkit.js
+./node_modules/genkit/lib/index.mjs
+./src/ai/genkit.ts
+./src/ai/flows/chat.ts
+
+./node_modules/handlebars/lib/index.js
+require.extensions is not supported by webpack. Use a loader instead.
+
+Import trace for requested module:
+./node_modules/handlebars/lib/index.js
+./node_modules/dotprompt/dist/index.js
+./node_modules/@genkit-ai/core/lib/registry.js
+./node_modules/genkit/lib/registry.js
+./node_modules/genkit/lib/genkit.js
+./node_modules/genkit/lib/index.mjs
+./src/ai/genkit.ts
+./src/ai/flows/chat.ts
+
+<w> [webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|/root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/root/kasupdamainportal/src/app/globals.css': No serializer registered for PostCSSSyntaxError
+<w> while serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> webpack/lib/ModuleBuildError -> PostCSSSyntaxError
+Failed to compile.
+
+./src/app/globals.css:46:1
+Syntax error: /root/kasupdamainportal/src/app/globals.css Unexpected }
+
+  44 | 
+  45 |   }
+> 46 | }
+     | ^
+  47 | 
+  48 | @layer base {
+
+./src/app/globals.css
+Syntax error: /root/kasupdamainportal/src/app/globals.css Unexpected } (46:1)
+
+  44 | 
+  45 |   }
+> 46 | }
+     | ^
+  47 | 
+  48 | @layer base {
+
+    at tryRunOrWebpackError (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:316142)
+    at __webpack_require_module__ (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:131548)
+    at __nested_webpack_require_161494__ (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:130983)
+    at /root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:131840
+    at symbolIterator (/root/kasupdamainportal/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (/root/kasupdamainportal/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+    at Hook.eval [as callAsync] (eval at create (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:14:6378)
+    at /root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:130703
+    at symbolIterator (/root/kasupdamainportal/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
+-- inner error --
+Syntax error: /root/kasupdamainportal/src/app/globals.css Unexpected } (46:1)
+
+  44 | 
+  45 |   }
+> 46 | }
+     | ^
+  47 | 
+  48 | @layer base {
+
+    at Object.<anonymous> (/root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/root/kasupdamainportal/src/app/globals.css:1:7)
+    at /root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:962742
+    at Hook.eval [as call] (eval at create (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:14:9002), <anonymous>:7:1)
+    at Hook.CALL_DELEGATE [as _call] (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:14:6272)
+    at /root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:131581
+    at tryRunOrWebpackError (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:316096)
+    at __webpack_require_module__ (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:131548)
+    at __nested_webpack_require_161494__ (/root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:130983)
+    at /root/kasupdamainportal/node_modules/next/dist/compiled/webpack/bundle5.js:29:131840
+    at symbolIterator (/root/kasupdamainportal/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+
+Generated code for /root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/root/kasupdamainportal/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/root/kasupdamainportal/src/app/globals.css
+
+Import trace for requested module:
+./src/app/globals.css
+
+
+> Build failed because of webpack errors
