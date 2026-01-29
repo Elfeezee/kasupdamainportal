@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { updateUserProfile, changeUserPassword } from '@/app/actions/userActions';
 
 interface ProfileEditActionsProps {
@@ -29,6 +29,7 @@ export function ProfileEditActions({ userData }: ProfileEditActionsProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
 
     // Profile form state
     const [name, setName] = useState(userData.name);
