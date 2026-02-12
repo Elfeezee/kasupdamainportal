@@ -43,6 +43,7 @@ const adminNavItems = [
   { href: '/admin/users', label: 'User Management', icon: Users, allowedRoles: ['Super Admin'] },
   { href: '/admin/finance/dashboard', label: 'Finance', icon: Landmark, allowedRoles: ['Super Admin', 'Finance'] },
   { href: '/admin/messages', label: 'Contact Messages', icon: Mail },
+  { href: '/admin/news', label: 'News & Publications', icon: FileText },
   { href: '/admin/status', label: 'System Status', icon: Server },
   { href: '/admin/settings', label: 'Settings', icon: Settings, allowedRoles: ['Super Admin'] },
 ];

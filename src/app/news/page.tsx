@@ -5,64 +5,53 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from 'next';
 import { Newspaper, BookOpen } from "lucide-react";
+import { format } from "date-fns";
 
 export const metadata: Metadata = {
   title: 'News & Publications | KASUPDA - Kaduna State Urban Planning and Development Authority',
   description: 'Stay updated with the latest news, announcements, and publications from KASUPDA.',
 };
 
-const newsItems = [
-  {
-    title: "KASUPDA Announces New Urban Renewal Initiative",
-    date: "October 26, 2023",
-    summary: "A new initiative aimed at revitalizing key urban areas in Kaduna State has been launched...",
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-  {
-    title: "Guidelines for Building Permit Applications Updated",
-    date: "October 15, 2023",
-    summary: "KASUPDA has released updated guidelines for building permit applications to streamline the process...",
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-  {
-    title: "Public Consultation on New Zoning Regulations",
-    date: "September 30, 2023",
-    summary: "The public is invited to provide feedback on the proposed new zoning regulations for Kaduna metropolis...",
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-];
+import { getNewsItems, getPublications } from "@/app/actions/newsActions";
 
-const publications = [
-  {
-    title: "Kaduna State Master Plan (2023 Edition)",
-    type: "Master Plan",
-    summary: "The comprehensive master plan guiding urban development in Kaduna State for the next decade.",
-    downloadUrl: "#", // Placeholder
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-  {
-    title: "Annual Report 2022",
-    type: "Report",
-    summary: "KASUPDA's annual report detailing activities, achievements, and financial statements for 2022.",
-    downloadUrl: "#", // Placeholder
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-  {
-    title: "Building Code and Regulations Handbook",
-    type: "Handbook",
-    summary: "A complete guide to building codes, standards, and regulations enforced by KASUPDA.",
-    downloadUrl: "#", // Placeholder
-    imageUrl: "/image/logo.png",
-    hint: "logo"
-  },
-];
+export default async function NewsAndPublicationsPage() {
+  const dbNewsItems = await getNewsItems();
+  const dbPublications = await getPublications();
 
-export default function NewsAndPublicationsPage() {
+  const displayNewsItems = dbNewsItems.length > 0 ? dbNewsItems.map(item => ({
+    title: item.title,
+    date: format(new Date(item.date), 'MMMM dd, yyyy'),
+    summary: item.summary,
+    imageUrl: item.image_url || "/image/logo.png",
+    hint: "logo"
+  })) : [
+    {
+      title: "KASUPDA Announces New Urban Renewal Initiative",
+      date: "October 26, 2023",
+      summary: "A new initiative aimed at revitalizing key urban areas in Kaduna State has been launched...",
+      imageUrl: "/image/logo.png",
+      hint: "logo"
+    },
+    // ... other static items can be kept as fallback if needed, but usually we prefer live data
+  ];
+
+  const displayPublications = dbPublications.length > 0 ? dbPublications.map(item => ({
+    title: item.title,
+    type: item.type,
+    summary: item.summary,
+    downloadUrl: item.download_url,
+    imageUrl: item.image_url || "/image/logo.png",
+    hint: "logo"
+  })) : [
+    {
+      title: "Kaduna State Master Plan (2023 Edition)",
+      type: "Master Plan",
+      summary: "The comprehensive master plan guiding urban development in Kaduna State for the next decade.",
+      downloadUrl: "#",
+      imageUrl: "/image/logo.png",
+      hint: "logo"
+    },
+  ];
   return (
     <div className="space-y-12">
       <section className="py-8 md:py-12 lg:py-16">
@@ -82,7 +71,7 @@ export default function NewsAndPublicationsPage() {
               <Newspaper className="mr-3 h-7 w-7" /> Latest News
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {newsItems.map((item, index) => (
+              {displayNewsItems.map((item, index) => (
                 <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                   <CardHeader className="p-0">
                     <Image
@@ -117,22 +106,22 @@ export default function NewsAndPublicationsPage() {
               <BookOpen className="mr-3 h-7 w-7" /> Official Publications
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {publications.map((item, index) => (
+              {displayPublications.map((item, index) => (
                 <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                   <CardHeader className="p-0">
-                     <Image
-                        src={item.imageUrl}
-                        alt={item.title}
-                        data-ai-hint={item.hint}
-                        width={400}
-                        height={300}
-                        className="w-full h-48 object-contain rounded-t-lg bg-muted/20 p-4"
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      data-ai-hint={item.hint}
+                      width={400}
+                      height={300}
+                      className="w-full h-48 object-contain rounded-t-lg bg-muted/20 p-4"
                     />
                   </CardHeader>
                   <CardContent className="p-6 flex-grow">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{item.type}</p>
                     <CardTitle className="text-xl font-semibold mb-2">{item.title}</CardTitle>
-                     <p className="text-sm text-foreground mb-4">
+                    <p className="text-sm text-foreground mb-4">
                       {item.summary}
                     </p>
                   </CardContent>
