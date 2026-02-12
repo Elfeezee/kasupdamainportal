@@ -36,12 +36,20 @@ const fileValidation = z.any()
   .optional();
 
 const optionalFileValidation = z.any()
-  .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 5MB.`)
+  .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 50MB.`)
   .refine(
     (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
     "Only .jpg, .jpeg, .png and .pdf files are accepted."
   )
   .optional();
+
+const requiredFileValidation = z.any()
+  .refine((files) => files && files.length > 0, "This document is required")
+  .refine((files) => !files || files.length === 0 || (files?.[0]?.size <= MAX_FILE_SIZE), `Max file size is 50MB.`)
+  .refine(
+    (files) => !files || files.length === 0 || ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
+    "Only .jpg, .jpeg, .png and .pdf files are accepted."
+  );
 
 
 // Define Zod schema based on the form
@@ -126,16 +134,17 @@ const permitApplicationSchema = z.object({
   plotLGA: z.string().optional(),
   plotDescriptionAddress: z.string().min(1, "Plot Description/Address is required"),
 
-  // Box 6: Documents - All fields are now mandatory except for repId
-  docLandTitle: fileValidation,
-  docSar: fileValidation,
-  docWorkingDrawings: fileValidation,
-  docStructuralInfo: fileValidation,
-  docSoilTest: fileValidation,
-  docPdfDrawings: fileValidation,
-  docApplicantId: fileValidation,
-  docRepId: optionalFileValidation,
-  docUtilityBill: fileValidation,
+  // Box 6: Documents
+  docLandTitle: requiredFileValidation,
+  docArchitecturalWorksDrawings: requiredFileValidation,
+  docMechanicalWorksDrawings: requiredFileValidation,
+  docStructuralDrawings: requiredFileValidation,
+  docStructuralCalculationSheets: requiredFileValidation,
+  docSoilTest: optionalFileValidation,
+  docKepaEiaApproval: optionalFileValidation,
+  docSar: requiredFileValidation,
+  docApplicantId: requiredFileValidation,
+  docUtilityBill: requiredFileValidation,
 
   declaration: z.boolean().refine(val => val === true, {
     message: "You must agree to the declaration to submit the application."
@@ -153,15 +162,16 @@ const identificationOptions = [
 ];
 
 const residentialDocs = [
-  { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)", required: false },
-  { id: "docSar" as const, label: "Site Analysis Report (SAR)", required: false },
-  { id: "docWorkingDrawings" as const, label: "Complete working Drawings (Architectural, Mechanical and Electrical)", required: false },
-  { id: "docStructuralInfo" as const, label: "Structural drawing, Calculation sheet, Letter for Supervision/ Responsibility for storey buildings.", required: false },
+  { id: "docLandTitle" as const, label: "Land title document (Digitized C of O, KADGIS Offer Letter, KADGIS Acknowledgment)", required: true },
+  { id: "docArchitecturalWorksDrawings" as const, label: "Architectural designs and details", required: true },
+  { id: "docMechanicalWorksDrawings" as const, label: "Mechanical designs and details", required: true },
+  { id: "docStructuralDrawings" as const, label: "Structural designs and details", required: true },
+  { id: "docStructuralCalculationSheets" as const, label: "Structural calculation sheet / Letter of responsibility", required: true },
   { id: "docSoilTest" as const, label: "Geotechnical investigation Report (Soil Test) for Multi storey development that exceeds two (2) floors.", required: false },
-  { id: "docPdfDrawings" as const, label: "PDF copy of all drawings on CD", required: false },
-  { id: "docApplicantId" as const, label: "Means of ID of applicant", required: false },
-  { id: "docRepId" as const, label: "Means of ID of representative (optional)", required: false },
-  { id: "docUtilityBill" as const, label: "Copy of utility bill", required: false },
+  { id: "docKepaEiaApproval" as const, label: "KEPA Certificate", required: false },
+  { id: "docSar" as const, label: "Site Analysis Report", required: true },
+  { id: "docApplicantId" as const, label: "I.D Card", required: true },
+  { id: "docUtilityBill" as const, label: "Utility Bill", required: true },
 ];
 
 
@@ -173,7 +183,7 @@ const steps = [
   { id: 3, name: "Representative", fields: ['repEmail'] as FieldName<PermitApplicationFormValues>[] },
   { id: 4, name: "Representative Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
   { id: 5, name: "Plot Details", fields: ['plotDescriptionAddress'] as FieldName<PermitApplicationFormValues>[] },
-  { id: 6, name: "Documents & Declaration", fields: ['declaration', 'docLandTitle', 'docSar', 'docWorkingDrawings', 'docStructuralInfo', 'docSoilTest', 'docPdfDrawings', 'docApplicantId', 'docUtilityBill'] as FieldName<PermitApplicationFormValues>[] },
+  { id: 6, name: "Documents & Declaration", fields: ['declaration', 'docLandTitle', 'docArchitecturalWorksDrawings', 'docMechanicalWorksDrawings', 'docStructuralDrawings', 'docStructuralCalculationSheets', 'docSoilTest', 'docKepaEiaApproval', 'docSar', 'docApplicantId', 'docUtilityBill'] as FieldName<PermitApplicationFormValues>[] },
 ];
 
 export default function ResidentialBuildingPermitPage() {
@@ -251,7 +261,7 @@ export default function ResidentialBuildingPermitPage() {
   const { register, handleSubmit, control, formState: { errors }, trigger } = form;
 
   const { clearStorage } = useFormPersistence(form, 'residential-building-permit-form', [
-    'docLandTitle', 'docSar', 'docWorkingDrawings', 'docStructuralInfo', 'docSoilTest', 'docPdfDrawings', 'docApplicantId', 'docRepId', 'docUtilityBill'
+    'docLandTitle', 'docArchitecturalWorksDrawings', 'docMechanicalWorksDrawings', 'docStructuralDrawings', 'docStructuralCalculationSheets', 'docSoilTest', 'docKepaEiaApproval', 'docSar', 'docApplicantId', 'docUtilityBill'
   ] as any);
 
   const onSubmit = async (data: PermitApplicationFormValues) => {
