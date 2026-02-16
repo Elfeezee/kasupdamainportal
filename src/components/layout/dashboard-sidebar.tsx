@@ -94,8 +94,8 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
   return (
     <>
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <Image src="/image/logo.png" alt="KASUPDA Logo" width={32} height={32} />
+        <div className="flex items-center gap-3">
+          <Image src="/image/logo.png" alt="KASUPDA Logo" width={40} height={40} className="h-10 w-10" />
           <div className={cn("font-semibold text-lg text-primary", state === 'collapsed' && "hidden")}>
             KASUPDA
           </div>

@@ -94,15 +94,41 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                             )}
 
                             <div className="space-y-2">
-                                <Label htmlFor="imageUrl">Thumbnail/Image URL</Label>
-                                <Input id="imageUrl" name="imageUrl" defaultValue={initialData?.image_url} placeholder="https://..." />
-                                <p className="text-xs text-muted-foreground">Provide a link to an image for the thumbnail.</p>
+                                <Label htmlFor="imageFile">Thumbnail/Image</Label>
+                                <div className="flex items-center gap-4 border p-4 rounded-md">
+                                    <div className="w-24 h-24 bg-muted rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                                        {initialData?.image_url ? (
+                                            <img src={initialData.image_url} alt="Current" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <ImageIcon className="text-muted-foreground w-10 h-10" />
+                                        )}
+                                    </div>
+                                    <div className="flex-grow space-y-2">
+                                        <Input id="imageFile" name="imageFile" type="file" accept="image/*" />
+                                        <p className="text-xs text-muted-foreground">Select an image for the thumbnail. Recommended 16:9 ratio.</p>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="existingImageUrl" value={initialData?.image_url || ''} />
                             </div>
 
                             {type === 'publication' && (
                                 <div className="space-y-2">
-                                    <Label htmlFor="downloadUrl">Document Download URL (PDF)</Label>
-                                    <Input id="downloadUrl" name="downloadUrl" defaultValue={initialData?.download_url} required placeholder="https://..." />
+                                    <Label htmlFor="docFile">Document (PDF)</Label>
+                                    <div className="flex items-center gap-4 border p-4 rounded-md">
+                                        <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                            <Upload className="text-muted-foreground w-6 h-6" />
+                                        </div>
+                                        <div className="flex-grow space-y-2">
+                                            <Input id="docFile" name="docFile" type="file" accept="application/pdf" />
+                                            {initialData?.download_url && (
+                                                <p className="text-xs font-medium text-primary">
+                                                    Current: {initialData.download_url.split('/').pop()}
+                                                </p>
+                                            )}
+                                            <p className="text-xs text-muted-foreground">Select a PDF file to upload as the document.</p>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="existingDownloadUrl" value={initialData?.download_url || ''} />
                                 </div>
                             )}
 

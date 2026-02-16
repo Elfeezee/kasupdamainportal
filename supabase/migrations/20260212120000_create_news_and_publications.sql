@@ -31,14 +31,61 @@ ALTER TABLE news_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE publications ENABLE ROW LEVEL SECURITY;
 
 -- Public Select
+DROP POLICY IF EXISTS "Allow public read news_items" ON news_items;
 CREATE POLICY "Allow public read news_items" ON news_items FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public read publications" ON publications;
 CREATE POLICY "Allow public read publications" ON publications FOR SELECT USING (true);
 
 -- Admin All
+DROP POLICY IF EXISTS "Allow admin all news_items" ON news_items;
 CREATE POLICY "Allow admin all news_items" ON news_items 
     FOR ALL 
     USING (auth.uid() IN (SELECT uid FROM users WHERE role IN ('Admin', 'Super Admin')));
 
+DROP POLICY IF EXISTS "Allow admin all publications" ON publications;
 CREATE POLICY "Allow admin all publications" ON publications 
     FOR ALL 
     USING (auth.uid() IN (SELECT uid FROM users WHERE role IN ('Admin', 'Super Admin')));
+
+-- Storage Bucket for News and Publications Media
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('news_media', 'news_media', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage Policies for news_media
+-- Public Read
+DROP POLICY IF EXISTS "Public Read Access" ON storage.objects;
+CREATE POLICY "Public Read Access"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'news_media');
+
+-- Admin Upload
+DROP POLICY IF EXISTS "Admin Upload Access" ON storage.objects;
+CREATE POLICY "Admin Upload Access"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'news_media' AND 
+    (SELECT role FROM public.users WHERE uid = auth.uid()) IN ('Admin', 'Super Admin')
+);
+
+-- Admin Update
+DROP POLICY IF EXISTS "Admin Update Access" ON storage.objects;
+CREATE POLICY "Admin Update Access"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'news_media' AND 
+    (SELECT role FROM public.users WHERE uid = auth.uid()) IN ('Admin', 'Super Admin')
+);
+
+-- Admin Delete
+DROP POLICY IF EXISTS "Admin Delete Access" ON storage.objects;
+CREATE POLICY "Admin Delete Access"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'news_media' AND 
+    (SELECT role FROM public.users WHERE uid = auth.uid()) IN ('Admin', 'Super Admin')
+);

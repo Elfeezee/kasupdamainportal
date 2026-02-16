@@ -113,8 +113,8 @@ export default function AdminSidebar() {
   return (
     <>
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <Image src="/image/logo.png" alt="KASUPDA Logo" width={32} height={32} />
+        <div className="flex items-center gap-3">
+          <Image src="/image/logo.png" alt="KASUPDA Logo" width={40} height={40} className="h-10 w-10" />
           <div className={cn("font-bold text-lg text-primary", state === 'collapsed' && "hidden")}>
             Admin Panel
           </div>
