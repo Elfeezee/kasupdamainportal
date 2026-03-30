@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, MapPin, FileText, ShieldCheck, Users, RefreshCcw, Server, Beaker } from "lucide-react";
+import { ArrowRight, MapPin, FileText, ShieldCheck, Users, RefreshCcw, Server, Beaker, Clock, ClipboardList, Calendar, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Carousel, type CarouselImage } from "@/components/ui/carousel";
@@ -205,6 +205,156 @@ export default function Home() {
                 </Button>
               </CardFooter>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Impact In Numbers Section */}
+      <section className="w-full py-16 bg-white overflow-hidden">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-16 px-4">
+            <div className="inline-block rounded-lg bg-green-50 px-4 py-1.5 text-sm text-green-600 font-black uppercase tracking-widest mb-6">
+              STATISTICS
+            </div>
+            <h2 className="text-4xl font-black tracking-tight text-green-600 sm:text-5xl md:text-6xl mb-6">
+              Our Impact In Numbers
+            </h2>
+            <p className="mt-4 text-slate-500 font-bold max-w-3xl mx-auto text-xl leading-snug tracking-tight">
+              These numbers highlight the real impact of our work, showing the progress and positive change we&apos;ve achieved over time
+            </p>
+          </div>
+
+          <div className="w-full bg-gradient-to-r from-green-800 to-green-600 rounded-[3rem] p-10 md:p-16 lg:p-24 shadow-[0_45px_100px_rgba(22,101,52,0.3)] relative">
+            {/* Design accents */}
+            <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl p-10"></div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
+              {/* Permits Issued */}
+              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
+                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                  <FileText className="h-12 w-12 text-yellow-500" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-6xl font-black text-slate-900 tracking-tighter">5240+</div>
+                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Permits Issued</p>
+                </div>
+              </div>
+
+              {/* Avg Processing Time */}
+              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
+                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                  <Clock className="h-12 w-12 text-yellow-500" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-6xl font-black text-slate-900 tracking-tighter">48hrs</div>
+                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Avg. Processing Time</p>
+                </div>
+              </div>
+
+              {/* Master Plans */}
+              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
+                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                  <ClipboardList className="h-12 w-12 text-yellow-500" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-6xl font-black text-slate-900 tracking-tighter">32</div>
+                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Master Plans</p>
+                </div>
+              </div>
+
+              {/* Community Projects */}
+              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
+                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                  <Users className="h-12 w-12 text-yellow-500" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-6xl font-black text-slate-900 tracking-tighter">12</div>
+                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Community Projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* News & Events Section */}
+      <section className="w-full py-24 bg-white">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-24 px-4">
+            <h2 className="text-4xl font-black tracking-tight text-green-600 sm:text-6xl mb-6 uppercase">
+              News & Events
+            </h2>
+            <p className="mt-4 text-slate-500 font-bold max-w-5xl mx-auto text-2xl leading-relaxed tracking-tight p-2 border-b-2 border-slate-50">
+              Explore recent announcements, planning reforms, stakeholder engagements, and key events driving sustainable urban growth across Kaduna State.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-40 items-start">
+            {/* Latest News & Updates */}
+            <div className="space-y-16">
+              <div className="border-l-8 border-green-600 pl-8">
+                <h3 className="text-4xl font-black text-green-600 leading-none">Latest News & Updates</h3>
+                <p className="text-slate-500 font-black mt-4 text-2xl tracking-tight">Stay Informed on Urban Development in Kaduna</p>
+              </div>
+
+              <div className="space-y-12">
+                {[
+                  { title: "KASUPDA Launches Permit Monitor System", date: "Feb 10, 2026", img: "/image/logo.png" },
+                  { title: "2025 Awareness Week Concludes", date: "Feb 06, 2026", img: "/image/logo.png" },
+                  { title: "City Inspections & Enforcement Drive", date: "Feb 02, 2026", img: "/image/logo.png" }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-12 group cursor-pointer hover:bg-slate-50/50 p-4 rounded-[2.5rem] transition-all duration-500 transform hover:-translate-x-2">
+                    <div className="w-64 h-36 bg-white rounded-[2rem] overflow-hidden flex-shrink-0 shadow-xl border-4 border-white group-hover:rotate-1">
+                      <Image src={item.img} alt={item.title} width={256} height={144} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-[2000ms] ease-out" />
+                    </div>
+                    <div className="flex flex-col justify-center space-y-6">
+                      <h4 className="text-2xl font-black text-slate-900 group-hover:text-green-600 transition-colors line-clamp-2 leading-tight tracking-tighter">{item.title}</h4>
+                      <p className="text-sm font-black text-slate-400 tracking-[0.3em] uppercase">{item.date}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Events & Public Engagement */}
+            <div className="space-y-16">
+              <div className="flex justify-between items-center bg-green-50/50 p-4 rounded-3xl border-2 border-green-100/20">
+                <h3 className="text-3xl font-black text-green-600 leading-none pl-4">Events & Public Engagement</h3>
+                <div className="bg-green-600 text-white text-sm px-10 py-5 rounded-[2rem] font-black flex items-center gap-4 shadow-2xl shadow-green-200 transform translate-x-6 lg:translate-x-16 hover:scale-105 transition-transform cursor-pointer">
+                  FEBRUARY 2026 <ChevronRight className="h-6 w-6" />
+                </div>
+              </div>
+
+              <div className="space-y-10">
+                {[
+                  { day: "Sat", date: "25", title: "Planning Stakeholders Meeting", actualDate: "March 10, 2026" },
+                  { day: "Mon", date: "27", title: "Public Hearing", actualDate: "April 10, 2026" }
+                ].map((item, idx) => (
+                  <div key={idx} className="bg-white border-2 border-slate-100 rounded-[3rem] p-12 flex gap-12 hover:shadow-[0_40px_100px_rgba(0,0,0,0.08)] transition-all duration-1000 transform hover:-translate-y-4 group relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full translate-x-1/2 -translate-y-1/2"></div>
+                    <div className="flex flex-col items-center justify-center bg-blue-50 rounded-[2.5rem] w-32 h-32 flex-shrink-0 border-4 border-white shadow-inner group-hover:bg-green-100 transition-all duration-700">
+                      <span className="text-xs uppercase font-black text-slate-400 tracking-[0.3em] group-hover:text-green-400 transition-colors mb-2">{item.day}</span>
+                      <span className="text-7xl font-black text-green-600 leading-none tracking-tighter group-hover:scale-125 transition-all duration-500">{item.date}</span>
+                    </div>
+                    <div className="flex flex-col justify-center space-y-6">
+                      <h4 className="text-4xl font-black text-green-600 leading-none group-hover:text-green-700 transition-colors tracking-tighter">{item.title}</h4>
+                      <div className="flex items-center gap-4">
+                        <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></div>
+                        <p className="text-xl text-orange-500 font-black tracking-tight">{item.actualDate}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-12 flex justify-start">
+                <Button className="rounded-[2.5rem] border-4 border-slate-100 bg-white text-yellow-500 font-black hover:bg-yellow-50 hover:text-yellow-600 hover:border-yellow-200 gap-8 h-24 px-20 text-3xl shadow-2xl transition-all duration-700 active:scale-95 hover:shadow-yellow-100">
+                  <Calendar className="h-10 w-10 text-yellow-500" />
+                  View All News
+                  <ChevronRight className="h-8 w-8 transition-transform group-hover:translate-x-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
