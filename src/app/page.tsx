@@ -8,7 +8,7 @@ import { ArrowRight, MapPin, FileText, ShieldCheck, Users, RefreshCcw, Server, B
 import Image from "next/image";
 import Link from "next/link";
 import { Carousel, type CarouselImage } from "@/components/ui/carousel";
-import { getNewsItems, getStatistics, getEvents } from "@/app/actions/newsActions";
+import { getNewsItems, getStatistics, getEvents, getLeadership, getCarouselImages } from "@/app/actions/newsActions";
 import { format } from "date-fns";
 
 const initialCarouselImages: CarouselImage[] = [
@@ -43,19 +43,25 @@ export default function Home() {
   const [stats, setStats] = useState<any[]>([]);
   const [news, setNews] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
+  const [leadership, setLeadership] = useState<any[]>([]);
+  const [carouselData, setCarouselData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [statsData, newsData, eventsData] = await Promise.all([
+        const [statsData, newsData, eventsData, leadershipData, carouselData] = await Promise.all([
           getStatistics(),
           getNewsItems(),
-          getEvents()
+          getEvents(),
+          getLeadership(),
+          getCarouselImages()
         ]);
         setStats(statsData);
-        setNews(newsData.slice(0, 3)); // Only take top 3
-        setEvents(eventsData.slice(0, 2)); // Only take top 2
+        setNews(newsData.slice(0, 3));
+        setEvents(eventsData.slice(0, 2));
+        setLeadership(leadershipData);
+        setCarouselData(carouselData);
       } catch (error) {
         console.error("Error fetching homepage data:", error);
       } finally {
@@ -65,36 +71,50 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const displayCarouselImages = carouselData.length > 0
+    ? carouselData.map(item => ({
+      src: item.image_url,
+      alt: item.alt_text || 'Carousel Image',
+      hint: 'carousel',
+      customClassName: "object-cover",
+    }))
+    : initialCarouselImages;
+
+  const heroContent = carouselData.length > 0 ? carouselData[0] : {
+    title: "Streamlining Urban Development in Kaduna State",
+    subtitle: "Welcome to the official digital portal of KASUPDA. Discover services, apply for permits, and stay updated on urban planning initiatives in Kaduna."
+  };
+
   return (
     <div className="flex flex-col items-center">
       <section className="w-full">
         <div className="container px-0 md:px-0 max-w-full">
           <div className="relative">
             <Carousel
-              images={initialCarouselImages}
+              images={displayCarouselImages}
               className="w-full h-[calc(100vh-var(--header-height,100px))] min-h-[400px] md:min-h-[500px] lg:min-h-[600px] shadow-lg bg-muted"
               imageClassName="object-cover"
-              autoPlay={initialCarouselImages.length > 1}
+              autoPlay={displayCarouselImages.length > 1}
               interval={5000}
-              showDots={initialCarouselImages.length > 1}
-              showNavigation={initialCarouselImages.length > 1}
+              showDots={displayCarouselImages.length > 1}
+              showNavigation={displayCarouselImages.length > 1}
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20 bg-black/60 p-4 md:p-8">
               <div className="space-y-4">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-white">
-                  Streamlining Urban Development in Kaduna State
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-white max-w-4xl">
+                  {heroContent.title}
                 </h1>
                 <p className="max-w-[700px] mx-auto text-gray-100 md:text-xl">
-                  Welcome to the official digital portal of KASUPDA. Discover services, apply for permits, and stay updated on urban planning initiatives in Kaduna.
+                  {heroContent.subtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
-                  <Button size="lg" asChild>
+                  <Button size="lg" asChild className="rounded-xl px-8 font-bold shadow-xl hover:scale-105 transition-transform">
                     <Link href="/apply-for-permit">
                       Apply for Permit
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button size="lg" variant="secondary" asChild>
+                  <Button size="lg" variant="secondary" asChild className="rounded-xl px-8 font-bold shadow-xl hover:scale-105 transition-transform">
                     <a href="https://permit.kasupda.kdsg.gov.ng/" target="_blank" rel="noopener noreferrer">
                       Renew permit
                       <RefreshCcw className="ml-2 h-5 w-5" />

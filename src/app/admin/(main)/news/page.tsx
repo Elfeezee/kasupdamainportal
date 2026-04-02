@@ -13,13 +13,18 @@ import {
     getStatistics,
     getEvents,
     deleteStatistic,
-    deleteEvent
+    deleteEvent,
+    getLeadership,
+    deleteLeadershipPerson,
+    getCarouselImages,
+    deleteCarouselImage
 } from '@/app/actions/newsActions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
+import { UserCheck, LayoutPanelTop } from 'lucide-react';
 
 export default function NewsManagementPage() {
     const { toast } = useToast();
@@ -27,21 +32,27 @@ export default function NewsManagementPage() {
     const [publications, setPublications] = useState<any[]>([]);
     const [statistics, setStatistics] = useState<any[]>([]);
     const [events, setEvents] = useState<any[]>([]);
+    const [leadership, setLeadership] = useState<any[]>([]);
+    const [carousel, setCarousel] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [news, pubs, stats, evs] = await Promise.all([
+            const [news, pubs, stats, evs, lead, car] = await Promise.all([
                 getNewsItems(),
                 getPublications(),
                 getStatistics(),
-                getEvents()
+                getEvents(),
+                getLeadership(),
+                getCarouselImages()
             ]);
             setNewsItems(news);
             setPublications(pubs);
             setStatistics(stats);
             setEvents(evs);
+            setLeadership(lead);
+            setCarousel(car);
         } catch (error) {
             console.error("Error fetching data:", error);
             toast({ title: 'Error', description: 'Failed to fetch management data.', variant: 'destructive' });
@@ -98,12 +109,34 @@ export default function NewsManagementPage() {
         }
     };
 
+    const handleDeleteLeadership = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this person?')) return;
+        const result = await deleteLeadershipPerson(id);
+        if (result.success) {
+            toast({ title: 'Deleted', description: 'Leader record deleted successfully.' });
+            fetchData();
+        } else {
+            toast({ title: 'Error', description: result.error, variant: 'destructive' });
+        }
+    };
+
+    const handleDeleteCarousel = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this carousel image?')) return;
+        const result = await deleteCarouselImage(id);
+        if (result.success) {
+            toast({ title: 'Deleted', description: 'Carousel image deleted successfully.' });
+            fetchData();
+        } else {
+            toast({ title: 'Error', description: result.error, variant: 'destructive' });
+        }
+    };
+
     return (
         <div className="w-full space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-primary">Content Management</h1>
-                    <p className="text-muted-foreground mt-1">Manage news, publications, statistics, and events.</p>
+                    <p className="text-muted-foreground mt-1">Manage news, publications, statistics, events, leadership, and carousel.</p>
                 </div>
             </div>
 
@@ -120,6 +153,12 @@ export default function NewsManagementPage() {
                     </TabsTrigger>
                     <TabsTrigger value="events" className="gap-2">
                         <CalendarDays className="h-4 w-4" /> Events
+                    </TabsTrigger>
+                    <TabsTrigger value="leadership" className="gap-2">
+                        <UserCheck className="h-4 w-4" /> Leadership
+                    </TabsTrigger>
+                    <TabsTrigger value="carousel" className="gap-2">
+                        <LayoutPanelTop className="h-4 w-4" /> Carousel
                     </TabsTrigger>
                 </TabsList>
 
@@ -319,6 +358,107 @@ export default function NewsManagementPage() {
                                             </Link>
                                         </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleDeleteEvent(item.id)} className="text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="leadership" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=leadership">
+                                <Plus className="mr-2 h-4 w-4" /> Add Leader
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {loading ? (
+                            <p>Loading leadership...</p>
+                        ) : leadership.length === 0 ? (
+                            <Card className="col-span-full py-12">
+                                <CardContent className="flex flex-col items-center justify-center text-center">
+                                    <UserCheck className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+                                    <p className="text-lg font-medium">No leadership records found.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            leadership.map((item) => (
+                                <Card key={item.id} className="flex flex-col shadow-md">
+                                    <div className="aspect-square w-32 h-32 mx-auto mt-6 bg-muted rounded-full overflow-hidden flex items-center justify-center border-4 border-primary/10">
+                                        {item.image_url ? (
+                                            <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <UserCheck className="h-12 w-12 text-muted-foreground opacity-20" />
+                                        )}
+                                    </div>
+                                    <CardHeader className="p-4 text-center">
+                                        <CardTitle className="text-lg">{item.name}</CardTitle>
+                                        <Badge variant="outline" className="w-fit mx-auto">{item.role}</Badge>
+                                    </CardHeader>
+                                    <CardContent className="flex-grow p-4 pt-0">
+                                        <p className="text-sm text-muted-foreground line-clamp-3 text-center">{item.bio}</p>
+                                    </CardContent>
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/news/${item.id}?type=leadership`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteLeadership(item.id)} className="text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </TabsContent>
+                <TabsContent value="carousel" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=carousel">
+                                <Plus className="mr-2 h-4 w-4" /> Add Slide
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {loading ? (
+                            <p>Loading carousel...</p>
+                        ) : carousel.length === 0 ? (
+                            <Card className="col-span-full py-12">
+                                <CardContent className="flex flex-col items-center justify-center text-center">
+                                    <LayoutPanelTop className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+                                    <p className="text-lg font-medium">No carousel slides found.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            carousel.map((item) => (
+                                <Card key={item.id} className="flex flex-col shadow-md overflow-hidden">
+                                    <div className="aspect-video w-full bg-muted flex items-center justify-center relative">
+                                        {item.image_url ? (
+                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <LayoutPanelTop className="h-10 w-10 text-muted-foreground opacity-20" />
+                                        )}
+                                        <div className="absolute top-2 left-2">
+                                            <Badge>Order: {item.display_order}</Badge>
+                                        </div>
+                                    </div>
+                                    <CardHeader className="p-4">
+                                        <CardTitle className="text-base line-clamp-1">{item.title || 'No Title'}</CardTitle>
+                                        <CardDescription className="line-clamp-1">{item.subtitle || 'No Subtitle'}</CardDescription>
+                                    </CardHeader>
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/news/${item.id}?type=carousel`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteCarousel(item.id)} className="text-destructive">
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>

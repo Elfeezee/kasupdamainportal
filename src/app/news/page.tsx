@@ -19,6 +19,7 @@ export default async function NewsAndPublicationsPage() {
   const dbPublications = await getPublications();
 
   const displayNewsItems = dbNewsItems.length > 0 ? dbNewsItems.map(item => ({
+    id: item.id,
     title: item.title,
     date: format(new Date(item.date), 'MMMM dd, yyyy'),
     summary: item.summary,
@@ -26,6 +27,7 @@ export default async function NewsAndPublicationsPage() {
     hint: "logo"
   })) : [
     {
+      id: 'static-1',
       title: "KASUPDA Announces New Urban Renewal Initiative",
       date: "October 26, 2023",
       summary: "A new initiative aimed at revitalizing key urban areas in Kaduna State has been launched...",
@@ -92,7 +94,7 @@ export default async function NewsAndPublicationsPage() {
                   </CardContent>
                   <CardFooter>
                     <Button variant="link" className="p-0 text-primary" asChild>
-                      <Link href="#">Read More</Link>
+                      <Link href={`/news/${item.id}`}>Read More</Link>
                     </Button>
                   </CardFooter>
                 </Card>

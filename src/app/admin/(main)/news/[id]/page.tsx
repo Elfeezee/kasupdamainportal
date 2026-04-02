@@ -11,8 +11,10 @@ function EditContentPageContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const id = params.id as string;
-    const typeStr = searchParams.get('type');
-    const type = (typeStr === 'publication' || typeStr === 'statistic' || typeStr === 'event') ? typeStr : 'news';
+    const typeStr = searchParams.get('type') || 'news';
+    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel'].includes(typeStr))
+        ? typeStr as any
+        : 'news';
 
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -23,12 +25,20 @@ function EditContentPageContent() {
             if (type === 'publication') table = 'publications';
             else if (type === 'statistic') table = 'site_statistics';
             else if (type === 'event') table = 'site_events';
+            else if (type === 'leadership') table = 'site_leadership';
+            else if (type === 'carousel') table = 'site_carousel';
 
-            const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
-            if (data) {
-                setData(data);
+            try {
+                const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
+                if (error) throw error;
+                if (data) {
+                    setData(data);
+                }
+            } catch (error) {
+                console.error(`Error fetching ${type}:`, error);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         fetchData();
     }, [id, type]);

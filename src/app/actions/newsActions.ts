@@ -19,6 +19,21 @@ export async function getNewsItems() {
     return data;
 }
 
+export async function getNewsItem(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('news_items')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error) {
+        console.error('Error fetching news item:', error);
+        return null;
+    }
+    return data;
+}
+
 export async function getPublications() {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
@@ -281,6 +296,160 @@ export async function saveEvent(formData: FormData) {
 export async function deleteEvent(id: string) {
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.from('site_events').delete().eq('id', id);
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function getLeadership() {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('site_leadership')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching leadership:', error);
+        return [];
+    }
+    return data;
+}
+
+export async function saveLeadershipPerson(formData: FormData) {
+    const supabase = await createSupabaseServerClient();
+    const id = formData.get('id') as string;
+    const name = formData.get('name') as string;
+    const role = formData.get('role') as string;
+    const bio = formData.get('bio') as string;
+    const full_bio = formData.get('full_bio') as string;
+
+    // Handle image file or existing URL
+    const imageFile = formData.get('imageFile') as File;
+    let imageUrl = formData.get('existingImageUrl') as string || '';
+
+    if (imageFile && imageFile.size > 0) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `leadership/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('news-thumbnails')
+            .upload(filePath, imageFile);
+
+        if (uploadError) {
+            console.error('Leadership image upload error:', uploadError);
+        } else {
+            const { data: { publicUrl } } = supabase.storage
+                .from('news-thumbnails')
+                .getPublicUrl(filePath);
+            imageUrl = publicUrl;
+        }
+    }
+
+    const payload = {
+        name,
+        role,
+        bio,
+        full_bio,
+        image_url: imageUrl,
+        display_order: parseInt(formData.get('display_order') as string || '0'),
+        updated_at: new Date().toISOString(),
+    };
+
+    let result;
+    if (id) {
+        result = await supabase.from('site_leadership').update(payload).eq('id', id);
+    } else {
+        result = await supabase.from('site_leadership').insert([payload]);
+    }
+
+    if (result.error) return { success: false, error: result.error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function deleteLeadershipPerson(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.from('site_leadership').delete().eq('id', id);
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function getCarouselImages() {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('site_carousel')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching carousel:', error);
+        return [];
+    }
+    return data;
+}
+
+export async function saveCarouselImage(formData: FormData) {
+    const supabase = await createSupabaseServerClient();
+    const id = formData.get('id') as string;
+    const title = formData.get('title') as string;
+    const subtitle = formData.get('subtitle') as string;
+    const alt_text = formData.get('alt_text') as string;
+    const imageFile = formData.get('imageFile') as File;
+    let imageUrl = formData.get('existingImageUrl') as string || '';
+
+    if (imageFile && imageFile.size > 0) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `carousel-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `carousel/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('news-thumbnails')
+            .upload(filePath, imageFile);
+
+        if (uploadError) {
+            console.error('Carousel image upload error:', uploadError);
+        } else {
+            const { data: { publicUrl } } = supabase.storage
+                .from('news-thumbnails')
+                .getPublicUrl(filePath);
+            imageUrl = publicUrl;
+        }
+    }
+
+    const payload = {
+        title,
+        subtitle,
+        alt_text,
+        image_url: imageUrl,
+        display_order: parseInt(formData.get('display_order') as string || '0'),
+        updated_at: new Date().toISOString(),
+    };
+
+    let result;
+    if (id) {
+        result = await supabase.from('site_carousel').update(payload).eq('id', id);
+    } else {
+        result = await supabase.from('site_carousel').insert([payload]);
+    }
+
+    if (result.error) return { success: false, error: result.error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function deleteCarouselImage(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.from('site_carousel').delete().eq('id', id);
     if (error) return { success: false, error: error.message };
 
     revalidatePath('/');
