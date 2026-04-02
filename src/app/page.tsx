@@ -1,12 +1,15 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, MapPin, FileText, ShieldCheck, Users, RefreshCcw, Server, Beaker, Clock, ClipboardList, Calendar, ChevronRight } from "lucide-react";
+import { ArrowRight, MapPin, FileText, ShieldCheck, Users, RefreshCcw, Server, Beaker, Clock, ClipboardList, Calendar, ChevronRight, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Carousel, type CarouselImage } from "@/components/ui/carousel";
+import { getNewsItems, getStatistics, getEvents } from "@/app/actions/newsActions";
+import { format } from "date-fns";
 
 const initialCarouselImages: CarouselImage[] = [
   {
@@ -29,7 +32,39 @@ const initialCarouselImages: CarouselImage[] = [
   },
 ];
 
+const ICON_MAP: Record<string, any> = {
+  FileText,
+  Clock,
+  ClipboardList,
+  Users,
+};
+
 export default function Home() {
+  const [stats, setStats] = useState<any[]>([]);
+  const [news, setNews] = useState<any[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [statsData, newsData, eventsData] = await Promise.all([
+          getStatistics(),
+          getNewsItems(),
+          getEvents()
+        ]);
+        setStats(statsData);
+        setNews(newsData.slice(0, 3)); // Only take top 3
+        setEvents(eventsData.slice(0, 2)); // Only take top 2
+      } catch (error) {
+        console.error("Error fetching homepage data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       <section className="w-full">
@@ -210,148 +245,129 @@ export default function Home() {
       </section>
 
       {/* Our Impact In Numbers Section */}
-      <section className="w-full py-16 bg-white overflow-hidden">
+      <section className="w-full py-12 bg-white overflow-hidden">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-16 px-4">
-            <div className="inline-block rounded-lg bg-green-50 px-4 py-1.5 text-sm text-green-600 font-black uppercase tracking-widest mb-6">
+          <div className="text-center mb-10 px-4">
+            <div className="inline-block rounded-lg bg-green-50 px-3 py-1 text-[10px] text-green-600 font-bold uppercase tracking-widest mb-4">
               STATISTICS
             </div>
-            <h2 className="text-4xl font-black tracking-tight text-green-600 sm:text-5xl md:text-6xl mb-6">
+            <h2 className="text-2xl font-bold tracking-tight text-green-600 sm:text-3xl md:text-4xl mb-3">
               Our Impact In Numbers
             </h2>
-            <p className="mt-4 text-slate-500 font-bold max-w-3xl mx-auto text-xl leading-snug tracking-tight">
+            <p className="text-slate-500 font-medium max-w-2xl mx-auto text-sm md:text-base leading-relaxed tracking-tight">
               These numbers highlight the real impact of our work, showing the progress and positive change we&apos;ve achieved over time
             </p>
           </div>
 
-          <div className="w-full bg-gradient-to-r from-green-800 to-green-600 rounded-[3rem] p-10 md:p-16 lg:p-24 shadow-[0_45px_100px_rgba(22,101,52,0.3)] relative">
-            {/* Design accents */}
-            <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl p-10"></div>
+          <div className="w-full bg-gradient-to-r from-green-800 to-green-600 rounded-[1.5rem] p-6 md:p-10 shadow-[0_20px_50px_rgba(22,101,52,0.15)] relative">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
-              {/* Permits Issued */}
-              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
-                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
-                  <FileText className="h-12 w-12 text-yellow-500" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+              {loading ? (
+                <div className="col-span-full flex justify-center py-10">
+                  <Loader2 className="h-10 w-10 text-white animate-spin" />
                 </div>
-                <div className="space-y-2">
-                  <div className="text-6xl font-black text-slate-900 tracking-tighter">5240+</div>
-                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Permits Issued</p>
-                </div>
-              </div>
-
-              {/* Avg Processing Time */}
-              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
-                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
-                  <Clock className="h-12 w-12 text-yellow-500" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-6xl font-black text-slate-900 tracking-tighter">48hrs</div>
-                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Avg. Processing Time</p>
-                </div>
-              </div>
-
-              {/* Master Plans */}
-              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
-                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
-                  <ClipboardList className="h-12 w-12 text-yellow-500" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-6xl font-black text-slate-900 tracking-tighter">32</div>
-                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Master Plans</p>
-                </div>
-              </div>
-
-              {/* Community Projects */}
-              <div className="bg-white rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center space-y-8 shadow-2xl hover:scale-110 transition-all duration-500 transform hover:-translate-y-4 group">
-                <div className="w-24 h-24 bg-yellow-50 rounded-[2rem] flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
-                  <Users className="h-12 w-12 text-yellow-500" />
-                </div>
-                <div className="space-y-2">
-                  <div className="text-6xl font-black text-slate-900 tracking-tighter">12</div>
-                  <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Community Projects</p>
-                </div>
-              </div>
+              ) : stats.length > 0 ? (
+                stats.map((stat) => {
+                  const IconComp = ICON_MAP[stat.icon] || FileText;
+                  return (
+                    <div key={stat.id} className="bg-white rounded-[1rem] p-6 flex flex-col items-center justify-center text-center space-y-4 shadow hover:scale-105 transition-all duration-300">
+                      <div className="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center">
+                        <IconComp className="h-7 w-7 text-yellow-500" />
+                      </div>
+                      <div>
+                        <div className="text-3xl font-bold text-slate-900 tracking-tighter">{stat.value}</div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mt-1">{stat.label}</p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="col-span-full text-white text-center">No statistics available.</p>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* News & Events Section */}
-      <section className="w-full py-24 bg-white">
+      <section className="w-full py-12 bg-white">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-24 px-4">
-            <h2 className="text-4xl font-black tracking-tight text-green-600 sm:text-6xl mb-6 uppercase">
-              News & Events
+          <div className="text-center mb-10 px-4">
+            <h2 className="text-3xl font-bold tracking-tight text-green-600 sm:text-4xl mb-3">
+              NEWS & EVENTS
             </h2>
-            <p className="mt-4 text-slate-500 font-bold max-w-5xl mx-auto text-2xl leading-relaxed tracking-tight p-2 border-b-2 border-slate-50">
+            <p className="text-slate-500 font-medium max-w-3xl mx-auto text-sm md:text-base leading-relaxed tracking-tight">
               Explore recent announcements, planning reforms, stakeholder engagements, and key events driving sustainable urban growth across Kaduna State.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-40 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Latest News & Updates */}
-            <div className="space-y-16">
-              <div className="border-l-8 border-green-600 pl-8">
-                <h3 className="text-4xl font-black text-green-600 leading-none">Latest News & Updates</h3>
-                <p className="text-slate-500 font-black mt-4 text-2xl tracking-tight">Stay Informed on Urban Development in Kaduna</p>
+            <div className="space-y-8">
+              <div className="border-l-4 border-green-600 pl-4">
+                <h3 className="text-xl font-bold text-green-600">Latest News & Updates</h3>
+                <p className="text-slate-500 font-bold mt-1 text-xs tracking-tight">Stay Informed on Urban Development in Kaduna</p>
               </div>
 
-              <div className="space-y-12">
-                {[
-                  { title: "KASUPDA Launches Permit Monitor System", date: "Feb 10, 2026", img: "/image/logo.png" },
-                  { title: "2025 Awareness Week Concludes", date: "Feb 06, 2026", img: "/image/logo.png" },
-                  { title: "City Inspections & Enforcement Drive", date: "Feb 02, 2026", img: "/image/logo.png" }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-12 group cursor-pointer hover:bg-slate-50/50 p-4 rounded-[2.5rem] transition-all duration-500 transform hover:-translate-x-2">
-                    <div className="w-64 h-36 bg-white rounded-[2rem] overflow-hidden flex-shrink-0 shadow-xl border-4 border-white group-hover:rotate-1">
-                      <Image src={item.img} alt={item.title} width={256} height={144} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-[2000ms] ease-out" />
-                    </div>
-                    <div className="flex flex-col justify-center space-y-6">
-                      <h4 className="text-2xl font-black text-slate-900 group-hover:text-green-600 transition-colors line-clamp-2 leading-tight tracking-tighter">{item.title}</h4>
-                      <p className="text-sm font-black text-slate-400 tracking-[0.3em] uppercase">{item.date}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-6">
+                {loading ? (
+                  <div className="flex justify-center p-10"><Loader2 className="animate-spin text-primary" /></div>
+                ) : news.length > 0 ? (
+                  news.map((item) => (
+                    <Link key={item.id} href={`/news/${item.id}`} className="flex gap-4 group cursor-pointer hover:bg-slate-50/50 p-3 rounded-xl transition-all duration-300">
+                      <div className="w-32 h-20 bg-white rounded-lg overflow-hidden flex-shrink-0 shadow border border-slate-100">
+                        <Image src={item.image_url || "/image/logo.png"} alt={item.title} width={128} height={80} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      </div>
+                      <div className="flex flex-col justify-center space-y-1">
+                        <h4 className="text-base font-bold text-slate-900 group-hover:text-green-600 transition-colors line-clamp-2 leading-tight">{item.title}</h4>
+                        <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">{format(new Date(item.date), 'MMM d, yyyy')}</p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-slate-400 italic">No recent news.</p>
+                )}
               </div>
             </div>
 
             {/* Events & Public Engagement */}
-            <div className="space-y-16">
-              <div className="flex justify-between items-center bg-green-50/50 p-4 rounded-3xl border-2 border-green-100/20">
-                <h3 className="text-3xl font-black text-green-600 leading-none pl-4">Events & Public Engagement</h3>
-                <div className="bg-green-600 text-white text-sm px-10 py-5 rounded-[2rem] font-black flex items-center gap-4 shadow-2xl shadow-green-200 transform translate-x-6 lg:translate-x-16 hover:scale-105 transition-transform cursor-pointer">
-                  FEBRUARY 2026 <ChevronRight className="h-6 w-6" />
+            <div className="space-y-8">
+              <div className="flex justify-between items-center bg-green-50/30 p-2 rounded-xl border border-green-100/20">
+                <h3 className="text-lg font-bold text-green-600 pl-2">Events & Public Engagement</h3>
+                <div className="bg-green-600 text-white text-[10px] px-4 py-2 rounded-l-full font-bold flex items-center gap-2 shadow-md transform translate-x-3 lg:translate-x-6">
+                  {format(new Date(), 'MMMM yyyy').toUpperCase()} <ChevronRight className="h-3 w-3" />
                 </div>
               </div>
 
-              <div className="space-y-10">
-                {[
-                  { day: "Sat", date: "25", title: "Planning Stakeholders Meeting", actualDate: "March 10, 2026" },
-                  { day: "Mon", date: "27", title: "Public Hearing", actualDate: "April 10, 2026" }
-                ].map((item, idx) => (
-                  <div key={idx} className="bg-white border-2 border-slate-100 rounded-[3rem] p-12 flex gap-12 hover:shadow-[0_40px_100px_rgba(0,0,0,0.08)] transition-all duration-1000 transform hover:-translate-y-4 group relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full translate-x-1/2 -translate-y-1/2"></div>
-                    <div className="flex flex-col items-center justify-center bg-blue-50 rounded-[2.5rem] w-32 h-32 flex-shrink-0 border-4 border-white shadow-inner group-hover:bg-green-100 transition-all duration-700">
-                      <span className="text-xs uppercase font-black text-slate-400 tracking-[0.3em] group-hover:text-green-400 transition-colors mb-2">{item.day}</span>
-                      <span className="text-7xl font-black text-green-600 leading-none tracking-tighter group-hover:scale-125 transition-all duration-500">{item.date}</span>
-                    </div>
-                    <div className="flex flex-col justify-center space-y-6">
-                      <h4 className="text-4xl font-black text-green-600 leading-none group-hover:text-green-700 transition-colors tracking-tighter">{item.title}</h4>
-                      <div className="flex items-center gap-4">
-                        <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></div>
-                        <p className="text-xl text-orange-500 font-black tracking-tight">{item.actualDate}</p>
+              <div className="space-y-4">
+                {loading ? (
+                  <div className="flex justify-center p-10"><Loader2 className="animate-spin text-primary" /></div>
+                ) : events.length > 0 ? (
+                  events.map((item) => (
+                    <div key={item.id} className="bg-white border border-slate-100 rounded-2xl p-4 flex gap-6 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
+                      <div className="flex flex-col items-center justify-center bg-blue-50/50 rounded-xl w-16 h-16 flex-shrink-0 border border-blue-100/30 group-hover:bg-green-50 transition-all duration-300">
+                        <span className="text-[8px] uppercase font-bold text-slate-400 tracking-widest leading-none mb-1">{format(new Date(item.event_date), 'EEE')}</span>
+                        <span className="text-3xl font-bold text-green-600 leading-none tracking-tighter">{format(new Date(item.event_date), 'd')}</span>
+                      </div>
+                      <div className="flex flex-col justify-center space-y-1">
+                        <h4 className="text-lg font-bold text-green-600 group-hover:text-green-700 transition-colors leading-tight tracking-tight">{item.title}</h4>
+                        <p className="text-xs text-orange-500 font-bold tracking-tight">{item.date_text || format(new Date(item.event_date), 'MMMM d, yyyy')}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-slate-400 italic">No upcoming events.</p>
+                )}
               </div>
 
-              <div className="pt-12 flex justify-start">
-                <Button className="rounded-[2.5rem] border-4 border-slate-100 bg-white text-yellow-500 font-black hover:bg-yellow-50 hover:text-yellow-600 hover:border-yellow-200 gap-8 h-24 px-20 text-3xl shadow-2xl transition-all duration-700 active:scale-95 hover:shadow-yellow-100">
-                  <Calendar className="h-10 w-10 text-yellow-500" />
-                  View All News
-                  <ChevronRight className="h-8 w-8 transition-transform group-hover:translate-x-4" />
+              <div className="pt-4 flex justify-start">
+                <Button className="rounded-lg border border-slate-100 bg-white text-yellow-500 font-bold hover:bg-yellow-50 hover:text-yellow-600 hover:border-yellow-200 gap-2 h-10 px-6 text-sm shadow-sm transition-all" asChild>
+                  <Link href="/news">
+                    <Calendar className="h-4 w-4" />
+                    View All News
+                    <ChevronRight className="h-3 w-3" />
+                  </Link>
                 </Button>
               </div>
             </div>

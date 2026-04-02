@@ -4,25 +4,50 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Newspaper, BookOpen, Edit, Trash2, ExternalLink } from 'lucide-react';
-import { getNewsItems, getPublications, deleteNewsItem, deletePublication } from '@/app/actions/newsActions';
+import { Plus, Newspaper, BookOpen, Edit, Trash2, ExternalLink, BarChart3, CalendarDays } from 'lucide-react';
+import {
+    getNewsItems,
+    getPublications,
+    deleteNewsItem,
+    deletePublication,
+    getStatistics,
+    getEvents,
+    deleteStatistic,
+    deleteEvent
+} from '@/app/actions/newsActions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
 
 export default function NewsManagementPage() {
     const { toast } = useToast();
     const [newsItems, setNewsItems] = useState<any[]>([]);
     const [publications, setPublications] = useState<any[]>([]);
+    const [statistics, setStatistics] = useState<any[]>([]);
+    const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         setLoading(true);
-        const [news, pubs] = await Promise.all([getNewsItems(), getPublications()]);
-        setNewsItems(news);
-        setPublications(pubs);
-        setLoading(false);
+        try {
+            const [news, pubs, stats, evs] = await Promise.all([
+                getNewsItems(),
+                getPublications(),
+                getStatistics(),
+                getEvents()
+            ]);
+            setNewsItems(news);
+            setPublications(pubs);
+            setStatistics(stats);
+            setEvents(evs);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            toast({ title: 'Error', description: 'Failed to fetch management data.', variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -51,38 +76,61 @@ export default function NewsManagementPage() {
         }
     };
 
+    const handleDeleteStatistic = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this statistic?')) return;
+        const result = await deleteStatistic(id);
+        if (result.success) {
+            toast({ title: 'Deleted', description: 'Statistic deleted successfully.' });
+            fetchData();
+        } else {
+            toast({ title: 'Error', description: result.error, variant: 'destructive' });
+        }
+    };
+
+    const handleDeleteEvent = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this event?')) return;
+        const result = await deleteEvent(id);
+        if (result.success) {
+            toast({ title: 'Deleted', description: 'Event deleted successfully.' });
+            fetchData();
+        } else {
+            toast({ title: 'Error', description: result.error, variant: 'destructive' });
+        }
+    };
+
     return (
         <div className="w-full space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-primary">News & Publications Management</h1>
-                    <p className="text-muted-foreground mt-1">Manage the content that appears on the public News page.</p>
-                </div>
-                <div className="flex gap-2">
-                    <Button asChild>
-                        <Link href="/admin/news/new?type=news">
-                            <Plus className="mr-2 h-4 w-4" /> Add News
-                        </Link>
-                    </Button>
-                    <Button variant="outline" asChild>
-                        <Link href="/admin/news/new?type=publication">
-                            <Plus className="mr-2 h-4 w-4" /> Add Publication
-                        </Link>
-                    </Button>
+                    <h1 className="text-3xl font-bold tracking-tight text-primary">Content Management</h1>
+                    <p className="text-muted-foreground mt-1">Manage news, publications, statistics, and events.</p>
                 </div>
             </div>
 
             <Tabs defaultValue="news" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+                <TabsList className="flex flex-wrap h-auto p-1 bg-muted rounded-lg w-fit">
                     <TabsTrigger value="news" className="gap-2">
-                        <Newspaper className="h-4 w-4" /> News Items
+                        <Newspaper className="h-4 w-4" /> News
                     </TabsTrigger>
                     <TabsTrigger value="publications" className="gap-2">
                         <BookOpen className="h-4 w-4" /> Publications
                     </TabsTrigger>
+                    <TabsTrigger value="statistics" className="gap-2">
+                        <BarChart3 className="h-4 w-4" /> Statistics
+                    </TabsTrigger>
+                    <TabsTrigger value="events" className="gap-2">
+                        <CalendarDays className="h-4 w-4" /> Events
+                    </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="news" className="mt-6">
+                <TabsContent value="news" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=news">
+                                <Plus className="mr-2 h-4 w-4" /> Add News
+                            </Link>
+                        </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {loading ? (
                             <p>Loading news items...</p>
@@ -91,7 +139,6 @@ export default function NewsManagementPage() {
                                 <CardContent className="flex flex-col items-center justify-center text-center">
                                     <Newspaper className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
                                     <p className="text-lg font-medium">No news items found.</p>
-                                    <p className="text-muted-foreground mt-1">Add your first news update to share it with the public.</p>
                                 </CardContent>
                             </Card>
                         ) : (
@@ -104,14 +151,14 @@ export default function NewsManagementPage() {
                                             <Newspaper className="h-10 w-10 text-muted-foreground opacity-20" />
                                         )}
                                     </div>
-                                    <CardHeader>
-                                        <CardTitle className="line-clamp-2 text-lg">{item.title}</CardTitle>
+                                    <CardHeader className="p-4">
                                         <CardDescription>{format(new Date(item.date), 'PPP')}</CardDescription>
+                                        <CardTitle className="line-clamp-2 text-base">{item.title}</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="flex-grow">
-                                        <p className="text-sm text-muted-foreground line-clamp-3">{item.summary}</p>
+                                    <CardContent className="flex-grow p-4 pt-0">
+                                        <p className="text-sm text-muted-foreground line-clamp-2">{item.summary}</p>
                                     </CardContent>
-                                    <div className="p-4 pt-0 border-t flex justify-end gap-2 px-6 pb-6 mt-4">
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
                                         <Button variant="ghost" size="sm" asChild>
                                             <Link href={`/admin/news/${item.id}?type=news`}>
                                                 <Edit className="h-4 w-4" />
@@ -127,7 +174,14 @@ export default function NewsManagementPage() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="publications" className="mt-6">
+                <TabsContent value="publications" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=publication">
+                                <Plus className="mr-2 h-4 w-4" /> Add Publication
+                            </Link>
+                        </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {loading ? (
                             <p>Loading publications...</p>
@@ -136,7 +190,6 @@ export default function NewsManagementPage() {
                                 <CardContent className="flex flex-col items-center justify-center text-center">
                                     <BookOpen className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
                                     <p className="text-lg font-medium">No publications found.</p>
-                                    <p className="text-muted-foreground mt-1">Upload reports, handbooks, and master plans.</p>
                                 </CardContent>
                             </Card>
                         ) : (
@@ -149,14 +202,14 @@ export default function NewsManagementPage() {
                                             <BookOpen className="h-10 w-10 text-muted-foreground opacity-20" />
                                         )}
                                     </div>
-                                    <CardHeader>
-                                        <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">{item.type}</div>
-                                        <CardTitle className="line-clamp-2 text-lg">{item.title}</CardTitle>
+                                    <CardHeader className="p-4">
+                                        <Badge variant="secondary" className="w-fit mb-1">{item.type}</Badge>
+                                        <CardTitle className="line-clamp-2 text-base">{item.title}</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="flex-grow">
-                                        <p className="text-sm text-muted-foreground line-clamp-3">{item.summary}</p>
+                                    <CardContent className="flex-grow p-4 pt-0">
+                                        <p className="text-sm text-muted-foreground line-clamp-2">{item.summary}</p>
                                     </CardContent>
-                                    <div className="p-4 pt-0 border-t flex justify-end gap-2 px-6 pb-6 mt-4">
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
                                         <Button variant="ghost" size="sm" asChild>
                                             <Link href={`/admin/news/${item.id}?type=publication`}>
                                                 <Edit className="h-4 w-4" />
@@ -168,6 +221,104 @@ export default function NewsManagementPage() {
                                             </a>
                                         </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleDeletePublication(item.id)} className="text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="statistics" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=statistic">
+                                <Plus className="mr-2 h-4 w-4" /> Add Statistic
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {loading ? (
+                            <p>Loading statistics...</p>
+                        ) : statistics.length === 0 ? (
+                            <Card className="col-span-full py-12">
+                                <CardContent className="flex flex-col items-center justify-center text-center">
+                                    <BarChart3 className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+                                    <p className="text-lg font-medium">No statistics found.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            statistics.map((item) => (
+                                <Card key={item.id} className="shadow-md">
+                                    <CardHeader className="p-4">
+                                        <div className="flex justify-between items-start">
+                                            <div className="p-2 bg-primary/10 rounded-lg">
+                                                <BarChart3 className="h-5 w-5 text-primary" />
+                                            </div>
+                                            <Badge variant="outline">Order: {item.display_order}</Badge>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="p-4 pt-0 text-center">
+                                        <div className="text-2xl font-bold text-primary">{item.value}</div>
+                                        <div className="text-sm font-medium text-muted-foreground">{item.label}</div>
+                                    </CardContent>
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/news/${item.id}?type=statistic`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteStatistic(item.id)} className="text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="events" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=event">
+                                <Plus className="mr-2 h-4 w-4" /> Add Event
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {loading ? (
+                            <p>Loading events...</p>
+                        ) : events.length === 0 ? (
+                            <Card className="col-span-full py-12">
+                                <CardContent className="flex flex-col items-center justify-center text-center">
+                                    <CalendarDays className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+                                    <p className="text-lg font-medium">No events found.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            events.map((item) => (
+                                <Card key={item.id} className="shadow-md">
+                                    <CardHeader className="p-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex flex-col items-center justify-center bg-primary/10 rounded-lg w-12 h-12 flex-shrink-0">
+                                                <span className="text-[10px] uppercase font-bold text-muted-foreground">{format(new Date(item.event_date), 'EEE')}</span>
+                                                <span className="text-lg font-bold text-primary">{format(new Date(item.event_date), 'd')}</span>
+                                            </div>
+                                            <div>
+                                                <CardTitle className="text-base line-clamp-1">{item.title}</CardTitle>
+                                                <CardDescription>{item.date_text || format(new Date(item.event_date), 'PPP')}</CardDescription>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/news/${item.id}?type=event`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteEvent(item.id)} className="text-destructive">
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>

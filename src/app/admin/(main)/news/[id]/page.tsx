@@ -11,14 +11,19 @@ function EditContentPageContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const id = params.id as string;
-    const type = searchParams.get('type') === 'publication' ? 'publication' : 'news';
+    const typeStr = searchParams.get('type');
+    const type = (typeStr === 'publication' || typeStr === 'statistic' || typeStr === 'event') ? typeStr : 'news';
 
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const table = type === 'news' ? 'news_items' : 'publications';
+            let table = 'news_items';
+            if (type === 'publication') table = 'publications';
+            else if (type === 'statistic') table = 'site_statistics';
+            else if (type === 'event') table = 'site_events';
+
             const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
             if (data) {
                 setData(data);

@@ -9,13 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { saveNewsItem, savePublication } from '@/app/actions/newsActions';
+import { saveNewsItem, savePublication, saveStatistic, saveEvent } from '@/app/actions/newsActions';
 import { Loader2, ArrowLeft, Image as ImageIcon, Upload } from 'lucide-react';
 import Link from 'next/link';
 
 interface ContentFormProps {
     initialData?: any;
-    type: 'news' | 'publication';
+    type: 'news' | 'publication' | 'statistic' | 'event';
 }
 
 export default function ContentForm({ initialData, type }: ContentFormProps) {
@@ -33,25 +33,44 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
             formData.append('id', initialData.id);
         }
 
-        const result = type === 'news'
-            ? await saveNewsItem(formData)
-            : await savePublication(formData);
+        let result: { success: boolean; error?: string };
 
-        if (result.success) {
-            toast({
-                title: 'Success',
-                description: `${type === 'news' ? 'News item' : 'Publication'} saved successfully.`,
-            });
-            router.push('/admin/news');
-            router.refresh();
-        } else {
+        try {
+            if (type === 'news') {
+                result = await saveNewsItem(formData);
+            } else if (type === 'publication') {
+                result = await savePublication(formData);
+            } else if (type === 'statistic') {
+                result = await saveStatistic(formData);
+            } else if (type === 'event') {
+                result = await saveEvent(formData);
+            } else {
+                result = { success: false, error: 'Invalid content type' };
+            }
+
+            if (result.success) {
+                toast({
+                    title: 'Success',
+                    description: `${type.charAt(0).toUpperCase() + type.slice(1)} saved successfully.`,
+                });
+                router.push('/admin/news');
+                router.refresh();
+            } else {
+                toast({
+                    title: 'Error',
+                    description: result.error || 'Something went wrong',
+                    variant: 'destructive',
+                });
+            }
+        } catch (error: any) {
             toast({
                 title: 'Error',
-                description: result.error,
+                description: error.message || 'An unexpected error occurred',
                 variant: 'destructive',
             });
+        } finally {
+            setIsSubmitting(false);
         }
-        setIsSubmitting(false);
     };
 
     return (
@@ -63,21 +82,57 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                     </Link>
                 </Button>
                 <h1 className="text-2xl font-bold tracking-tight">
-                    {initialData ? 'Edit' : 'Add New'} {type === 'news' ? 'News Item' : 'Publication'}
+                    {initialData ? 'Edit' : 'Add New'} {type.charAt(0).toUpperCase() + type.slice(1)}
                 </h1>
             </div>
 
             <form ref={formRef} onSubmit={handleSubmit}>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Content Details</CardTitle>
+                        <CardTitle>{type.charAt(0).toUpperCase() + type.slice(1)} Details</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Title</Label>
-                                <Input id="title" name="title" defaultValue={initialData?.title} required placeholder="Enter title..." />
-                            </div>
+                            {(type === 'news' || type === 'publication' || type === 'event') && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Title</Label>
+                                    <Input id="title" name="title" defaultValue={initialData?.title} required placeholder="Enter title..." />
+                                </div>
+                            )}
+
+                            {type === 'statistic' && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="label">Label (e.g. Permits Issued)</Label>
+                                        <Input id="label" name="label" defaultValue={initialData?.label} required placeholder="Enter label..." />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="value">Value (e.g. 5240+)</Label>
+                                        <Input id="value" name="value" defaultValue={initialData?.value} required placeholder="Enter value..." />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="icon">Icon (Lucide name, e.g. FileText, Clock, Users)</Label>
+                                        <Input id="icon" name="icon" defaultValue={initialData?.icon} placeholder="FileText" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="display_order">Display Order</Label>
+                                        <Input id="display_order" name="display_order" type="number" defaultValue={initialData?.display_order || 0} />
+                                    </div>
+                                </>
+                            )}
+
+                            {type === 'event' && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="event_date">Date & Time</Label>
+                                        <Input id="event_date" name="event_date" type="datetime-local" defaultValue={initialData?.event_date ? new Date(initialData.event_date).toISOString().slice(0, 16) : undefined} required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="date_text">Display Date Override (e.g. "March 10, 2026")</Label>
+                                        <Input id="date_text" name="date_text" defaultValue={initialData?.date_text} placeholder="March 10, 2026" />
+                                    </div>
+                                </>
+                            )}
 
                             {type === 'publication' && (
                                 <div className="space-y-2">
@@ -88,54 +143,51 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
 
                             {type === 'news' && (
                                 <div className="space-y-2">
-                                    <Label htmlFor="date">Date</Label>
+                                    <Label htmlFor="date">News Date</Label>
                                     <Input id="date" name="date" type="datetime-local" defaultValue={initialData?.date ? new Date(initialData.date).toISOString().slice(0, 16) : undefined} />
                                 </div>
                             )}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="imageFile">Thumbnail/Image</Label>
-                                <div className="flex items-center gap-4 border p-4 rounded-md">
-                                    <div className="w-24 h-24 bg-muted rounded flex items-center justify-center overflow-hidden flex-shrink-0">
-                                        {initialData?.image_url ? (
-                                            <img src={initialData.image_url} alt="Current" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <ImageIcon className="text-muted-foreground w-10 h-10" />
-                                        )}
+                            {(type === 'news' || type === 'publication') && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="imageFile">Thumbnail/Image</Label>
+                                        <div className="flex items-center gap-4 border p-4 rounded-md">
+                                            <div className="w-24 h-24 bg-muted rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                                                {initialData?.image_url ? (
+                                                    <img src={initialData.image_url} alt="Current" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <ImageIcon className="text-muted-foreground w-10 h-10" />
+                                                )}
+                                            </div>
+                                            <div className="flex-grow space-y-2">
+                                                <Input id="imageFile" name="imageFile" type="file" accept="image/*" />
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="existingImageUrl" value={initialData?.image_url || ''} />
                                     </div>
-                                    <div className="flex-grow space-y-2">
-                                        <Input id="imageFile" name="imageFile" type="file" accept="image/*" />
-                                        <p className="text-xs text-muted-foreground">Select an image for the thumbnail. Recommended 16:9 ratio.</p>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="existingImageUrl" value={initialData?.image_url || ''} />
-                            </div>
 
-                            {type === 'publication' && (
-                                <div className="space-y-2">
-                                    <Label htmlFor="docFile">Document (PDF)</Label>
-                                    <div className="flex items-center gap-4 border p-4 rounded-md">
-                                        <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
-                                            <Upload className="text-muted-foreground w-6 h-6" />
+                                    {type === 'publication' && (
+                                        <div className="space-y-2">
+                                            <Label htmlFor="docFile">Document (PDF)</Label>
+                                            <div className="flex items-center gap-4 border p-4 rounded-md">
+                                                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <Upload className="text-muted-foreground w-6 h-6" />
+                                                </div>
+                                                <div className="flex-grow space-y-2">
+                                                    <Input id="docFile" name="docFile" type="file" accept="application/pdf" />
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="existingDownloadUrl" value={initialData?.download_url || ''} />
                                         </div>
-                                        <div className="flex-grow space-y-2">
-                                            <Input id="docFile" name="docFile" type="file" accept="application/pdf" />
-                                            {initialData?.download_url && (
-                                                <p className="text-xs font-medium text-primary">
-                                                    Current: {initialData.download_url.split('/').pop()}
-                                                </p>
-                                            )}
-                                            <p className="text-xs text-muted-foreground">Select a PDF file to upload as the document.</p>
-                                        </div>
+                                    )}
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="summary">Brief Summary</Label>
+                                        <Textarea id="summary" name="summary" defaultValue={initialData?.summary} required placeholder="Short description..." rows={3} />
                                     </div>
-                                    <input type="hidden" name="existingDownloadUrl" value={initialData?.download_url || ''} />
-                                </div>
+                                </>
                             )}
-
-                            <div className="space-y-2">
-                                <Label htmlFor="summary">Brief Summary</Label>
-                                <Textarea id="summary" name="summary" defaultValue={initialData?.summary} required placeholder="Short description for the card list..." rows={3} />
-                            </div>
 
                             {type === 'news' && (
                                 <div className="space-y-2">

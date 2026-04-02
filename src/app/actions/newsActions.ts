@@ -181,3 +181,109 @@ export async function deletePublication(id: string) {
     revalidatePath('/admin/news');
     return { success: true };
 }
+
+export async function getStatistics() {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('site_statistics')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching statistics:', error);
+        return [];
+    }
+    return data;
+}
+
+export async function saveStatistic(formData: FormData) {
+    const supabase = await createSupabaseServerClient();
+    const id = formData.get('id') as string;
+    const label = formData.get('label') as string;
+    const value = formData.get('value') as string;
+    const icon = formData.get('icon') as string;
+    const display_order = parseInt(formData.get('display_order') as string || '0');
+
+    const payload = {
+        label,
+        value,
+        icon,
+        display_order,
+        updated_at: new Date().toISOString(),
+    };
+
+    let result;
+    if (id) {
+        result = await supabase.from('site_statistics').update(payload).eq('id', id);
+    } else {
+        result = await supabase.from('site_statistics').insert([payload]);
+    }
+
+    if (result.error) return { success: false, error: result.error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function deleteStatistic(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.from('site_statistics').delete().eq('id', id);
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function getEvents() {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('site_events')
+        .select('*')
+        .order('event_date', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching events:', error);
+        return [];
+    }
+    return data;
+}
+
+export async function saveEvent(formData: FormData) {
+    const supabase = await createSupabaseServerClient();
+    const id = formData.get('id') as string;
+    const title = formData.get('title') as string;
+    const event_date = formData.get('event_date') as string;
+    const date_text = formData.get('date_text') as string;
+
+    const payload = {
+        title,
+        event_date: event_date || new Date().toISOString(),
+        date_text,
+        updated_at: new Date().toISOString(),
+    };
+
+    let result;
+    if (id) {
+        result = await supabase.from('site_events').update(payload).eq('id', id);
+    } else {
+        result = await supabase.from('site_events').insert([payload]);
+    }
+
+    if (result.error) return { success: false, error: result.error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function deleteEvent(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.from('site_events').delete().eq('id', id);
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
