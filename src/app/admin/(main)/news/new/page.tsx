@@ -7,8 +7,10 @@ import { useSearchParams } from 'next/navigation';
 
 function NewContentPageContent() {
     const searchParams = useSearchParams();
-    const typeStr = searchParams.get('type');
-    const type = (typeStr === 'publication' || typeStr === 'statistic' || typeStr === 'event') ? typeStr : 'news';
+    const typeStr = searchParams.get('type') || 'news';
+    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel'].includes(typeStr))
+        ? typeStr as any
+        : 'news';
 
     return <ContentForm type={type} />;
 }

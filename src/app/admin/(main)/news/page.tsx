@@ -185,7 +185,7 @@ export default function NewsManagementPage() {
                                 <Card key={item.id} className="flex flex-col shadow-md hover:shadow-lg transition-shadow">
                                     <div className="aspect-video w-full bg-muted rounded-t-lg overflow-hidden flex items-center justify-center relative">
                                         {item.image_url ? (
-                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-contain" />
                                         ) : (
                                             <Newspaper className="h-10 w-10 text-muted-foreground opacity-20" />
                                         )}
@@ -236,7 +236,7 @@ export default function NewsManagementPage() {
                                 <Card key={item.id} className="flex flex-col shadow-md hover:shadow-lg transition-shadow">
                                     <div className="aspect-video w-full bg-muted rounded-t-lg overflow-hidden flex items-center justify-center">
                                         {item.image_url ? (
-                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-contain" />
                                         ) : (
                                             <BookOpen className="h-10 w-10 text-muted-foreground opacity-20" />
                                         )}

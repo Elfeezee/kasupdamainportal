@@ -35,14 +35,17 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
                     </div>
                 </header>
 
-                <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-xl">
-                    <Image
-                        src={item.image_url || "/image/logo.png"}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+                <div className="w-full overflow-hidden rounded-2xl shadow-xl bg-muted">
+                    <a href={item.image_url} target="_blank" rel="noopener noreferrer" className="cursor-zoom-in block">
+                        <img
+                            src={item.image_url || "/image/logo.png"}
+                            alt={item.title}
+                            className="w-full h-auto object-contain"
+                        />
+                    </a>
+                    <div className="p-2 text-center text-xs text-muted-foreground bg-muted/50 border-t">
+                        Click image to view full resolution
+                    </div>
                 </div>
 
                 <div className="prose prose-slate lg:prose-xl max-w-none prose-headings:text-primary prose-a:text-primary hover:prose-a:underline">
