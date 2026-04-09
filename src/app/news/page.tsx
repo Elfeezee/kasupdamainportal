@@ -60,7 +60,7 @@ export default async function NewsAndPublicationsPage() {
         <div className="container px-4 md:px-6">
           <div className="text-center mb-10 md:mb-12">
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-primary">
-              News & Publications
+              News, Publications and Laws
             </h1>
             <p className="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground sm:text-xl">
               Stay informed with the latest updates, announcements, and official documents from KASUPDA.
@@ -105,7 +105,7 @@ export default async function NewsAndPublicationsPage() {
           {/* Publications Section */}
           <div>
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl text-primary mb-8 flex items-center">
-              <BookOpen className="mr-3 h-7 w-7" /> Official Publications
+              <BookOpen className="mr-3 h-7 w-7" /> Laws
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {displayPublications.map((item, index) => (

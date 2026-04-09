@@ -144,7 +144,7 @@ export default function Header() {
 
   const mainNavLinks = [
     { href: "/about", label: "About Us" },
-    { href: "/news", label: "News and Publications" },
+    { href: "/news", label: "News, Publications and Laws" },
     { href: "/contact", label: "Contact Us" },
   ];
 
