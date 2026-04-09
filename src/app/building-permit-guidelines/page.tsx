@@ -9,7 +9,6 @@ import {
     Clock,
     Download,
     ExternalLink,
-    ChevronRight,
     Info,
     Building,
     Users,
@@ -30,48 +29,48 @@ const steps = [
         icon: <MapPin className="w-6 h-6" />,
         content: (
             <div className="space-y-4">
-                <p className="text-muted-foreground">Applicants may commence their building permit application through any of the approved channels outlined below.</p>
+                <p className="text-slate-600">Applicants may commence their building permit application through any of the approved channels outlined below.</p>
 
-                <div className="bg-muted/50 p-4 rounded-lg border border-border">
-                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                    <h4 className="font-semibold mb-2 flex items-center gap-2 text-slate-900">
                         <Building className="w-4 h-4 text-primary" /> Physical Channels
                     </h4>
-                    <p className="text-sm">Application forms are available <strong>free of charge</strong> at the <strong>Kaduna State Urban Planning and Development Authority (KASUPDA) Headquarters</strong>, located at No. 4 Bida Road, Kaduna or Zonal Offices.</p>
+                    <p className="text-sm text-slate-700">Application forms are available <strong>free of charge</strong> at the <strong>Kaduna State Urban Planning and Development Authority (KASUPDA) Headquarters</strong>, located at No. 4 Bida Road, Kaduna or Zonal Offices.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-muted/50 p-4 rounded-lg border border-border">
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <h4 className="font-semibold mb-3 flex items-center gap-2 text-slate-900">
                             <Download className="w-4 h-4 text-primary" /> Downloadable Forms
                         </h4>
                         <div className="space-y-2">
                             <Link
                                 href="https://kasupda.kdsg.gov.ng/wp-content/uploads/2020/03/Building-Permit-Individual-BPI-v1.1-1.pdf"
                                 target="_blank"
-                                className="flex items-center gap-2 text-sm text-primary hover:underline transition-all"
+                                className="flex items-center gap-2 text-sm text-primary hover:underline transition-all font-medium"
                             >
                                 <FileText className="w-4 h-4" /> Building Permit for Individuals (BPI)
                             </Link>
                             <Link
                                 href="https://kasupda.kdsg.gov.ng/wp-content/uploads/2020/03/Building-Permit-Organization-BPO-v1.1.pdf"
                                 target="_blank"
-                                className="flex items-center gap-2 text-sm text-primary hover:underline transition-all"
+                                className="flex items-center gap-2 text-sm text-primary hover:underline transition-all font-medium"
                             >
                                 <Briefcase className="w-4 h-4" /> Building Permit for Organizations (BPO)
                             </Link>
                         </div>
                     </div>
 
-                    <div className="bg-muted/50 p-4 rounded-lg border border-border">
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <h4 className="font-semibold mb-3 flex items-center gap-2 text-slate-900">
                             <Globe className="w-4 h-4 text-primary" /> Online Portal
                         </h4>
                         <div className="space-y-2">
-                            <p className="text-sm">For alterations, new developments, and renewal of permits:</p>
+                            <p className="text-sm text-slate-700">For alterations, new developments, and renewal of permits:</p>
                             <Link
                                 href="https://kasupda.kdsg.gov.ng"
                                 target="_blank"
-                                className="inline-flex items-center gap-2 text-sm text-primary hover:underline font-medium"
+                                className="inline-flex items-center gap-2 text-sm text-primary hover:underline font-bold"
                             >
                                 KASUPDA Online Portal <ExternalLink className="w-3 h-3" />
                             </Link>
@@ -79,7 +78,7 @@ const steps = [
                     </div>
                 </div>
 
-                <p className="text-xs text-muted-foreground italic">All completed applications must be submitted with the required supporting documents and will be subject to review in accordance with KASUPDA regulations.</p>
+                <p className="text-xs text-slate-500 italic">All completed applications must be submitted with the required supporting documents and will be subject to review in accordance with KASUPDA regulations.</p>
             </div>
         )
     },
@@ -89,7 +88,7 @@ const steps = [
         icon: <FileText className="w-6 h-6" />,
         content: (
             <div className="space-y-6">
-                <p className="text-muted-foreground">Applicants are required to prepare and submit copies of the following documents to facilitate processing:</p>
+                <p className="text-slate-600">Applicants are required to prepare and submit copies of the following documents to facilitate processing:</p>
 
                 <div className="grid gap-4 md:grid-cols-2">
                     {[
@@ -122,12 +121,12 @@ const steps = [
                             items: ["Soil Investigation Report (for >3 floors)", "KEPA EIA Certificate (where applicable)", "Tax Clearance Certificate (TCC) or TIN", "Valid Means of ID (Passport, National ID, etc.)", "Recent Utility Bill or Bank Statement"]
                         }
                     ].map((doc, i) => (
-                        <div key={i} className="p-4 rounded-lg bg-muted/30 border border-border/50">
-                            <h4 className="font-bold text-sm mb-2 text-primary">{doc.title}</h4>
+                        <div key={i} className="p-4 rounded-lg bg-slate-50 border border-slate-100">
+                            <h4 className="font-bold text-sm mb-2 text-primary uppercase tracking-tight">{doc.title}</h4>
                             <ul className="space-y-1">
                                 {doc.items.map((item, j) => (
-                                    <li key={j} className="text-xs flex gap-2">
-                                        <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0 mt-0.5" />
+                                    <li key={j} className="text-xs text-slate-700 flex gap-2">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-green-600 shrink-0 mt-0.5" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -136,10 +135,10 @@ const steps = [
                     ))}
                 </div>
 
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded flex gap-3">
-                    <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
-                    <p className="text-xs text-blue-800 dark:text-blue-300">
-                        For unplanned layouts, a <strong>District Head Confirmation</strong> is required. All documents must be properly endorsed to avoid delays.
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3">
+                    <Info className="w-5 h-5 text-amber-600 shrink-0" />
+                    <p className="text-xs text-amber-800 leading-relaxed">
+                        For unplanned layouts, a <strong>District Head Confirmation</strong> is required. All documents must be properly endorsed and submitted in the required format to avoid delays in processing.
                     </p>
                 </div>
             </div>
@@ -153,52 +152,52 @@ const steps = [
             <div className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                        <h4 className="font-semibold flex items-center gap-2"><Users className="w-4 h-4" /> Processing Fees</h4>
-                        <div className="overflow-hidden rounded-lg border border-border">
+                        <h4 className="font-semibold flex items-center gap-2 text-slate-900"><Users className="w-4 h-4 text-primary" /> Processing Fees</h4>
+                        <div className="overflow-hidden rounded-xl border border-slate-200">
                             <table className="w-full text-sm">
-                                <thead className="bg-muted">
+                                <thead className="bg-slate-50">
                                     <tr>
-                                        <th className="px-4 py-2 text-left">Category</th>
-                                        <th className="px-4 py-2 text-right">Regular</th>
-                                        <th className="px-4 py-2 text-right">Express</th>
+                                        <th className="px-4 py-3 text-left font-bold text-slate-900">Category</th>
+                                        <th className="px-4 py-3 text-right font-bold text-slate-900">Regular</th>
+                                        <th className="px-4 py-3 text-right font-bold text-slate-900">Express</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y">
-                                    <tr>
-                                        <td className="px-4 py-2">Individuals</td>
-                                        <td className="px-4 py-2 text-right">₦10,000</td>
-                                        <td className="px-4 py-2 text-right">₦50,000</td>
+                                <tbody className="divide-y divide-slate-100 text-slate-700">
+                                    <tr className="hover:bg-slate-50/50">
+                                        <td className="px-4 py-3">Individuals</td>
+                                        <td className="px-4 py-3 text-right font-medium">₦10,000</td>
+                                        <td className="px-4 py-3 text-right font-medium text-primary">₦50,000</td>
                                     </tr>
-                                    <tr>
-                                        <td className="px-4 py-2">Organizations</td>
-                                        <td className="px-4 py-2 text-right">₦20,000</td>
-                                        <td className="px-4 py-2 text-right">₦100,000</td>
+                                    <tr className="hover:bg-slate-50/50">
+                                        <td className="px-4 py-3">Organizations</td>
+                                        <td className="px-4 py-3 text-right font-medium">₦20,000</td>
+                                        <td className="px-4 py-3 text-right font-medium text-primary">₦100,000</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <p className="text-xs text-muted-foreground italic">Payment via KASUPDA PayDirect, OSoft Platform, or POS at Headquarters.</p>
+                        <p className="text-[11px] text-slate-500 italic">Payment via KASUPDA PayDirect Account, OSoft Platform, or POS at KASUPDA Customer Service Units.</p>
                     </div>
 
                     <div className="space-y-4">
-                        <h4 className="font-semibold flex items-center gap-2"><Globe className="w-4 h-4" /> Online Submission</h4>
-                        <p className="text-sm">Applicants may alternatively process applications online:</p>
-                        <div className="flex flex-col gap-2">
-                            <Link href="https://kasupda.kdsg.gov.ng/e-payment/" target="_blank" className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
-                                KASUPDA e-Payment Platform <ExternalLink className="w-3 h-3" />
+                        <h4 className="font-semibold flex items-center gap-2 text-slate-900"><Globe className="w-4 h-4 text-primary" /> Online Submission</h4>
+                        <p className="text-sm text-slate-600">Applicants may alternatively process applications online via the following link:</p>
+                        <div className="flex flex-col gap-3">
+                            <Link href="https://kasupda.kdsg.gov.ng/e-payment/" target="_blank" className="bg-white border text-primary p-3 rounded-xl hover:shadow-md transition-all text-sm font-bold flex items-center justify-between group">
+                                KASUPDA e-Payment Platform <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
                             </Link>
-                            <Link href="https://kasupda.kdsg.gov.ng/create-application/" target="_blank" className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
-                                Create Application Portal <ExternalLink className="w-3 h-3" />
+                            <Link href="https://kasupda.kdsg.gov.ng/create-application/" target="_blank" className="bg-white border text-primary p-3 rounded-xl hover:shadow-md transition-all text-sm font-bold flex items-center justify-between group">
+                                Create Application Portal <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100" />
                             </Link>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                    <h4 className="font-semibold text-green-900 dark:text-green-300 mb-2 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" /> Confirmation of Application
+                <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                    <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                        <CheckCircle2 className="w-5 h-5" /> Confirmation of Application
                     </h4>
-                    <p className="text-sm text-green-800 dark:text-green-400">Upon successful submission, you will be issued an <strong>Acknowledgement Letter</strong> with a <strong>Building Permit Identification (BPI) Number</strong>, which serves as your unique reference for tracking.</p>
+                    <p className="text-sm text-blue-800 leading-relaxed">Upon successful submission, you will be issued an <strong>Acknowledgement Letter</strong>. This letter contains your <strong>Building Permit Identification (BPI) Number</strong>, which consists of a unique application reference number and an official file number.</p>
                 </div>
             </div>
         )
@@ -209,51 +208,49 @@ const steps = [
         icon: <Clock className="w-6 h-6" />,
         content: (
             <div className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-1 space-y-4">
-                        <div className="flex items-start gap-4 p-4 rounded-xl bg-primary/5 border border-primary/10">
-                            <div className="bg-primary/10 p-2 rounded-lg">
-                                <Clock className="w-5 h-5 text-primary" />
+                <div className="flex flex-col md:flex-row gap-8">
+                    <div className="flex-1 space-y-6">
+                        <div className="flex items-start gap-4 p-5 rounded-2xl bg-primary/5 border border-primary/10">
+                            <div className="bg-primary/10 p-2.5 rounded-xl">
+                                <Clock className="w-6 h-6 text-primary" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-primary">Approval Timeline</h4>
-                                <p className="text-sm text-muted-foreground">Successful applicants will be notified within <strong>5-10 working days</strong> via SMS, telephone, or email.</p>
+                                <h4 className="font-bold text-primary text-base">Approval Timeline</h4>
+                                <p className="text-sm text-slate-700 leading-relaxed">Successful applicants will be notified within <strong>5-10 working days</strong> via SMS, telephone call, or email.</p>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <h4 className="font-semibold text-sm">Next Steps after Notification:</h4>
-                            <ul className="space-y-2">
-                                <li className="text-sm flex gap-3">
-                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">1</span>
-                                    <span><strong>Assessment of Fees:</strong> Based on size, location, and proposed use.</span>
-                                </li>
-                                <li className="text-sm flex gap-3">
-                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">2</span>
-                                    <span><strong>Payment of Fees:</strong> Can be made via Bank, POS, or Online portal.</span>
-                                </li>
-                                <li className="text-sm flex gap-3">
-                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">3</span>
-                                    <span><strong>Collection:</strong> Present evidence of payment at the designated KASUPDA office.</span>
-                                </li>
+                        <div className="space-y-4">
+                            <h4 className="font-bold text-sm text-slate-900 uppercase tracking-wider">Next Steps after Notification:</h4>
+                            <ul className="space-y-3">
+                                {[
+                                    { title: "Assessment of Fees", desc: "Fees are assessed based on the size, location, and proposed use of the development." },
+                                    { title: "Payment of Fees", desc: "Payment can be made through any of the approved channels (Bank, POS, or Online)." },
+                                    { title: "Collection", desc: "Present evidence of payment at the designated KASUPDA office to collect your check-list certificate." }
+                                ].map((item, idx) => (
+                                    <li key={idx} className="text-sm flex gap-4">
+                                        <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[11px] font-black shrink-0">{idx + 1}</span>
+                                        <span className="text-slate-700"><strong className="text-slate-900">{item.title}:</strong> {item.desc}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
 
-                    <div className="md:w-72 p-4 rounded-xl bg-muted border border-border space-y-4">
-                        <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Enquiries & Follow-up</h4>
-                        <div className="space-y-3">
-                            <div className="flex gap-2 text-xs">
-                                <MapPin className="w-4 h-4 text-primary shrink-0" />
-                                <span>KASUPDA Customer Service Unit<br />No. 4 Bida Road, Kaduna.</span>
+                    <div className="md:w-80 p-6 rounded-2xl bg-slate-900 text-white space-y-5">
+                        <h4 className="font-bold text-xs uppercase tracking-widest text-primary-foreground/60">Enquiries & Follow-up</h4>
+                        <div className="space-y-4">
+                            <div className="flex gap-3 text-sm">
+                                <MapPin className="w-5 h-5 text-primary shrink-0" />
+                                <span className="leading-relaxed font-medium">KASUPDA Customer Service Unit<br />No. 4 Bida Road, Kaduna.</span>
                             </div>
-                            <div className="flex gap-2 text-xs">
-                                <Globe className="w-4 h-4 text-primary shrink-0" />
-                                <Link href="mailto:kasupda@kdsg.gov.ng" className="hover:underline">kasupda@kdsg.gov.ng</Link>
+                            <div className="flex gap-3 text-sm">
+                                <Globe className="w-5 h-5 text-primary shrink-0" />
+                                <Link href="mailto:kasupda@kdsg.gov.ng" className="hover:text-primary transition-colors font-medium underline underline-offset-4">kasupda@kdsg.gov.ng</Link>
                             </div>
-                            <div className="flex gap-2 text-xs">
-                                <ExternalLink className="w-4 h-4 text-primary shrink-0" />
-                                <span>+234 912 500 2126</span>
+                            <div className="flex gap-3 text-sm">
+                                <ExternalLink className="w-5 h-5 text-primary shrink-0" />
+                                <span className="font-bold tracking-wider">+234 912 500 2126</span>
                             </div>
                         </div>
                     </div>
@@ -265,59 +262,58 @@ const steps = [
 
 export default function BuildingPermitGuidelinesPage() {
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        <div className="min-h-screen bg-white">
             {/* Hero Section */}
-            <section className="bg-primary/5 border-b py-12 md:py-20 relative overflow-hidden">
+            <section className="bg-white border-b border-slate-100 py-16 md:py-24 relative overflow-hidden">
                 <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
-                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 leading-relaxed">
+                    <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-6 leading-tight uppercase">
                         APPLICATION PROCESS AND GUIDELINES FOR OBTAINING BUILDING PERMIT IN KADUNA STATE
                     </h1>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">
+                    <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium">
                         Pursuant to the Kaduna State Urban and Regional Planning Law, 2018, all individuals and organisations
                         intending to undertake any form of land development within Kaduna State shall obtain a Development
                         (Building) Permit through the procedures outlined below:
                     </p>
                 </div>
                 {/* Background Decorative Element */}
-                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50" />
-                <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl opacity-50" />
+                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-30" />
             </section>
 
             {/* Steps Section */}
-            <div className="container mx-auto px-4 py-12 md:py-16">
-                <div className="max-w-5xl mx-auto space-y-12">
+            <div className="container mx-auto px-4 py-16 md:py-20 bg-white">
+                <div className="max-w-5xl mx-auto space-y-16">
                     {steps.map((step, index) => (
                         <div key={index} className="relative">
                             {/* Connector Line */}
                             {index !== steps.length - 1 && (
-                                <div className="absolute left-[24px] top-[70px] bottom-[-50px] w-px bg-border hidden md:block" />
+                                <div className="absolute left-[24px] top-[80px] bottom-[-60px] w-0.5 bg-slate-100 hidden md:block" />
                             )}
 
-                            <div className="flex flex-col md:flex-row gap-6 md:gap-10">
+                            <div className="flex flex-col md:flex-row gap-8 md:gap-14">
                                 {/* Step Marker */}
                                 <div className="flex md:flex-col items-center gap-4 shrink-0">
-                                    <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20 relative z-10">
+                                    <div className="w-14 h-14 rounded-3xl bg-primary text-white flex items-center justify-center font-black text-2xl shadow-xl shadow-primary/20 relative z-10">
                                         {step.number}
                                     </div>
-                                    <div className="md:hidden h-px flex-1 bg-border" />
-                                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary/60 md:rotate-180 md:[writing-mode:vertical-lr] md:mt-4 whitespace-nowrap">
-                                        STEP {step.number}
+                                    <div className="md:hidden h-0.5 flex-1 bg-slate-100" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 md:rotate-180 md:[writing-mode:vertical-lr] md:mt-6 whitespace-nowrap">
+                                        PHASE {step.number}
                                     </span>
                                 </div>
 
                                 {/* Content Card */}
-                                <Card className="flex-1 border-none shadow-xl shadow-slate-200/50 dark:shadow-none bg-white dark:bg-slate-900 overflow-hidden group hover:ring-1 hover:ring-primary/20 transition-all duration-300">
-                                    <CardHeader className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-border/50 py-4 px-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+                                <Card className="flex-1 border-none shadow-2xl shadow-slate-200/40 bg-white overflow-hidden group hover:shadow-slate-200/60 transition-all duration-500">
+                                    <CardHeader className="bg-slate-50/30 border-b border-slate-50 py-5 px-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-2.5 bg-white rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-500">
                                                 {step.icon}
                                             </div>
-                                            <CardTitle className="text-lg md:text-xl font-bold tracking-tight">
+                                            <CardTitle className="text-xl md:text-2xl font-black tracking-tight text-slate-900">
                                                 {step.title}
                                             </CardTitle>
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="p-6 md:p-8">
+                                    <CardContent className="p-8 md:p-10">
                                         {step.content}
                                     </CardContent>
                                 </Card>
@@ -327,18 +323,21 @@ export default function BuildingPermitGuidelinesPage() {
                 </div>
 
                 {/* Closing Note */}
-                <div className="max-w-4xl mx-auto mt-20 p-8 rounded-3xl bg-slate-900 text-white text-center space-y-4">
-                    <p className="text-lg font-medium opacity-90">Ready to start your application?</p>
-                    <div className="flex flex-wrap justify-center gap-4">
+                <div className="max-w-4xl mx-auto mt-24 p-12 rounded-[3rem] bg-slate-900 text-white text-center space-y-6 shadow-2xl shadow-slate-900/20">
+                    <p className="text-xl font-bold text-primary-foreground/90">Ready to start your application?</p>
+                    <p className="text-sm opacity-60 max-w-lg mx-auto leading-relaxed">
+                        Ensure all your documents are ready before starting the online process to have a smooth experience.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-6 pt-4">
                         <Link
                             href="/dashboard/apply"
-                            className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-bold transition-all transform hover:scale-105"
+                            className="px-10 py-4 bg-primary text-white rounded-full font-black transition-all transform hover:scale-105 hover:bg-primary/90 shadow-xl shadow-primary/20"
                         >
                             Start Application Online
                         </Link>
                     </div>
-                    <p className="text-xs opacity-50 pt-4">
-                        © {new Date().getFullYear()} Kaduna State Urban Planning and Development Authority (KASUPDA). All rights reserved.
+                    <p className="text-[10px] uppercase tracking-[0.2em] opacity-30 pt-8 font-bold">
+                        © {new Date().getFullYear()} Kaduna State Urban Planning and Development Authority (KASUPDA)
                     </p>
                 </div>
             </div>
