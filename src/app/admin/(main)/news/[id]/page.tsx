@@ -12,7 +12,7 @@ function EditContentPageContent() {
     const searchParams = useSearchParams();
     const id = params.id as string;
     const typeStr = searchParams.get('type') || 'news';
-    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel'].includes(typeStr))
+    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel', 'mda'].includes(typeStr))
         ? typeStr as any
         : 'news';
 
@@ -27,6 +27,7 @@ function EditContentPageContent() {
             else if (type === 'event') table = 'site_events';
             else if (type === 'leadership') table = 'site_leadership';
             else if (type === 'carousel') table = 'site_carousel';
+            else if (type === 'mda') table = 'site_mda_logos';
 
             try {
                 const { data, error } = await supabase.from(table).select('*').eq('id', id).single();

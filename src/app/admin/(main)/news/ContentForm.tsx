@@ -9,13 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { saveNewsItem, savePublication, saveStatistic, saveEvent, saveLeadershipPerson, saveCarouselImage } from '@/app/actions/newsActions';
-import { Loader2, ArrowLeft, Image as ImageIcon, Upload, User, Layout } from 'lucide-react';
+import { saveNewsItem, savePublication, saveStatistic, saveEvent, saveLeadershipPerson, saveCarouselImage, saveMDALogo } from '@/app/actions/newsActions';
+import { Loader2, ArrowLeft, Image as ImageIcon, Upload, User, Layout, Building2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface ContentFormProps {
     initialData?: any;
-    type: 'news' | 'publication' | 'statistic' | 'event' | 'leadership' | 'carousel';
+    type: 'news' | 'publication' | 'statistic' | 'event' | 'leadership' | 'carousel' | 'mda';
 }
 
 export default function ContentForm({ initialData, type }: ContentFormProps) {
@@ -120,6 +120,8 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                 result = await saveLeadershipPerson(formData);
             } else if (type === 'carousel') {
                 result = await saveCarouselImage(formData);
+            } else if (type === 'mda') {
+                result = await saveMDALogo(formData);
             } else {
                 result = { success: false, error: 'Invalid content type' };
             }
@@ -218,6 +220,19 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                                 </>
                             )}
 
+                            {type === 'mda' && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="name">MDA Name</Label>
+                                        <Input id="name" name="name" defaultValue={initialData?.name} required placeholder="Enter MDA name..." />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="display_order">Display Order</Label>
+                                        <Input id="display_order" name="display_order" type="number" defaultValue={initialData?.display_order || 0} />
+                                    </div>
+                                </>
+                            )}
+
                             {type === 'statistic' && (
                                 <>
                                     <div className="space-y-2">
@@ -266,7 +281,7 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                                 </div>
                             )}
 
-                            {(type === 'news' || type === 'publication' || type === 'leadership' || type === 'carousel') && (
+                            {(type === 'news' || type === 'publication' || type === 'leadership' || type === 'carousel' || type === 'mda') && (
                                 <>
                                     <div className="space-y-2">
                                         <Label htmlFor="imageFile">{type === 'leadership' ? 'Profile Photo' : 'Thumbnail/Image'}</Label>
@@ -276,6 +291,8 @@ export default function ContentForm({ initialData, type }: ContentFormProps) {
                                                     <img src={initialData.image_url} alt="Current" className="w-full h-full object-cover" />
                                                 ) : type === 'leadership' ? (
                                                     <User className="text-muted-foreground w-10 h-10" />
+                                                ) : type === 'mda' ? (
+                                                    <Building2 className="text-muted-foreground w-10 h-10" />
                                                 ) : (
                                                     <ImageIcon className="text-muted-foreground w-10 h-10" />
                                                 )}

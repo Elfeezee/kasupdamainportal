@@ -456,3 +456,75 @@ export async function deleteCarouselImage(id: string) {
     revalidatePath('/admin/news');
     return { success: true };
 }
+
+export async function getMDALogos() {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('site_mda_logos')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching MDA logos:', error);
+        return [];
+    }
+    return data;
+}
+
+export async function saveMDALogo(formData: FormData) {
+    const supabase = await createSupabaseServerClient();
+    const id = formData.get('id') as string;
+    const name = formData.get('name') as string;
+    const imageFile = formData.get('imageFile') as File;
+    let logoUrl = formData.get('existingImageUrl') as string || '';
+
+    if (imageFile && imageFile.size > 0) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `mda-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `mda-logos/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('news-thumbnails')
+            .upload(filePath, imageFile);
+
+        if (uploadError) {
+            console.error('MDA logo upload error:', uploadError);
+        } else {
+            const { data: { publicUrl } } = supabase.storage
+                .from('news-thumbnails')
+                .getPublicUrl(filePath);
+            logoUrl = publicUrl;
+        }
+    }
+
+    const payload = {
+        name,
+        logo_url: logoUrl,
+        display_order: parseInt(formData.get('display_order') as string || '0'),
+        updated_at: new Date().toISOString(),
+    };
+
+    let result;
+    if (id) {
+        result = await supabase.from('site_mda_logos').update(payload).eq('id', id);
+    } else {
+        result = await supabase.from('site_mda_logos').insert([payload]);
+    }
+
+    if (result.error) return { success: false, error: result.error.message };
+
+    revalidatePath('/news');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+
+export async function deleteMDALogo(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.from('site_mda_logos').delete().eq('id', id);
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/news');
+    revalidatePath('/admin/news');
+    return { success: true };
+}
+

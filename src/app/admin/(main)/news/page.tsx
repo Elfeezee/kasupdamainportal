@@ -17,14 +17,16 @@ import {
     getLeadership,
     deleteLeadershipPerson,
     getCarouselImages,
-    deleteCarouselImage
+    deleteCarouselImage,
+    getMDALogos,
+    deleteMDALogo
 } from '@/app/actions/newsActions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import { UserCheck, LayoutPanelTop } from 'lucide-react';
+import { UserCheck, LayoutPanelTop, Building2 } from 'lucide-react';
 
 export default function NewsManagementPage() {
     const { toast } = useToast();
@@ -34,18 +36,20 @@ export default function NewsManagementPage() {
     const [events, setEvents] = useState<any[]>([]);
     const [leadership, setLeadership] = useState<any[]>([]);
     const [carousel, setCarousel] = useState<any[]>([]);
+    const [mdaLogos, setMDALogos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [news, pubs, stats, evs, lead, car] = await Promise.all([
+            const [news, pubs, stats, evs, lead, car, mdas] = await Promise.all([
                 getNewsItems(),
                 getPublications(),
                 getStatistics(),
                 getEvents(),
                 getLeadership(),
-                getCarouselImages()
+                getCarouselImages(),
+                getMDALogos()
             ]);
             setNewsItems(news);
             setPublications(pubs);
@@ -53,6 +57,7 @@ export default function NewsManagementPage() {
             setEvents(evs);
             setLeadership(lead);
             setCarousel(car);
+            setMDALogos(mdas);
         } catch (error) {
             console.error("Error fetching data:", error);
             toast({ title: 'Error', description: 'Failed to fetch management data.', variant: 'destructive' });
@@ -131,6 +136,17 @@ export default function NewsManagementPage() {
         }
     };
 
+    const handleDeleteMDALogo = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this MDA logo?')) return;
+        const result = await deleteMDALogo(id);
+        if (result.success) {
+            toast({ title: 'Deleted', description: 'MDA logo deleted successfully.' });
+            fetchData();
+        } else {
+            toast({ title: 'Error', description: result.error, variant: 'destructive' });
+        }
+    };
+
     return (
         <div className="w-full space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -159,6 +175,9 @@ export default function NewsManagementPage() {
                     </TabsTrigger>
                     <TabsTrigger value="carousel" className="gap-2">
                         <LayoutPanelTop className="h-4 w-4" /> Carousel
+                    </TabsTrigger>
+                    <TabsTrigger value="mda" className="gap-2">
+                        <Building2 className="h-4 w-4" /> MDA&apos;s
                     </TabsTrigger>
                 </TabsList>
 
@@ -459,6 +478,55 @@ export default function NewsManagementPage() {
                                             </Link>
                                         </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleDeleteCarousel(item.id)} className="text-destructive">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </TabsContent>
+                <TabsContent value="mda" className="mt-6 space-y-4">
+                    <div className="flex justify-end">
+                        <Button asChild size="sm">
+                            <Link href="/admin/news/new?type=mda">
+                                <Plus className="mr-2 h-4 w-4" /> Add MDA Logo
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {loading ? (
+                            <p>Loading MDA logos...</p>
+                        ) : mdaLogos.length === 0 ? (
+                            <Card className="col-span-full py-12">
+                                <CardContent className="flex flex-col items-center justify-center text-center">
+                                    <Building2 className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+                                    <p className="text-lg font-medium">No MDA logos found.</p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            mdaLogos.map((item) => (
+                                <Card key={item.id} className="flex flex-col shadow-md overflow-hidden">
+                                    <div className="aspect-square w-full bg-muted flex items-center justify-center relative p-4">
+                                        {item.logo_url ? (
+                                            <img src={item.logo_url} alt={item.name} className="w-full h-full object-contain" />
+                                        ) : (
+                                            <Building2 className="h-10 w-10 text-muted-foreground opacity-20" />
+                                        )}
+                                        <div className="absolute top-2 left-2">
+                                            <Badge>Order: {item.display_order}</Badge>
+                                        </div>
+                                    </div>
+                                    <CardHeader className="p-4">
+                                        <CardTitle className="text-base line-clamp-1">{item.name}</CardTitle>
+                                    </CardHeader>
+                                    <div className="p-4 pt-0 flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/news/${item.id}?type=mda`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteMDALogo(item.id)} className="text-destructive">
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>

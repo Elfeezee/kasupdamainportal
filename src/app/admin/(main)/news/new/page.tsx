@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 function NewContentPageContent() {
     const searchParams = useSearchParams();
     const typeStr = searchParams.get('type') || 'news';
-    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel'].includes(typeStr))
+    const type = (['news', 'publication', 'statistic', 'event', 'leadership', 'carousel', 'mda'].includes(typeStr))
         ? typeStr as any
         : 'news';
 

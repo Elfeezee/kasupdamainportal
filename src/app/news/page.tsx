@@ -12,11 +12,12 @@ export const metadata: Metadata = {
   description: 'Stay updated with the latest news, announcements, and publications from KASUPDA.',
 };
 
-import { getNewsItems, getPublications } from "@/app/actions/newsActions";
+import { getNewsItems, getPublications, getMDALogos } from "@/app/actions/newsActions";
 
 export default async function NewsAndPublicationsPage() {
   const dbNewsItems = await getNewsItems();
   const dbPublications = await getPublications();
+  const dbMDAs = await getMDALogos();
 
   const displayNewsItems = dbNewsItems.length > 0 ? dbNewsItems.map(item => ({
     id: item.id,
@@ -136,6 +137,30 @@ export default async function NewsAndPublicationsPage() {
               ))}
             </div>
           </div>
+          {/* MDA's Section */}
+          {dbMDAs.length > 0 && (
+            <div className="mt-20">
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl text-primary mb-12 flex items-center justify-center">
+                Our Collaborating MDA&apos;s
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center opacity-80">
+                {dbMDAs.map((mda, index) => (
+                  <div key={index} className="group flex flex-col items-center">
+                    <div className="w-24 h-24 md:w-32 md:h-32 bg-white rounded-xl shadow-sm border border-border p-4 flex items-center justify-center transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
+                      <Image
+                        src={mda.logo_url}
+                        alt={mda.name}
+                        width={120}
+                        height={120}
+                        className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm font-medium text-muted-foreground text-center line-clamp-1">{mda.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
