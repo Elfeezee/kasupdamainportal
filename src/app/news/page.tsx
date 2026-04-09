@@ -147,13 +147,15 @@ export default async function NewsAndPublicationsPage() {
                 {dbMDAs.map((mda, index) => (
                   <div key={index} className="group flex flex-col items-center">
                     <div className="w-24 h-24 md:w-32 md:h-32 bg-white rounded-xl shadow-sm border border-border p-4 flex items-center justify-center transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
-                      <Image
-                        src={mda.logo_url}
-                        alt={mda.name}
-                        width={120}
-                        height={120}
-                        className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                      />
+                      {mda.logo_url ? (
+                        <img
+                          src={mda.logo_url}
+                          alt={mda.name}
+                          className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                        />
+                      ) : (
+                        <div className="text-xs text-muted-foreground text-center">No Logo</div>
+                      )}
                     </div>
                     <p className="mt-3 text-sm font-medium text-muted-foreground text-center line-clamp-1">{mda.name}</p>
                   </div>

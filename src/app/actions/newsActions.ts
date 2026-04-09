@@ -335,14 +335,14 @@ export async function saveLeadershipPerson(formData: FormData) {
         const filePath = `leadership/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('news-thumbnails')
+            .from('news_media')
             .upload(filePath, imageFile);
 
         if (uploadError) {
             console.error('Leadership image upload error:', uploadError);
         } else {
             const { data: { publicUrl } } = supabase.storage
-                .from('news-thumbnails')
+                .from('news_media')
                 .getPublicUrl(filePath);
             imageUrl = publicUrl;
         }
@@ -411,14 +411,14 @@ export async function saveCarouselImage(formData: FormData) {
         const filePath = `carousel/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('news-thumbnails')
+            .from('news_media')
             .upload(filePath, imageFile);
 
         if (uploadError) {
             console.error('Carousel image upload error:', uploadError);
         } else {
             const { data: { publicUrl } } = supabase.storage
-                .from('news-thumbnails')
+                .from('news_media')
                 .getPublicUrl(filePath);
             imageUrl = publicUrl;
         }
@@ -484,14 +484,14 @@ export async function saveMDALogo(formData: FormData) {
         const filePath = `mda-logos/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('news-thumbnails')
+            .from('news_media')
             .upload(filePath, imageFile);
 
         if (uploadError) {
             console.error('MDA logo upload error:', uploadError);
         } else {
             const { data: { publicUrl } } = supabase.storage
-                .from('news-thumbnails')
+                .from('news_media')
                 .getPublicUrl(filePath);
             logoUrl = publicUrl;
         }
