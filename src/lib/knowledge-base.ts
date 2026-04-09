@@ -21,47 +21,32 @@ export const knowledgeBase = [
     `,
   },
   {
-    source: "Building Permit Process",
+    source: "Building Permit Process (4 Steps)",
     content: `
-      The official workflow for processing building permit applications at KASUPDA is a sequence of 8 steps:
-      1. Application Submission (Front Desk)
-      2. DG's Office (Director General)
-      3. Director Development Control
-      4. Site Inspection
-      5. Building Permit Unit
-      6. Director Development Control (Review)
-      7. DG's Office (Final Approval)
-      8. Conveyance (Issuing the permit)
+      The official application process for obtaining a building permit at KASUPDA consists of 4 main steps:
+      Step 1: Application Channels - Choose between physical (Headquarters/Zonal Offices) or online portal. Download BPI or BPO forms.
+      Step 2: Required Documentation - Prepare proof of land ownership, architectural drawings (sealed by registered Architect), Site Analysis Report (SAR), M&E drawings, and structural drawings (for storey buildings).
+      Step 3: Submission & Fees - Pay processing fees (Individuals: ₦10,000, Organizations: ₦20,000; Express options available). Submit documents via Customer Service Unit or Online Portal. Get Acknowledgement Letter and BPI Number.
+      Step 4: Collection of Certificate - Notification of approval within 5-10 working days. Assessment of final fees based on development size. Final payment and collection of certificate.
     `,
   },
   {
-    source: "Building Permit Guidelines - Fees",
+    source: "Building Permit Guidelines - Fees & Requirements",
     content: `
-      Processing Fees for Building Permits:
-      - Company / Organization: ₦20,000.00
-      - Commercial Development: ₦20,000.00
-      - Individual: ₦10,000.00
-      - Telecom Mast: ₦20,000.00
-      - Car wash: ₦10,000.00
-      - Quarter Plot: ₦2,000.00
+      Processing Fees:
+      - Individuals: ₦10,000 (Standard), ₦50,000 (Express)
+      - Organizations: ₦20,000 (Standard), ₦100,000 (Express)
+      
+      Main Requirements:
+      - Proof of Land Ownership (Digital C of O preferred)
+      - Architectural Drawings (2 copies of A3, sealed/stamped)
+      - Site Analysis Report (SAR) by registered consultants
+      - M&E Drawings (Hard copy + Soft copy on CD)
+      - Structural Drawings and Calculations (for storey buildings)
+      - Valid Means of Identification and Utility Bill
     `,
   },
   {
-    source: "Building Permit Guidelines - Residential Requirements",
-    content: `
-      Required documents for a Residential Building Permit include:
-      - Land title document (C of O, KADGIS Offer Letter, etc.)
-      - Site Analysis Report (SAR)
-      - Complete working Drawings (Architectural, Mechanical and Electrical)
-      - For storey buildings: Structural drawing, Calculation sheet, Letter for Supervision.
-      - Builder's Document for commercial Residential projects.
-      - Geotechnical investigation Report (Soil Test) for buildings over two floors.
-      - PDF copy of all drawings on CD.
-      - ID of applicant and representative (optional).
-      - Copy of utility bill.
-    `,
-  },
-   {
     source: "Development and Design Guidelines",
     content: `
       KASUPDA has detailed architectural guidelines for various types of developments.
