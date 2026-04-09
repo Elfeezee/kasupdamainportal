@@ -29,7 +29,7 @@ export default function BuildingPermitGuidelinesPage() {
             {/* Header Section */}
             <section className="bg-white border-b py-12 md:py-16 text-center">
                 <div className="container mx-auto px-4 max-w-5xl">
-                    <h1 className="text-2xl md:text-3xl font-bold text-red-600 mb-6 leading-tight uppercase tracking-tight">
+                    <h1 className="text-2xl md:text-3xl font-bold text-green-600 mb-6 leading-tight uppercase tracking-tight">
                         APPLICATION PROCESS AND GUIDELINES FOR OBTAINING BUILDING PERMIT IN KADUNA STATE
                     </h1>
                     <p className="text-lg md:text-xl font-bold text-slate-800 leading-relaxed mb-4">
@@ -46,7 +46,7 @@ export default function BuildingPermitGuidelinesPage() {
                     {/* STEP 1 */}
                     <div className="flex flex-col md:flex-row gap-0 md:gap-8 group">
                         <div className="md:w-32 shrink-0 flex flex-col items-center">
-                            <div className="w-full bg-orange-500 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
+                            <div className="w-full bg-green-600 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
                                 Step 1
                             </div>
                             <div className="hidden md:block h-full w-1.5 bg-slate-100 mt-2 rounded-full" />
@@ -113,7 +113,7 @@ export default function BuildingPermitGuidelinesPage() {
                     {/* STEP 2 */}
                     <div className="flex flex-col md:flex-row gap-0 md:gap-8 group">
                         <div className="md:w-32 shrink-0 flex flex-col items-center">
-                            <div className="w-full bg-orange-500 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
+                            <div className="w-full bg-green-600 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
                                 Step 2
                             </div>
                             <div className="hidden md:block h-full w-1.5 bg-slate-100 mt-2 rounded-full" />
@@ -324,7 +324,7 @@ export default function BuildingPermitGuidelinesPage() {
                     {/* STEP 3 */}
                     <div className="flex flex-col md:flex-row gap-0 md:gap-8 group">
                         <div className="md:w-32 shrink-0 flex flex-col items-center">
-                            <div className="w-full bg-orange-500 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
+                            <div className="w-full bg-green-600 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
                                 Step 3
                             </div>
                             <div className="hidden md:block h-full w-1.5 bg-slate-100 mt-2 rounded-full" />
@@ -350,10 +350,10 @@ export default function BuildingPermitGuidelinesPage() {
                                                         <div>
                                                             <p className="font-bold text-xs mb-1 opacity-60">Processing Fees:</p>
                                                             <ul className="ml-6 text-sm grid grid-cols-1 md:grid-cols-2 gap-1 uppercase font-bold text-slate-800">
-                                                                <li className="flex justify-between md:block">Individuals: <span className="text-orange-600">₦10,000</span></li>
-                                                                <li className="flex justify-between md:block">Individuals (Express Service): <span className="text-orange-600">₦50,000</span></li>
-                                                                <li className="flex justify-between md:block">Companies/Organisations: <span className="text-orange-600">₦20,000</span></li>
-                                                                <li className="flex justify-between md:block">Companies/Organisations (Express Service): <span className="text-orange-600">₦100,000</span></li>
+                                                                <li className="flex justify-between md:block">Individuals: <span className="text-green-600">₦10,000</span></li>
+                                                                <li className="flex justify-between md:block">Individuals (Express Service): <span className="text-green-600">₦50,000</span></li>
+                                                                <li className="flex justify-between md:block">Companies/Organisations: <span className="text-green-600">₦20,000</span></li>
+                                                                <li className="flex justify-between md:block">Companies/Organisations (Express Service): <span className="text-green-600">₦100,000</span></li>
                                                             </ul>
                                                         </div>
                                                         <div>
@@ -406,7 +406,7 @@ export default function BuildingPermitGuidelinesPage() {
                                     </div>
 
                                     {/* Confirmation */}
-                                    <div className="space-y-4 bg-slate-50 p-6 rounded-xl border-l-4 border-orange-500">
+                                    <div className="space-y-4 bg-slate-50 p-6 rounded-xl border-l-4 border-green-600">
                                         <h4 className="font-bold text-base">3. Confirmation of Application</h4>
                                         <p className="text-sm italic">Upon successful submission of the application:</p>
                                         <ul className="ml-6 space-y-4">
@@ -438,7 +438,7 @@ export default function BuildingPermitGuidelinesPage() {
                     {/* STEP 4 */}
                     <div className="flex flex-col md:flex-row gap-0 md:gap-8 group pb-12">
                         <div className="md:w-32 shrink-0 flex flex-col items-center">
-                            <div className="w-full bg-orange-500 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
+                            <div className="w-full bg-green-600 text-white font-black text-2xl py-4 flex items-center justify-center rounded-t-lg md:rounded-lg shadow-lg">
                                 Step 4
                             </div>
                         </div>
@@ -507,15 +507,15 @@ export default function BuildingPermitGuidelinesPage() {
                                                 <p className="text-sm">Applicants who do not receive notification of application status within <strong>three (3) working days</strong> after submission are advised to contact:</p>
                                                 <div className="grid md:grid-cols-3 gap-4">
                                                     <div className="p-4 bg-slate-50 border rounded-xl flex flex-col items-center text-center gap-2">
-                                                        <MapPin className="w-5 h-5 text-orange-600" />
+                                                        <MapPin className="w-5 h-5 text-green-600" />
                                                         <p className="text-[11px] font-bold">KASUPDA Customer Service Unit<br />No. 4 Bida Road, Kaduna</p>
                                                     </div>
                                                     <div className="p-4 bg-slate-50 border rounded-xl flex flex-col items-center text-center gap-2">
-                                                        <Mail className="w-5 h-5 text-orange-600" />
+                                                        <Mail className="w-5 h-5 text-green-600" />
                                                         <Link href="mailto:kasupda@kdsg.gov.ng" className="text-[11px] font-bold underline">kasupda@kdsg.gov.ng</Link>
                                                     </div>
                                                     <div className="p-4 bg-slate-50 border rounded-xl flex flex-col items-center text-center gap-2">
-                                                        <Phone className="w-5 h-5 text-orange-600" />
+                                                        <Phone className="w-5 h-5 text-green-600" />
                                                         <p className="text-[11px] font-bold">Phone: +234 912 500 2126</p>
                                                     </div>
                                                 </div>
