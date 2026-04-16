@@ -216,11 +216,11 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-20 max-w-screen-2xl items-center">
+      <div className="container flex h-24 max-w-screen-2xl items-center">
         {/* Desktop Navigation */}
         <div className="mr-4 hidden md:flex md:flex-1 items-center">
           <Link href="/" className="mr-8 flex items-center space-x-3">
-            <Image src="/image/logo.png" alt="KASUPDA Logo" width={48} height={48} className="h-12 w-12" />
+            <Image src="/image/logo.png" alt="KASUPDA Logo" width={80} height={80} className="h-20 w-20" />
             <span className="hidden font-bold sm:inline-block text-primary text-xl tracking-tight">
               KASUPDA
             </span>
@@ -419,7 +419,7 @@ export default function Header() {
         {/* Mobile Navigation Header Bar */}
         <div className="flex w-full items-center justify-between md:hidden py-2">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/image/logo.png" alt="KASUPDA Logo" width={40} height={40} className="h-10 w-10" />
+            <Image src="/image/logo.png" alt="KASUPDA Logo" width={64} height={64} className="h-16 w-16" />
             <span className="font-bold text-primary text-lg">
               KASUPDA
             </span>
