@@ -234,4 +234,3 @@ export default function Receipt({ transaction }: ReceiptProps) {
         </>
     );
 }
-}
