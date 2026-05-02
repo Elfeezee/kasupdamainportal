@@ -217,6 +217,37 @@ const renderFieldValue = (
         return <p className="text-sm font-medium text-slate-700">{format(parseISO(value), 'PPP')}</p>;
     }
 
+    if (value && typeof value === 'object') {
+        const entries = Array.isArray(value)
+            ? value.map((item, index) => ({ key: String(index), value: item }))
+            : Object.entries(value).map(([nestedKey, nestedValue]) => ({ key: nestedKey, value: nestedValue }));
+
+        if (entries.length === 0) {
+            return <span className="text-sm text-slate-400 italic">Not provided</span>;
+        }
+
+        return (
+            <div className="space-y-2">
+                {entries.map(({ key: nestedKey, value: nestedValue }) => {
+                    if (typeof nestedValue === 'boolean') {
+                        return (
+                            <div key={nestedKey} className="flex items-center gap-2 text-sm text-slate-700">
+                                <span className="font-semibold">{nestedKey.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}:</span>
+                                <span>{nestedValue ? 'Yes' : 'No'}</span>
+                            </div>
+                        );
+                    }
+                    return (
+                        <div key={nestedKey} className="text-sm text-slate-700 break-words">
+                            <span className="font-semibold">{nestedKey.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}:</span>{' '}
+                            {String(nestedValue)}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+
     // Empty state
     if (!value && value !== 0) return <span className="text-sm text-slate-400 italic">Not provided</span>;
 
