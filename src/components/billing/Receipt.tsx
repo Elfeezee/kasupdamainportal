@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Landmark, CheckCircle2, Printer, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface ReceiptProps {
     transaction: {
@@ -33,11 +33,11 @@ export default function Receipt({ transaction }: ReceiptProps) {
 
     return (
         <>
-            {/* Screen View */}
-            <div className="print:hidden max-w-3xl mx-auto p-4 sm:p-8 bg-white text-slate-900">
+            {/* Unified Screen and Print View */}
+            <div className="max-w-3xl mx-auto p-4 sm:p-8 bg-white text-slate-900 print-receipt-container">
                 <div className="flex justify-between items-start mb-8">
                     <h2 className="text-2xl font-bold text-slate-800">Payment Receipt</h2>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 print:hidden">
                         <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
                             <Printer className="h-4 w-4" /> Print Receipt
                         </Button>
@@ -138,8 +138,17 @@ export default function Receipt({ transaction }: ReceiptProps) {
                                 </p>
                             </div>
                             <div className="text-center sm:text-right">
-                                <div className="w-24 h-24 bg-slate-100 rounded-lg mb-2 mx-auto sm:ml-auto flex items-center justify-center border-2 border-slate-200">
-                                    <span className="text-[8px] font-bold text-slate-400 uppercase text-center px-2">KASUPDA SECURE QR CODE</span>
+                                <div className="w-24 h-24 bg-white rounded-lg mb-2 mx-auto sm:ml-auto flex items-center justify-center border-2 border-slate-200 p-1">
+                                    <QRCodeSVG 
+                                        value={JSON.stringify({
+                                            id: transaction.id,
+                                            ref: transaction.payment_reference,
+                                            amount: transaction.amount,
+                                            date: transaction.created_at
+                                        })} 
+                                        size={80} 
+                                        level="L"
+                                    />
                                 </div>
                                 <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Verified by PayKaduna</p>
                             </div>
@@ -148,78 +157,7 @@ export default function Receipt({ transaction }: ReceiptProps) {
                 </Card>
             </div>
 
-            {/* Print View - Simplified Structure */}
-            <div className="hidden print:block w-full bg-white p-2 print-receipt-container" style={{ fontSize: '12px' }}>
-                {/* Header with Logo/Branding */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', paddingBottom: '12px', borderBottom: '2px solid #ccc' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <Landmark style={{ width: '24px', height: '24px', color: '#2563eb' }} />
-                        <div>
-                            <h1 style={{ fontSize: '16px', fontWeight: 'bold', color: '#2563eb', margin: '0' }}>KASUPDA</h1>
-                            <p style={{ fontSize: '8px', fontWeight: 'bold', color: '#666', margin: '0', textTransform: 'uppercase' }}>Kaduna State Urban Planning & Dev. Authority</p>
-                        </div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#059669', marginBottom: '4px' }}>✓ PAYMENT SUCCESSFUL</div>
-                        <p style={{ fontSize: '11px', color: '#666', margin: '0' }}>Receipt No: <span style={{ fontWeight: 'bold' }}>REC-{transaction.payment_reference.slice(-8).toUpperCase()}</span></p>
-                    </div>
-                </div>
 
-                {/* Main Info Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px', fontSize: '11px' }}>
-                    <div>
-                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payer Details</h3>
-                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{transaction.payer_name}</p>
-                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{transaction.payer_email}</p>
-                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{transaction.payer_phone}</p>
-                    </div>
-                    <div>
-                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payment Date</h3>
-                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{format(new Date(transaction.created_at), 'MMM dd, yyyy')}</p>
-                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{format(new Date(transaction.created_at), 'hh:mm a')}</p>
-                    </div>
-                    <div>
-                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payment Reference</h3>
-                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0', fontFamily: 'monospace' }}>{transaction.payment_reference}</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Application Type</h3>
-                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{transaction.applications?.type || transaction.description}</p>
-                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>App ID: {transaction.application_id}</p>
-                    </div>
-                </div>
-
-                {/* Transaction Table */}
-                <table style={{ width: '100%', fontSize: '10px', marginBottom: '16px', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
-                    <thead>
-                        <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '1px solid #ccc' }}>
-                            <th style={{ padding: '8px', textAlign: 'left', fontWeight: 'bold', fontSize: '9px' }}>Description</th>
-                            <th style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', fontSize: '9px' }}>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style={{ borderBottom: '1px solid #ccc' }}>
-                            <td style={{ padding: '8px' }}>
-                                <p style={{ fontWeight: 'bold', margin: '0' }}>{transaction.description}</p>
-                                <p style={{ fontSize: '9px', color: '#666', margin: '2px 0 0 0' }}>Official processing fee for KASUPDA permit application.</p>
-                            </td>
-                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold' }}>₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f9f9f9', borderTop: '2px solid #ccc', borderBottom: '2px solid #ccc' }}>
-                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold' }}>Total Amount Paid:</td>
-                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', fontSize: '12px' }}>₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                {/* Footer / Notes */}
-                <div style={{ paddingTop: '12px', borderTop: '1px solid #ccc', fontSize: '9px', color: '#666' }}>
-                    <p style={{ fontWeight: 'bold', margin: '0 0 4px 0' }}>Important Information:</p>
-                    <p style={{ lineHeight: '1.4', margin: '0' }}>
-                        This is an electronically generated receipt and does not require a physical signature. Please keep this receipt as proof of payment. For inquiries, contact KASUPDA support at support@kasupda.kdsg.gov.ng.
-                    </p>
-                </div>
-            </div>
 
             <style jsx global>{`
                 @media print {
@@ -236,6 +174,8 @@ export default function Receipt({ transaction }: ReceiptProps) {
                         width: 100%;
                         margin: 0;
                         padding: 0;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
                     }
                     /* Override Radix Dialog styles that break printing */
                     [data-radix-portal] {
