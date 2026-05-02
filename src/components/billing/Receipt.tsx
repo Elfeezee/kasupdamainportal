@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Landmark, CheckCircle2, Printer, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import QRCode from 'qrcode.react';
 
 interface ReceiptProps {
     transaction: {
