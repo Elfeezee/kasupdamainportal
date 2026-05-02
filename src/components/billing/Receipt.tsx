@@ -149,7 +149,7 @@ export default function Receipt({ transaction }: ReceiptProps) {
             </div>
 
             {/* Print View - Simplified Structure */}
-            <div className="hidden print:block w-full bg-white p-2" style={{ fontSize: '12px' }}>
+            <div className="hidden print:block w-full bg-white p-2 print-receipt-container" style={{ fontSize: '12px' }}>
                 {/* Header with Logo/Branding */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', paddingBottom: '12px', borderBottom: '2px solid #ccc' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -223,9 +223,36 @@ export default function Receipt({ transaction }: ReceiptProps) {
 
             <style jsx global>{`
                 @media print {
-                    body, html {
+                    body * {
+                        visibility: hidden;
+                    }
+                    .print-receipt-container, .print-receipt-container * {
+                        visibility: visible;
+                    }
+                    .print-receipt-container {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
                         margin: 0;
                         padding: 0;
+                    }
+                    /* Override Radix Dialog styles that break printing */
+                    [data-radix-portal] {
+                        position: absolute !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        transform: none !important;
+                    }
+                    [role="dialog"] {
+                        position: static !important;
+                        transform: none !important;
+                        max-height: none !important;
+                        height: auto !important;
+                        overflow: visible !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        background: transparent !important;
                     }
                 }
             `}</style>
