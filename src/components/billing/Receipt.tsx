@@ -148,77 +148,74 @@ export default function Receipt({ transaction }: ReceiptProps) {
             </div>
 
             {/* Print View - Simplified Structure */}
-            <div className="hidden print:block w-full bg-white p-4">
+            <div className="hidden print:block w-full bg-white p-2" style={{ fontSize: '12px' }}>
                 {/* Header with Logo/Branding */}
-                <div className="flex justify-between items-start mb-6 pb-4 border-b-2">
-                    <div className="flex items-center gap-3">
-                        <div className="text-primary">
-                            <Landmark className="h-8 w-8" />
-                        </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', paddingBottom: '12px', borderBottom: '2px solid #ccc' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <Landmark style={{ width: '24px', height: '24px', color: '#2563eb' }} />
                         <div>
-                            <h1 className="text-lg font-bold text-primary">KASUPDA</h1>
-                            <p className="text-[9px] font-bold text-slate-600 uppercase">Kaduna State Urban Planning & Dev. Authority</p>
+                            <h1 style={{ fontSize: '16px', fontWeight: 'bold', color: '#2563eb', margin: '0' }}>KASUPDA</h1>
+                            <p style={{ fontSize: '8px', fontWeight: 'bold', color: '#666', margin: '0', textTransform: 'uppercase' }}>Kaduna State Urban Planning & Dev. Authority</p>
                         </div>
                     </div>
-                    <div className="text-center text-right">
-                        <div className="text-xs font-bold text-green-700 mb-1">✓ PAYMENT SUCCESSFUL</div>
-                        <p className="text-xs text-slate-600">Receipt No: <span className="font-bold">REC-{transaction.payment_reference.slice(-8).toUpperCase()}</span></p>
+                    <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#059669', marginBottom: '4px' }}>✓ PAYMENT SUCCESSFUL</div>
+                        <p style={{ fontSize: '11px', color: '#666', margin: '0' }}>Receipt No: <span style={{ fontWeight: 'bold' }}>REC-{transaction.payment_reference.slice(-8).toUpperCase()}</span></p>
                     </div>
                 </div>
 
                 {/* Main Info Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px', fontSize: '11px' }}>
                     <div>
-                        <h3 className="text-[8px] font-bold text-slate-500 uppercase mb-1">Payer Details</h3>
-                        <p className="font-bold text-slate-800">{transaction.payer_name}</p>
-                        <p className="text-slate-600">{transaction.payer_email}</p>
-                        <p className="text-slate-600">{transaction.payer_phone}</p>
+                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payer Details</h3>
+                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{transaction.payer_name}</p>
+                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{transaction.payer_email}</p>
+                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{transaction.payer_phone}</p>
                     </div>
                     <div>
-                        <h3 className="text-[8px] font-bold text-slate-500 uppercase mb-1">Payment Date</h3>
-                        <p className="font-bold text-slate-800">{format(new Date(transaction.created_at), 'MMM dd, yyyy')}</p>
-                        <p className="text-slate-600">{format(new Date(transaction.created_at), 'hh:mm a')}</p>
+                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payment Date</h3>
+                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{format(new Date(transaction.created_at), 'MMM dd, yyyy')}</p>
+                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>{format(new Date(transaction.created_at), 'hh:mm a')}</p>
                     </div>
                     <div>
-                        <h3 className="text-[8px] font-bold text-slate-500 uppercase mb-1">Payment Reference</h3>
-                        <p className="font-bold text-slate-800">{transaction.payment_reference}</p>
+                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Payment Reference</h3>
+                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0', fontFamily: 'monospace' }}>{transaction.payment_reference}</p>
                     </div>
-                    <div className="text-right">
-                        <h3 className="text-[8px] font-bold text-slate-500 uppercase mb-1">Application Type</h3>
-                        <p className="font-bold text-slate-800">{transaction.applications?.type || transaction.description}</p>
-                        <p className="text-[8px] text-slate-600">App ID: {transaction.application_id}</p>
+                    <div style={{ textAlign: 'right' }}>
+                        <h3 style={{ fontSize: '9px', fontWeight: 'bold', color: '#666', margin: '0 0 4px 0', textTransform: 'uppercase' }}>Application Type</h3>
+                        <p style={{ fontWeight: 'bold', color: '#000', margin: '0' }}>{transaction.applications?.type || transaction.description}</p>
+                        <p style={{ color: '#666', margin: '0', fontSize: '10px' }}>App ID: {transaction.application_id}</p>
                     </div>
                 </div>
 
                 {/* Transaction Table */}
-                <table className="w-full text-[9px] mb-6 border-collapse border border-slate-300">
+                <table style={{ width: '100%', fontSize: '10px', marginBottom: '16px', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
                     <thead>
-                        <tr className="bg-slate-100 border border-slate-300">
-                            <th className="px-2 py-1 text-left font-bold text-slate-700">Description</th>
-                            <th className="px-2 py-1 text-right font-bold text-slate-700">Amount</th>
+                        <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '1px solid #ccc' }}>
+                            <th style={{ padding: '8px', textAlign: 'left', fontWeight: 'bold', fontSize: '9px' }}>Description</th>
+                            <th style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', fontSize: '9px' }}>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="border border-slate-300">
-                            <td className="px-2 py-2">
-                                <p className="font-bold">{transaction.description}</p>
-                                <p className="text-[8px] text-slate-600">Official processing fee for KASUPDA permit application.</p>
+                        <tr style={{ borderBottom: '1px solid #ccc' }}>
+                            <td style={{ padding: '8px' }}>
+                                <p style={{ fontWeight: 'bold', margin: '0' }}>{transaction.description}</p>
+                                <p style={{ fontSize: '9px', color: '#666', margin: '2px 0 0 0' }}>Official processing fee for KASUPDA permit application.</p>
                             </td>
-                            <td className="px-2 py-2 text-right font-bold">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold' }}>₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                         </tr>
-                        <tr className="bg-slate-50 border border-slate-300">
-                            <td className="px-2 py-1 text-right font-bold text-slate-700">Total Amount Paid:</td>
-                            <td className="px-2 py-1 text-right font-bold text-slate-900">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        <tr style={{ backgroundColor: '#f9f9f9', borderTop: '2px solid #ccc', borderBottom: '2px solid #ccc' }}>
+                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold' }}>Total Amount Paid:</td>
+                            <td style={{ padding: '8px', textAlign: 'right', fontWeight: 'bold', fontSize: '12px' }}>₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 {/* Footer / Notes */}
-                <div className="pt-4 border-t text-[8px] text-slate-600">
-                    <p className="font-bold mb-1">Important Information:</p>
-                    <p className="leading-tight">
-                        This is an electronically generated receipt and does not require a physical signature.
-                        Please keep this receipt as proof of payment. For inquiries, contact KASUPDA support at support@kasupda.kdsg.gov.ng.
+                <div style={{ paddingTop: '12px', borderTop: '1px solid #ccc', fontSize: '9px', color: '#666' }}>
+                    <p style={{ fontWeight: 'bold', margin: '0 0 4px 0' }}>Important Information:</p>
+                    <p style={{ lineHeight: '1.4', margin: '0' }}>
+                        This is an electronically generated receipt and does not require a physical signature. Please keep this receipt as proof of payment. For inquiries, contact KASUPDA support at support@kasupda.kdsg.gov.ng.
                     </p>
                 </div>
             </div>
