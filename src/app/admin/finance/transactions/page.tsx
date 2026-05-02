@@ -245,12 +245,26 @@ export default function FinanceTransactionsPage() {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                        <DropdownMenuItem onClick={() => openReceipt(transaction)}>
-                                                            <Printer className="mr-2 h-4 w-4" /> Print Receipt
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onClick={() => openReceipt(transaction)}>
-                                                            <FileText className="mr-2 h-4 w-4" /> View Details
-                                                        </DropdownMenuItem>
+                                                        {transaction.status === 'Verified' && (
+                                                            <>
+                                                                <DropdownMenuItem onClick={() => openReceipt(transaction)}>
+                                                                    <Printer className="mr-2 h-4 w-4" /> Print Receipt
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => openReceipt(transaction)}>
+                                                                    <FileText className="mr-2 h-4 w-4" /> View Details
+                                                                </DropdownMenuItem>
+                                                            </>
+                                                        )}
+                                                        {transaction.status === 'Pending' && (
+                                                            <DropdownMenuItem disabled>
+                                                                <FileText className="mr-2 h-4 w-4" /> View Details (Payment Pending)
+                                                            </DropdownMenuItem>
+                                                        )}
+                                                        {transaction.status === 'Failed' && (
+                                                            <DropdownMenuItem disabled>
+                                                                <FileText className="mr-2 h-4 w-4" /> View Details (Payment Failed)
+                                                            </DropdownMenuItem>
+                                                        )}
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem disabled>
                                                             <Eye className="mr-2 h-4 w-4" /> App Details
