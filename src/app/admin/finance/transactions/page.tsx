@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { MoreHorizontal, Search, Landmark, CheckCircle, Clock, XCircle, Eye, Download, FileText, Loader2, Filter } from 'lucide-react';
+import { MoreHorizontal, Search, Landmark, CheckCircle, Clock, XCircle, Eye, Download, FileText, Loader2, Filter, Printer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format, parseISO } from 'date-fns';
 import { getTransactions } from '@/app/actions/billingActions';

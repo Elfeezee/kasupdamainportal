@@ -146,17 +146,33 @@ export default function Receipt({ transaction }: ReceiptProps) {
 
             <style jsx global>{`
                 @media print {
-                    body * {
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    html, body {
+                        width: 100%;
+                        height: 100%;
+                    }
+                    body {
                         visibility: hidden;
                     }
-                    .print-container, .print-container * {
-                        visibility: visible;
-                    }
                     .print-container {
+                        visibility: visible;
                         position: absolute;
                         left: 0;
                         top: 0;
                         width: 100%;
+                        height: auto;
+                        page-break-after: auto;
+                    }
+                    .print-container * {
+                        visibility: visible;
+                    }
+                    @page {
+                        size: A4;
+                        margin: 0.5cm;
                     }
                 }
             `}</style>
