@@ -41,12 +41,12 @@ export default function Receipt({ transaction }: ReceiptProps) {
                 </div>
             </div>
 
-            <Card className="border-2 border-slate-200 shadow-xl overflow-hidden print:border-none print:shadow-none print:m-0">
+            <Card className="border-2 border-slate-200 shadow-xl overflow-hidden print:border-none print:shadow-none print:m-0 print:overflow-visible">
                 {/* Header with Logo/Branding */}
-                <div className="bg-primary/5 border-b-2 border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="bg-primary/5 border-b-2 border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-4 print:bg-white print:p-4">
                     <div className="flex items-center gap-3">
-                        <div className="bg-primary p-2 rounded-lg">
-                            <Landmark className="h-8 w-8 text-white" />
+                        <div className="bg-primary p-2 rounded-lg print:bg-transparent print:p-0">
+                            <Landmark className="h-8 w-8 text-white print:text-primary" />
                         </div>
                         <div>
                             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-primary">KASUPDA</h1>
@@ -62,62 +62,62 @@ export default function Receipt({ transaction }: ReceiptProps) {
                     </div>
                 </div>
 
-                <CardContent className="p-6 sm:p-10">
+                <CardContent className="p-6 sm:p-10 print:p-6">
                     {/* Main Info Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
-                        <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10 print:gap-4 print:mb-6">
+                        <div className="space-y-4 print:space-y-3">
                             <div>
                                 <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payer Details</h3>
-                                <p className="text-sm font-bold text-slate-800">{transaction.payer_name}</p>
+                                <p className="text-sm font-bold text-slate-800 print:text-xs">{transaction.payer_name}</p>
                                 <p className="text-xs text-slate-500">{transaction.payer_email}</p>
                                 <p className="text-xs text-slate-500">{transaction.payer_phone}</p>
                             </div>
                             <div>
                                 <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payment Date</h3>
-                                <p className="text-sm font-bold text-slate-800">{format(new Date(transaction.created_at), 'MMMM dd, yyyy')}</p>
+                                <p className="text-sm font-bold text-slate-800 print:text-xs">{format(new Date(transaction.created_at), 'MMMM dd, yyyy')}</p>
                                 <p className="text-xs text-slate-500">{format(new Date(transaction.created_at), 'hh:mm a')}</p>
                             </div>
                         </div>
-                        <div className="sm:text-right space-y-4">
+                        <div className="sm:text-right space-y-4 print:space-y-3">
                             <div>
                                 <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payment Reference</h3>
-                                <p className="text-sm font-mono font-bold text-slate-800">{transaction.payment_reference}</p>
+                                <p className="text-sm font-mono font-bold text-slate-800 print:text-xs">{transaction.payment_reference}</p>
                             </div>
                             <div>
                                 <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Application Type</h3>
-                                <p className="text-sm font-bold text-slate-800">{transaction.applications?.type || transaction.description}</p>
+                                <p className="text-sm font-bold text-slate-800 print:text-xs">{transaction.applications?.type || transaction.description}</p>
                                 <p className="text-xs text-slate-500">App ID: {transaction.application_id}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Transaction Table */}
-                    <div className="border rounded-xl overflow-hidden mb-10">
-                        <table className="w-full text-left border-collapse">
+                    <div className="border rounded-xl overflow-hidden mb-10 print:border print:rounded-none print:mb-6">
+                        <table className="w-full text-left border-collapse print:text-sm">
                             <thead>
-                                <tr className="bg-slate-50 border-b border-slate-100">
-                                    <th className="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Description</th>
-                                    <th className="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+                                <tr className="bg-slate-50 border-b border-slate-100 print:bg-white print:border-b">
+                                    <th className="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider print:px-2 print:py-2 print:text-[9px]">Description</th>
+                                    <th className="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right print:px-2 print:py-2 print:text-[9px]">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                <tr>
-                                    <td className="px-4 py-4">
-                                        <p className="text-sm font-bold text-slate-800">{transaction.description}</p>
-                                        <p className="text-xs text-slate-500">Official processing fee for KASUPDA permit application.</p>
+                                <tr className="print:border-b">
+                                    <td className="px-4 py-4 print:px-2 print:py-3">
+                                        <p className="text-sm font-bold text-slate-800 print:text-xs">{transaction.description}</p>
+                                        <p className="text-xs text-slate-500 print:text-[9px]">Official processing fee for KASUPDA permit application.</p>
                                     </td>
-                                    <td className="px-4 py-4 text-right">
-                                        <p className="text-sm font-bold text-slate-800">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                                    <td className="px-4 py-4 text-right print:px-2 print:py-3">
+                                        <p className="text-sm font-bold text-slate-800 print:text-xs">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <tr className="bg-slate-50/50">
-                                    <td className="px-4 py-4 text-right">
-                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Amount Paid</p>
+                                <tr className="bg-slate-50/50 print:bg-white print:border-t print:border-b print:font-bold">
+                                    <td className="px-4 py-4 text-right print:px-2 print:py-3">
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider print:text-[9px]">Total Amount Paid</p>
                                     </td>
-                                    <td className="px-4 py-4 text-right">
-                                        <p className="text-lg font-black text-primary">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                                    <td className="px-4 py-4 text-right print:px-2 print:py-3">
+                                        <p className="text-lg font-black text-primary print:text-sm print:font-bold">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -125,16 +125,16 @@ export default function Receipt({ transaction }: ReceiptProps) {
                     </div>
 
                     {/* Footer / Notes */}
-                    <div className="pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-end gap-6">
-                        <div className="max-w-xs">
-                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Important Information</h4>
-                            <p className="text-[10px] leading-relaxed text-slate-500">
+                    <div className="pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-end gap-6 print:pt-4 print:border-t print:gap-3">
+                        <div className="max-w-xs print:max-w-full print:flex-1">
+                            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 print:mb-1">Important Information</h4>
+                            <p className="text-[10px] leading-relaxed text-slate-500 print:text-[8px] print:leading-tight">
                                 This is an electronically generated receipt and does not require a physical signature.
                                 Please keep this receipt as proof of payment for your application.
                                 For any inquiries, contact KASUPDA support at support@kasupda.kdsg.gov.ng.
                             </p>
                         </div>
-                        <div className="text-center sm:text-right">
+                        <div className="text-center sm:text-right print:hidden">
                             <div className="w-24 h-24 bg-slate-100 rounded-lg mb-2 mx-auto sm:ml-auto flex items-center justify-center border-2 border-slate-200">
                                 <span className="text-[8px] font-bold text-slate-400 uppercase text-center px-2">KASUPDA SECURE QR CODE</span>
                             </div>
@@ -147,28 +147,28 @@ export default function Receipt({ transaction }: ReceiptProps) {
             <style jsx global>{`
                 @media print {
                     * {
-                        margin: 0;
-                        padding: 0;
-                        box-sizing: border-box;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        box-sizing: border-box !important;
                     }
                     html, body {
-                        width: 100%;
-                        height: 100%;
+                        width: 100% !important;
+                        height: 100% !important;
+                        background: white !important;
                     }
                     body {
-                        visibility: hidden;
+                        visibility: hidden !important;
                     }
                     .print-container {
-                        visibility: visible;
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                        height: auto;
-                        page-break-after: auto;
+                        visibility: visible !important;
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        height: auto !important;
                     }
                     .print-container * {
-                        visibility: visible;
+                        visibility: visible !important;
                     }
                     @page {
                         size: A4;
