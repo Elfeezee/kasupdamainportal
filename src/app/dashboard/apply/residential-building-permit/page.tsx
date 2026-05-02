@@ -277,12 +277,45 @@ export default function ResidentialBuildingPermitPage() {
     formData.append('applicantName', applicantName);
     formData.append('userId', user.id);
 
+    // Upload files to Supabase and get URLs
+    const fileUploads: Promise<void>[] = [];
+    const fileUrls: Record<string, string> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof FileList && value.length > 0 && value[0].size > 0) {
+        const file = value[0];
+        const filePath = `${user.id}/${Date.now()}-${file.name}`;
+        fileUploads.push(
+          supabase.storage.from('application_documents').upload(filePath, file)
+            .then(({ data: uploadData, error }) => {
+              if (error) {
+                throw new Error(`Upload failed for ${key}: ${error.message}`);
+              }
+              const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
+              fileUrls[key] = publicUrlData.publicUrl;
+            })
+        );
+      }
+    });
+
+    try {
+      await Promise.all(fileUploads);
+    } catch (uploadError: any) {
+      console.error("File upload failed:", uploadError);
+      toast({
+        title: "Upload Failed",
+        description: uploadError.message,
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     // Convert all data to a serializable format for FormData
     Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof FileList && value.length > 0) {
-        if (value[0].size > 0) {
-          formData.append(key, value[0]);
-        }
+      if (value instanceof FileList && value.length > 0 && value[0].size > 0) {
+        // Use the uploaded URL instead of the file
+        formData.append(key, fileUrls[key]);
       } else if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {

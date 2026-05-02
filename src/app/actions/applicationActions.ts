@@ -294,6 +294,9 @@ export async function saveApplication(
                 dbPayload.data[dbKey] = true;
             } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
                 dbPayload.data[dbKey] = new Date(value).toISOString();
+            } else if (value.includes('supabase.co')) {
+                // It's a pre-uploaded file URL
+                dbPayload.data[`${dbKey}_url`] = value;
             } else {
                 dbPayload.data[dbKey] = value;
             }
