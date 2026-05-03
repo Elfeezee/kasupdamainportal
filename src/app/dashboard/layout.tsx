@@ -1,20 +1,15 @@
 
 'use client';
 
-import type { Metadata } from 'next';
 import { Sidebar, SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import DashboardSidebar from '@/components/layout/dashboard-sidebar';
-import { supabase } from '@/lib/supabase/client';
 import { useState, useEffect } from 'react';
-import type { User } from '@supabase/supabase-js';
 import { Loader2 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-
-// We can't use static metadata in a client component layout
-// export const metadata: Metadata = {
-//   title: 'KASUPDA Dashboard',
-//   description: 'Manage your KASUPDA applications and services.',
-// };
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 interface UserProfile {
   din: string | null;
@@ -25,70 +20,52 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Check if the current page is an acknowledgement letter page
   const isAcknowledgementPage = pathname.startsWith('/dashboard/acknowledgement/');
 
+  // Handle redirection if not authenticated
   useEffect(() => {
-    // Whenever the path changes, we assume navigation has started,
-    // so we turn off the loading state. This will be re-evaluated
-    // if the new page has its own loading logic.
+    if (status === 'unauthenticated') {
+      router.push('/login?redirectTo=' + pathname);
+    }
+  }, [status, router, pathname]);
+
+  useEffect(() => {
     setLoading(false);
   }, [pathname]);
 
-
   useEffect(() => {
-    const fetchUserAndProfile = async () => {
-      setLoading(true);
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (session?.user) {
-        setUser(session.user);
-        // Fetch from the 'users' table which now has the 'din' column
-        const { data: profile, error } = await supabase
-          .from('users')
-          .select('din')
-          .eq('uid', session.user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error("Error fetching user profile for layout:", error.message || error);
-          // Don't block rendering, just proceed without profile data
+    const fetchProfile = async () => {
+      if (session?.user?.id) {
+        setLoading(true);
+        try {
+          // This would ideally be a server action, but we'll simulate it for now 
+          // or use the session directly if it has the data
+          // For now, let's just use the session data
+          setUserProfile({
+            din: (session.user as any).din || null
+          });
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
         }
-
-        if (profile) {
-          setUserProfile(profile as UserProfile);
-        }
-
-      } else if (sessionError) {
-        console.error("Session fetch error:", sessionError.message);
-      }
-
-      setLoading(false);
-    };
-
-    fetchUserAndProfile();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      if (currentUser) {
-        // Re-fetch profile on auth change, e.g., after DIN application
-        fetchUserAndProfile();
-      } else {
-        setUserProfile(null);
         setLoading(false);
       }
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
     };
-  }, []);
+
+    if (status === 'authenticated') {
+        fetchProfile();
+    } else if (status === 'loading') {
+        setLoading(true);
+    } else {
+        setLoading(false);
+    }
+  }, [session, status]);
 
   // If it's the acknowledgement page, render children directly without the sidebar layout
   if (isAcknowledgementPage) {

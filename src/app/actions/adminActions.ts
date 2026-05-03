@@ -1,35 +1,32 @@
 
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { applications } from '@/lib/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 // Action to update the main data of an application
 export async function updateApplicationData(
-  applicationId: string,
+  applicationId: number,
   updateData: Record<string, any>
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createSupabaseServerClient();
-
   // Remove the id from the update payload if it exists
   if (updateData.id) {
     delete updateData.id;
   }
 
   try {
-    const { error } = await supabase
-      .from('applications')
-      .update(updateData)
-      .eq('id', applicationId);
-
-    if (error) throw error;
+    await db.update(applications)
+      .set(updateData)
+      .where(eq(applications.id, applicationId));
 
     revalidatePath(`/admin/applications/${applicationId}`);
     revalidatePath(`/admin/applications`);
 
     return { success: true };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred.';
+  } catch (error: any) {
+    const errorMessage = error.message || 'An unknown server error occurred.';
     console.error('Update Application Data Error:', errorMessage);
     return { success: false, error: `Failed to update application data: ${errorMessage}` };
   }
@@ -37,21 +34,17 @@ export async function updateApplicationData(
 
 // Action to update the status and rejection reason of an application
 export async function updateApplicationStatus(
-  applicationId: string,
+  applicationId: number,
   newStatus: 'Inprogress' | 'Approved' | 'Rejected' | 'Queried',
   rejectionReason: string | null
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createSupabaseServerClient();
-
   try {
-    // 1. Get the current application data to check type and existing data
-    const { data: app, error: fetchError } = await supabase
-      .from('applications')
-      .select('*')
-      .eq('id', applicationId)
-      .single();
+    // 1. Get the current application data
+    const app = await db.query.applications.findFirst({
+        where: eq(applications.id, applicationId)
+    });
 
-    if (fetchError) throw fetchError;
+    if (!app) throw new Error("Application not found");
 
     let updatePayload: any = {
       status: newStatus,
@@ -60,18 +53,16 @@ export async function updateApplicationStatus(
 
     // 2. Automated DIN Generation IF Approved and it's a DIN Application
     if (newStatus === 'Approved' && app.type === 'DIN Application' && !app.din) {
-      // Get count of ALREADY APPROVED DIN applications to determine serial number
-      const { count } = await supabase
-        .from('applications')
-        .select('*', { count: 'exact', head: true })
-        .eq('type', 'DIN Application')
-        .not('din', 'is', null);
+      // Get count of ALREADY APPROVED DIN applications
+      const approvedDinCount = await db.query.applications.findMany({
+          where: and(eq(applications.type, 'DIN Application'), sql`${applications.din} IS NOT NULL`)
+      });
 
-      const serialNumber = (count || 0) + 1;
+      const serialNumber = (approvedDinCount.length || 0) + 1;
       const paddedSN = String(serialNumber).padStart(4, '0');
 
       // Get parameters from the existing data
-      const appData = app.data || {};
+      const appData: any = app.data || {};
       const pc = String(appData.postal_code || '800271').padStart(6, '0');
       const lg = String(appData.lga_code || '00').padStart(2, '0');
       const wd = String(appData.ward_code || '00').padStart(2, '0');
@@ -81,7 +72,6 @@ export async function updateApplicationStatus(
       const generatedDin = `DIN-${pc}-${lg}-${wd}-${st}-${pl}-${paddedSN}`;
 
       updatePayload.din = generatedDin;
-      // Update the JSONB data with generation results
       updatePayload.data = {
         ...appData,
         serial_number: paddedSN,
@@ -89,12 +79,9 @@ export async function updateApplicationStatus(
       };
     }
 
-    const { error } = await supabase
-      .from('applications')
-      .update(updatePayload)
-      .eq('id', applicationId);
-
-    if (error) throw error;
+    await db.update(applications)
+      .set(updatePayload)
+      .where(eq(applications.id, applicationId));
 
     revalidatePath(`/admin/applications/${applicationId}`);
     revalidatePath(`/admin/applications`);
@@ -104,8 +91,8 @@ export async function updateApplicationStatus(
     revalidatePath(`/dashboard/my-applications`);
 
     return { success: true };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred.';
+  } catch (error: any) {
+    const errorMessage = error.message || 'An unknown server error occurred.';
     console.error('Update Application Status Error:', errorMessage);
     return { success: false, error: `Failed to update application status: ${errorMessage}` };
   }

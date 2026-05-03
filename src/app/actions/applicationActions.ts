@@ -1,226 +1,41 @@
 
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { applications, users, transactions } from '@/lib/db/schema';
+import { eq, and, desc } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
 import { createBill, createGeneralBill } from './billingActions';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
 
-/**
- * A robust function to convert form data keys from form-friendly names
- * to snake_case for the database. This is a highly explicit mapping to prevent errors.
- *
- * @param key The form field key from FormData.
- * @returns The snake_cased key for the database, or the original key if no mapping exists.
- */
+// Local storage helper
+async function saveFileLocally(file: File, userId: string): Promise<string> {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    
+    const fileName = `${uuidv4()}-${file.name}`;
+    const relativePath = `/uploads/applications/${userId}/${fileName}`;
+    const absolutePath = join(process.cwd(), 'public', relativePath);
+    
+    await mkdir(join(process.cwd(), 'public', 'uploads', 'applications', userId), { recursive: true });
+    
+    await writeFile(absolutePath, buffer);
+    return relativePath;
+}
+
 function mapKeyToDbField(key: string): string {
     const mappings: { [key: string]: string } = {
-        // General
-        'type': 'type',
         'applicantName': 'applicant_name',
         'userId': 'user_id',
-        'declaration': 'declaration',
-        'kbpNumber': 'kbp_number',
-        'kdlNumber': 'kdl_number',
-        'kopNumber': 'kop_number',
-        'applicantAddress': 'applicant_address',
-        'plotAddress': 'plot_address',
-
-        // Applicant Info (BPI & Others)
-        'title': 'title',
-        'firstName': 'first_name',
-        'middleName': 'middle_name',
-        'surname': 'surname',
-        'gender': 'gender',
-        'dateOfBirth': 'date_of_birth',
-        'occupation': 'occupation',
-        'nationality': 'nationality',
-        'stateOfOrigin': 'state_of_origin',
-        'localGov': 'local_gov',
-        'phone1': 'phone1',
-        'phone2': 'phone2',
-        'email': 'email',
-        'idNumber': 'id_number',
-        'identificationType': 'identification_type', // Parent for checkboxes
-
-        // Applicant Address
-        'appHouseNo': 'app_house_no',
-        'appStreetName': 'app_street_name',
-        'appDistrict': 'app_district',
-        'appCityTown': 'app_city_town',
-        'appState': 'app_state',
-        'appCountry': 'app_country',
-        'appPOBox': 'app_po_box',
-        'appCO': 'app_co',
-        'appAdditionalAddressInfo': 'app_additional_address_info',
-
-        // Organization Info
-        'orgName': 'org_name',
-        'cacNumber': 'cac_number',
-        'dateOfRegistration': 'date_of_registration',
-        'orgTaxIdNumber': 'org_tax_id_number',
-        'orgPhone': 'org_phone',
-        'orgEmail': 'org_email',
-        'orgHouseNo': 'org_house_no',
-        'orgStreetName': 'org_street_name',
-        'orgDistrict': 'org_district',
-        'orgCityTown': 'org_city_town',
-        'orgState': 'org_state',
-        'orgCountry': 'org_country',
-        'orgPOBox': 'org_po_box',
-        'orgCO': 'org_co',
-        'orgAdditionalAddressInfo': 'org_additional_address_info',
-        'orgTin': 'org_tin',
-
-        // CEO Info
-        'ceoTitle': 'ceo_title',
-        'ceoFirstName': 'ceo_first_name',
-        'ceoMiddleName': 'ceo_middle_name',
-        'ceoSurname': 'ceo_surname',
-        'ceoDesignation': 'ceo_designation',
-        'ceoPhone': 'ceo_phone',
-        'ceoEmail': 'ceo_email',
-        'ceoIdNumber': 'ceo_id_number',
-        'ceoIdentificationType': 'ceo_identification_type', // Parent for checkboxes
-
-        // Representative Info
-        'repFirstName': 'rep_first_name',
-        'repMiddleName': 'rep_middle_name',
-        'repSurname': 'rep_surname',
-        'repPhone1': 'rep_phone1',
-        'repPhone2': 'rep_phone2',
-        'repEmail': 'rep_email',
-        'repIdNumber': 'rep_id_number',
-        'repIdentificationType': 'rep_identification_type', // Parent for checkboxes
-        'repHouseNo': 'rep_house_no',
-        'repStreetName': 'rep_street_name',
-        'repDistrict': 'rep_district',
-        'repCityTown': 'rep_city_town',
-        'repState': 'rep_state',
-        'repCountry': 'rep_country',
-        'repPOBox': 'rep_po_box',
-        'repCO': 'rep_co',
-        'repAdditionalAddressInfo': 'rep_additional_address_info',
-
-        // Plot / Site Info
-        'landUse': 'land_use',
-        'purpose': 'purpose',
-        'plotDistrict': 'plot_district',
-        'plotLGA': 'plot_lga',
-        'plotDescriptionAddress': 'plot_description_address',
-        'siteStreetName': 'site_street_name',
-        'siteCityTown': 'site_city_town',
-        'siteLGA': 'site_lga',
-        'siteState': 'site_state',
-        'siteCoordLong': 'site_coord_long',
-        'siteCoordLat': 'site_coord_lat',
-        'siteTypeOfLand': 'site_type_of_land',
-        'siteProofOfOwnership': 'site_proof_of_ownership',
-        'siteAddInfo': 'site_add_info',
-
-        // Permit-Specific Fields
-        'din': 'din',
-        'originalPermitId': 'original_permit_id',
-        'kasupdaLicenseNo': 'kasupda_license_no',
-        'apconRegNo': 'apcon_reg_no',
-        'typeOfDevelopment': 'type_of_development',
-        'categoryOfBusiness': 'category_of_business',
-        'plotAddressDescription': 'plot_address_description',
-        'children': 'children',
-        'maritalStatus': 'marital_status',
-        'educationLevel': 'education_level',
-        'otherEducation': 'other_education',
-        'tin': 'tin',
-        'typeOfRoad': 'type_of_road',
-        'roadLength': 'road_length',
-        'coordinates': 'coordinates',
-        'locationOfSite': 'location_of_site',
-        'mastType': 'mast_type',
-        'mastTypeOther': 'mast_type_other',
-        'mastDuration': 'mast_duration',
-        'mastCommencementDate': 'mast_commencement_date',
-        'mastCoordinates': 'mast_coordinates',
-        'mastLocationOfShield': 'mast_location_of_shield',
-        'applicantCompanyNameIndividual': 'applicant_company_name_individual',
-        'applicantFullNameContact': 'applicant_full_name_contact',
-        'outdoorActivitySignboardSize': 'outdoor_activity_signboard_size',
-        'outdoorActivityOthersSpecify': 'outdoor_activity_others_specify',
-        'companyName': 'company_name',
-        'boardInstallationOthersText': 'board_installation_others_text',
-        'phoneNo': 'phone_no',
-        'emailAddress': 'email_address',
-        'ceoNameContact': 'ceo_name_contact',
-
-        // Document fields - map from form name to DB name directly
-        'docLandTitle': 'doc_land_title',
-        'docKadgisAcknowledgement': 'doc_kadgis_acknowledgement',
-        'docSar': 'doc_sar',
-        'docWorkingDrawings': 'doc_working_drawings',
-        'docCalculationSheet': 'doc_calculation_sheet',
-        'docBuildersDoc': 'doc_builders_doc',
-        'docSoilTest': 'doc_soil_test',
-        'docPdfDrawings': 'doc_pdf_drawings',
-        'docApplicantId': 'doc_applicant_id',
-        'docRepId': 'doc_rep_id',
-        'docUtilityBill': 'doc_utility_bill',
-        'doc_quality_assurance': 'doc_quality_assurance',
-        'doc_kepa_eia_cert': 'doc_kepa_eia_cert',
-        'doc_permit': 'doc_permit',
-        'doc_co': 'doc_co',
-        'doc_building_permit': 'doc_building_permit',
-        'docStructuralInfo': 'doc_structural_info',
-        // New doc fields from other forms
-        'docImageShowingSite': 'doc_image_showing_site',
-        'doc_image_showing_site': 'doc_image_showing_site',
-        'docConsentLetter': 'doc_consent_letter',
-        'doc_consent_letter': 'doc_consent_letter',
-        'docLeaseAgreement': 'doc_lease_agreement',
-        'docStructuralDrawings': 'doc_structural_drawings',
-        'docSiteAnalysisReport': 'doc_site_analysis_report',
-        'docKepasEnvImpactAssessment': 'doc_kepas_env_impact_assessment',
-        'docSoilInvestigationReport': 'doc_soil_investigation_report',
-        'docTelecommunicationDesigns': 'doc_telecommunication_designs',
-        'docStructuralCalculationSheets': 'doc_structural_calculation_sheets',
-        'docElectricalWorksDrawings': 'doc_electrical_works_drawings',
-        'docPoliceReport': 'doc_police_report',
-        'docProofOfOutrightPurchase': 'doc_proof_of_outright_purchase',
-        'docSitePlan': 'doc_site_plan',
-        'docNAMAApproval': 'doc_nama_approval',
-        'docNCAAApproval': 'doc_ncaa_approval',
-        'docLetterOfAttestation': 'doc_letter_of_attestation',
-        'docMechanicalWorksDrawings': 'doc_mechanical_works_drawings',
-        'docArchitecturalWorksDrawings': 'doc_architectural_works_drawings',
-        'docFireServiceReport': 'doc_fire_service_report',
-        'docKasupdaLicense': 'doc_kasupda_license',
-        'docSoilInvestigation': 'doc_soil_investigation',
-        'docCorporateArconLicense': 'doc_corporate_arcon_license',
-        'docTaxClearance': 'doc_tax_clearance',
-        'docSiteLocationType': 'doc_site_location_type',
-        'docKepaEiaApproval': 'doc_kepa_eia_approval',
-        'docStructuralWorkDrawings': 'doc_structural_work_drawings',
-        'docImagerySketch': 'doc_imagery_sketch',
-        'docSiteLocationInstallationCoordinates': 'doc_site_location_installation_coordinates',
-        'docLeaseAgreementLetter': 'doc_lease_agreement_letter',
-        'postalCode': 'postal_code',
-        'lgaCode': 'lga_code',
-        'wardCode': 'ward_code',
-        'streetCode': 'street_code',
-        'plotNumber': 'plot_number'
     };
-
     return mappings[key] || key;
 }
 
-
-/**
- * Saves a generic application form to the database. This is the main entry point for form submissions.
- */
 export async function saveApplication(
     formData: FormData
-): Promise<{ success: boolean; applicationId?: string; applicantName?: string; error?: string; }> {
-    const supabase = await createSupabaseServerClient();
-    const submissionPayload: Record<string, any> = {};
-
+): Promise<{ success: boolean; applicationId?: number; applicantName?: string; error?: string; }> {
     const type = formData.get('type') as string;
     const applicantName = formData.get('applicantName') as string;
     const userId = formData.get('userId') as string;
@@ -229,241 +44,120 @@ export async function saveApplication(
         return { success: false, error: 'Missing required application metadata (type, applicantName, or userId).' };
     }
 
-    // Separate top-level columns from data payload
     const topLevelColumns = ['type', 'applicant_name', 'user_id', 'status', 'rejection_reason', 'created_at', 'din'];
 
-    const dbPayload: Record<string, any> = {
+    const dbPayload: any = {
         type,
         applicant_name: applicantName,
         user_id: userId,
         status: 'Inprogress',
-        data: {} // Initialize data object for JSONB column
+        data: {}
     };
 
-    // Process all entries from FormData
-    for (const [key, value] of formData.entries()) {
-        if (['type', 'userId', 'applicantName'].includes(key)) {
-            continue;
-        }
-
-        // Handle checkbox groups (e.g., 'identificationType.nationalIdCard')
-        if (key.includes('.')) {
-            const [parentKey, childKey] = key.split('.');
-            // We don't map keys for JSONB data, we keep them as is or use a consistent convention.
-            // Let's stick to the form's camelCase for JSONB data to avoid confusion, 
-            // OR use the mapping if we want snake_case inside the JSON. 
-            // Given the previous code tried to map, let's map to snake_case for consistency 
-            // but store it inside 'data'.
-            const dbParentKey = mapKeyToDbField(parentKey);
-
-            if (!dbPayload.data[dbParentKey]) {
-                dbPayload.data[dbParentKey] = {};
-            }
-            if (value === 'on') {
-                dbPayload.data[dbParentKey][childKey] = true;
-            }
-            continue;
-        }
-
-        const dbKey = mapKeyToDbField(key);
-
-        // Check if this key belongs to a top-level column
-        if (topLevelColumns.includes(dbKey)) {
-            if (typeof value === 'string') {
-                dbPayload[dbKey] = value;
-            }
-            continue;
-        }
-
-        // Otherwise, it goes into the 'data' JSONB column
-        if (value instanceof File) {
-            if (value.size > 0) {
-                const filePath = `${userId}/${uuidv4()}-${value.name}`;
-                const { error: uploadError } = await supabase.storage.from('application_documents').upload(filePath, value);
-
-                if (uploadError) {
-                    console.error(`Storage error for ${key}:`, uploadError);
-                    return { success: false, error: `Storage error for ${key}: ${uploadError.message}` };
-                }
-
-                const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-                dbPayload.data[`${dbKey}_url`] = publicUrlData.publicUrl;
-            }
-        } else if (typeof value === 'string' && value) {
-            if (value === 'on') {
-                dbPayload.data[dbKey] = true;
-            } else if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) {
-                dbPayload.data[dbKey] = new Date(value).toISOString();
-            } else if (value.includes('supabase.co')) {
-                // It's a pre-uploaded file URL
-                dbPayload.data[`${dbKey}_url`] = value;
-            } else {
-                dbPayload.data[dbKey] = value;
-            }
-        }
-    }
-
-    // DIN Generation removed from here - moved to admin approval step in adminActions.ts
-
     try {
-        const { data: insertedData, error: dbError } = await supabase
-            .from('applications')
-            .insert(dbPayload)
-            .select()
-            .single();
+        for (const [key, value] of formData.entries()) {
+            if (['type', 'userId', 'applicantName'].includes(key)) continue;
 
-        if (dbError) {
-            console.error('Supabase insert error:', dbError);
-            throw dbError;
-        }
-        if (!insertedData) {
-            throw new Error("Failed to get ID from inserted application record.");
+            if (key.includes('.')) {
+                const [parentKey, childKey] = key.split('.');
+                const dbParentKey = mapKeyToDbField(parentKey);
+                if (!dbPayload.data[dbParentKey]) dbPayload.data[dbParentKey] = {};
+                if (value === 'on') dbPayload.data[dbParentKey][childKey] = true;
+                continue;
+            }
+
+            const dbKey = mapKeyToDbField(key);
+
+            if (topLevelColumns.includes(dbKey)) {
+                dbPayload[dbKey] = value;
+                continue;
+            }
+
+            if (value instanceof File) {
+                if (value.size > 0) {
+                    dbPayload.data[`${dbKey}_url`] = await saveFileLocally(value, userId);
+                }
+            } else if (typeof value === 'string' && value) {
+                if (value === 'on') {
+                    dbPayload.data[dbKey] = true;
+                } else {
+                    dbPayload.data[dbKey] = value;
+                }
+            }
         }
 
-        // Automatically create a bill based on application type
-        let billingResult;
+        const [inserted] = await db.insert(applications).values(dbPayload);
+        const applicationId = inserted.insertId;
+
+        // Fetch the inserted data to get the full record
+        const insertedData = await db.query.applications.findFirst({
+            where: eq(applications.id, applicationId)
+        });
+
+        if (!insertedData) throw new Error("Failed to retrieve inserted application.");
+
         if (type === 'DIN Application') {
-            billingResult = await createGeneralBill(insertedData, userId, 5000, 'Approval Fees For Building Plan');
+            await createGeneralBill(insertedData, userId, 5000, 'Approval Fees For Building Plan');
         } else {
-            billingResult = await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
+            await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
         }
 
-        if (!billingResult.success) {
-            console.error("Billing creation failed:", billingResult.error);
-            return {
-                success: true,
-                applicationId: insertedData.id,
-                applicantName,
-                error: `Application saved, but billing failed: ${billingResult.error}`
-            };
-        }
-
-        return { success: true, applicationId: insertedData.id, applicantName };
+        return { success: true, applicationId, applicantName };
 
     } catch (error: any) {
-        console.error('Database Insertion Error (Full):', error);
-
-        let errorMessage = 'An unknown server error occurred during database insertion.';
-
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        } else if (typeof error === 'object' && error !== null) {
-            // Handle Supabase/Postgrest errors which might not be Error instances
-            if ('message' in error) {
-                errorMessage = (error as any).message;
-            } else if ('error' in error) {
-                errorMessage = JSON.stringify((error as any).error);
-            } else {
-                errorMessage = JSON.stringify(error);
-            }
-        } else if (typeof error === 'string') {
-            errorMessage = error;
-        }
-
-        return { success: false, error: `Failed to save application: ${errorMessage}` };
+        console.error('Database Insertion Error:', error);
+        return { success: false, error: `Failed to save application: ${error.message}` };
     }
 }
 
-/**
- * Generates a signed URL for a private file in the application_documents bucket.
- * 
- * @param path The relative path to the file in the bucket.
- * @returns The signed URL or an error.
- */
-export async function getSignedUrl(path: string): Promise<{ success: boolean; url?: string; error?: string }> {
-    const supabase = await createSupabaseServerClient();
+export async function updateUserApplication(
+    applicationId: number,
+    updateData: Record<string, any>,
+    userId: string // Added userId for verification
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        const app = await db.query.applications.findFirst({
+            where: and(eq(applications.id, applicationId), eq(applications.user_id, userId))
+        });
 
-    // Verify authentication
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        return { success: false, error: 'Not authenticated' };
-    }
+        if (!app) return { success: false, error: 'Application not found or access denied.' };
 
-    // Check if user is admin or the owner of the file
-    // The storage policy we added handles the actual permission check, 
-    // but we can also do a quick check here if needed.
+        const topLevelColumns = ['applicant_name', 'phone1', 'email'];
+        const dbUpdatePayload: any = {};
+        const currentJsonData = (typeof app.data === 'object' && app.data !== null) ? app.data : {};
+        const dataUpdate: any = { ...currentJsonData };
 
-    const { data, error } = await supabase.storage
-        .from('application_documents')
-        .createSignedUrl(path, 3600); // 1 hour expiry
+        for (const [key, value] of Object.entries(updateData)) {
+            if (['id', 'user_id', 'created_at', 'status', 'rejection_reason', 'din', 'original_permit_id'].includes(key)) continue;
 
-    if (error) {
-        console.error('Error creating signed URL:', error);
+            if (topLevelColumns.includes(key)) {
+                dbUpdatePayload[key] = value;
+            } else {
+                dataUpdate[key] = value;
+            }
+        }
+
+        dbUpdatePayload.data = dataUpdate;
+
+        if (app.status === 'Queried') {
+            dbUpdatePayload.status = 'Inprogress';
+        }
+
+        await db.update(applications)
+            .set(dbUpdatePayload)
+            .where(eq(applications.id, applicationId));
+
+        revalidatePath(`/dashboard/my-applications`);
+        revalidatePath(`/dashboard/application-details/${applicationId}`);
+
+        return { success: true };
+    } catch (error: any) {
         return { success: false, error: error.message };
     }
-
-    return { success: true, url: data.signedUrl };
 }
 
-/**
- * Updates an application from the user dashboard.
- * Verifies ownership and allows editing non-sensitive fields.
- * If status was 'Queried', it resets to 'Inprogress'.
- */
-export async function updateUserApplication(
-    applicationId: string,
-    updateData: Record<string, any>
-): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-        return { success: false, error: 'Unauthorized' };
-    }
-
-    // Verify ownership
-    const { data: app, error: fetchError } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', applicationId)
-        .eq('user_id', user.id)
-        .single();
-
-    if (fetchError || !app) {
-        return { success: false, error: 'Application not found or access denied.' };
-    }
-
-    // Allowed top level columns to update directly
-    const topLevelColumns = ['applicant_name', 'phone1', 'email'];
-
-    const dbUpdatePayload: any = {};
-    // Merge existing JSONB data with new updates
-    const currentJsonData = (typeof app.data === 'object' && app.data !== null) ? app.data : {};
-    const dataUpdate: any = { ...currentJsonData };
-
-    for (const [key, value] of Object.entries(updateData)) {
-        // Skip protected fields if they somehow got into the payload
-        if (['id', 'user_id', 'created_at', 'status', 'rejection_reason', 'din', 'original_permit_id'].includes(key)) {
-            continue;
-        }
-
-        if (topLevelColumns.includes(key)) {
-            dbUpdatePayload[key] = value;
-        } else {
-            // Everything else goes into the 'data' JSONB column
-            dataUpdate[key] = value;
-        }
-    }
-
-    dbUpdatePayload.data = dataUpdate;
-
-    // Auto-update status if it was Queried
-    if (app.status === 'Queried') {
-        dbUpdatePayload.status = 'Inprogress'; // Set back to Inprogress for admin review
-    }
-
-    const { error: updateError } = await supabase
-        .from('applications')
-        .update(dbUpdatePayload)
-        .eq('id', applicationId)
-        .eq('user_id', user.id);
-
-    if (updateError) {
-        return { success: false, error: updateError.message };
-    }
-
-    revalidatePath(`/dashboard/my-applications`);
-    revalidatePath(`/dashboard/application-details/${applicationId}`);
-
-    return { success: true };
+export async function getSignedUrl(path: string): Promise<{ success: boolean; url?: string; error?: string }> {
+    // For local storage, the "signed URL" is just the public path
+    // In production, you might want to serve this via a proxy that checks permissions
+    return { success: true, url: path };
 }

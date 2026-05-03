@@ -31,7 +31,7 @@ import {
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { signOut } from 'next-auth/react';
 
 interface DashboardSidebarProps {
   userProfile: { din: string | null } | null;
@@ -62,14 +62,9 @@ export default function DashboardSidebar({ userProfile, setLoading }: DashboardS
   ];
 
   const handleLogout = async () => {
-    setOpenMobile(false); // Close sidebar on mobile if open
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({ title: 'Logout Failed', description: error.message, variant: 'destructive' });
-    } else {
-      router.push('/');
-      toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
-    }
+    setOpenMobile(false);
+    await signOut({ callbackUrl: '/' });
+    toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
   };
 
   const handleNavigation = (href: string, label: string, disabled?: boolean) => {

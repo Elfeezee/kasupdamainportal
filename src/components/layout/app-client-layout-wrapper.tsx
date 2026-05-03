@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { usePathname } from 'next/navigation';
+import NextAuthSessionProvider from '@/components/providers/session-provider';
 
 export default function AppClientLayoutWrapper({
   children,
@@ -27,8 +28,9 @@ export default function AppClientLayoutWrapper({
   const showMainLayoutElements = !isDashboardPage && !isAdminPage;
 
   return (
-    <ThemeProvider>
-      <ToastProvider>
+    <NextAuthSessionProvider>
+      <ThemeProvider>
+        <ToastProvider>
         {showMainLayoutElements && <Header />}
         <main className="flex-grow">{children}</main>
         {showMainLayoutElements && <Footer />}
@@ -72,5 +74,6 @@ export default function AppClientLayoutWrapper({
         )}
       </ToastProvider>
     </ThemeProvider>
+    </NextAuthSessionProvider>
   );
 }

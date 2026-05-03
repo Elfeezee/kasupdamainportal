@@ -9,7 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from '@/lib/supabase/client';
+import { signUp } from '@/app/actions/authActions';
+import { signIn } from 'next-auth/react';
+
 import { z } from 'zod';
 
 const SignUpSchema = z.object({
@@ -40,19 +42,6 @@ export default function ApplyForPermitPage() {
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        // If user signs in (which happens after sign up without email confirm), redirect them.
-        router.push('/dashboard');
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [router]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -70,53 +59,41 @@ export default function ApplyForPermitPage() {
         fieldErrors[key] = value?.[0];
       }
       setErrors(fieldErrors);
-      toast({
-        title: 'Validation Error',
-        description: 'Please check the fields below.',
-        variant: 'destructive',
-      });
       return;
     }
 
     setIsSubmitting(true);
-    const { applicantName, email, phone, password } = validatedFields.data;
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: applicantName,
-            phone: phone,
-          },
-          // Supabase redirects to this URL with a token if email confirmation is on.
-          emailRedirectTo: `${location.origin}/auth/callback`,
-        },
+      const result = await signUp(validatedFields.data);
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      // Automatically sign in after sign up
+      const signInResult = await signIn('credentials', {
+        email: validatedFields.data.email,
+        password: validatedFields.data.password,
+        redirect: false,
       });
 
-      if (error) {
-        throw error;
+      if (signInResult?.error) {
+        throw new Error('Sign up successful, but could not log in automatically.');
       }
       
-      // Since email confirmation is off, the user is logged in.
-      // The onAuthStateChange listener will handle the redirect.
       toast({
-        title: 'Sign Up Successful!',
-        description: 'You can now proceed to your dashboard.',
+        title: 'Welcome to KASUPDA!',
+        description: 'Your profile has been created successfully.',
       });
 
+      router.push('/dashboard');
+
     } catch (error: any) {
-      let errorMessage = 'Could not sign up. Please try again.';
-      if (error.message.includes('User already registered')) {
-        errorMessage = 'An account with this email address already exists.';
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      setErrors({ general: errorMessage });
+      setErrors({ general: error.message });
       toast({
         title: 'Sign Up Error',
-        description: errorMessage,
+        description: error.message,
         variant: 'destructive',
       });
     } finally {

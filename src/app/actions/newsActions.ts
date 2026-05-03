@@ -1,55 +1,66 @@
 
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { news_items, publications, site_statistics, site_events, site_leadership, site_carousel, site_mda_logos } from '@/lib/db/schema';
+import { desc, eq, asc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+
+// Local storage helper
+async function saveFileLocally(file: File, folder: string): Promise<string> {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const relativePath = `/uploads/${folder}/${fileName}`;
+    const absolutePath = join(process.cwd(), 'public', relativePath);
+    
+    // Ensure directory exists
+    await mkdir(join(process.cwd(), 'public', 'uploads', folder), { recursive: true });
+    
+    await writeFile(absolutePath, buffer);
+    return relativePath;
+}
 
 export async function getNewsItems() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('news_items')
-        .select('*')
-        .order('date', { ascending: false });
-
-    if (error) {
+    try {
+        return await db.query.news_items.findMany({
+            orderBy: [desc(news_items.date)]
+        });
+    } catch (error) {
         console.error('Error fetching news items:', error);
         return [];
     }
-    return data;
 }
 
 export async function getNewsItem(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('news_items')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-    if (error) {
+    try {
+        const item = await db.query.news_items.findFirst({
+            where: eq(news_items.id, id)
+        });
+        return item || null;
+    } catch (error) {
         console.error('Error fetching news item:', error);
         return null;
     }
-    return data;
 }
 
 export async function getPublications() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('publications')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-    if (error) {
+    try {
+        return await db.query.publications.findMany({
+            orderBy: [desc(publications.created_at)]
+        });
+    } catch (error) {
         console.error('Error fetching publications:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveNewsItem(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const summary = formData.get('summary') as string;
@@ -59,62 +70,47 @@ export async function saveNewsItem(formData: FormData) {
     let imageUrl = formData.get('existingImageUrl') as string;
 
     if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${uuidv4()}.${fileExt}`;
-        const filePath = `news/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, imageFile);
-
-        if (uploadError) {
-            return { success: false, error: `Image upload failed: ${uploadError.message}` };
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('news_media')
-            .getPublicUrl(filePath);
-
-        imageUrl = publicUrl;
+        imageUrl = await saveFileLocally(imageFile, 'news');
     }
 
     const payload = {
         title,
         summary,
         content,
-        date: date || new Date().toISOString(),
+        date: date ? new Date(date) : new Date(),
         image_url: imageUrl,
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('news_items').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('news_items').insert([payload]);
-    }
+    try {
+        if (id) {
+            await db.update(news_items).set({ ...payload, updated_at: new Date() }).where(eq(news_items.id, id));
+        } else {
+            await db.insert(news_items).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
 
-    if (result.error) {
-        return { success: false, error: result.error.message };
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteNewsItem(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('news_items').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(news_items).where(eq(news_items.id, id));
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function savePublication(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const type = formData.get('type') as string;
@@ -124,42 +120,12 @@ export async function savePublication(formData: FormData) {
     let imageUrl = formData.get('existingImageUrl') as string;
     let downloadUrl = formData.get('existingDownloadUrl') as string;
 
-    // Handle Image Upload
     if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${uuidv4()}.${fileExt}`;
-        const filePath = `publications/images/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, imageFile);
-
-        if (uploadError) return { success: false, error: `Image upload failed: ${uploadError.message}` };
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('news_media')
-            .getPublicUrl(filePath);
-
-        imageUrl = publicUrl;
+        imageUrl = await saveFileLocally(imageFile, 'publications/images');
     }
 
-    // Handle Document Upload
     if (docFile && docFile.size > 0) {
-        const fileExt = docFile.name.split('.').pop();
-        const fileName = `${uuidv4()}.${fileExt}`;
-        const filePath = `publications/docs/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, docFile);
-
-        if (uploadError) return { success: false, error: `Document upload failed: ${uploadError.message}` };
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('news_media')
-            .getPublicUrl(filePath);
-
-        downloadUrl = publicUrl;
+        downloadUrl = await saveFileLocally(docFile, 'publications/docs');
     }
 
     const payload = {
@@ -168,51 +134,49 @@ export async function savePublication(formData: FormData) {
         summary,
         download_url: downloadUrl,
         image_url: imageUrl,
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('publications').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('publications').insert([payload]);
-    }
+    try {
+        if (id) {
+            await db.update(publications).set({ ...payload, updated_at: new Date() }).where(eq(publications.id, id));
+        } else {
+            await db.insert(publications).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
 
-    if (result.error) {
-        return { success: false, error: result.error.message };
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deletePublication(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('publications').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(publications).where(eq(publications.id, id));
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function getStatistics() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('site_statistics')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-    if (error) {
+    try {
+        return await db.query.site_statistics.findMany({
+            orderBy: [asc(site_statistics.display_order)]
+        });
+    } catch (error) {
         console.error('Error fetching statistics:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveStatistic(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const label = formData.get('label') as string;
     const value = formData.get('value') as string;
@@ -224,49 +188,49 @@ export async function saveStatistic(formData: FormData) {
         value,
         icon,
         display_order,
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('site_statistics').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('site_statistics').insert([payload]);
+    try {
+        if (id) {
+            await db.update(site_statistics).set({ ...payload, updated_at: new Date() }).where(eq(site_statistics.id, id));
+        } else {
+            await db.insert(site_statistics).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
+
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    if (result.error) return { success: false, error: result.error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteStatistic(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('site_statistics').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(site_statistics).where(eq(site_statistics.id, id));
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function getEvents() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('site_events')
-        .select('*')
-        .order('event_date', { ascending: true });
-
-    if (error) {
+    try {
+        return await db.query.site_events.findMany({
+            orderBy: [asc(site_events.event_date)]
+        });
+    } catch (error) {
         console.error('Error fetching events:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveEvent(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const event_date = formData.get('event_date') as string;
@@ -274,78 +238,61 @@ export async function saveEvent(formData: FormData) {
 
     const payload = {
         title,
-        event_date: event_date || new Date().toISOString(),
+        event_date: event_date ? new Date(event_date) : new Date(),
         date_text,
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('site_events').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('site_events').insert([payload]);
+    try {
+        if (id) {
+            await db.update(site_events).set({ ...payload, updated_at: new Date() }).where(eq(site_events.id, id));
+        } else {
+            await db.insert(site_events).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
+
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    if (result.error) return { success: false, error: result.error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteEvent(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('site_events').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(site_events).where(eq(site_events.id, id));
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function getLeadership() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('site_leadership')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-    if (error) {
+    try {
+        return await db.query.site_leadership.findMany({
+            orderBy: [asc(site_leadership.display_order)]
+        });
+    } catch (error) {
         console.error('Error fetching leadership:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveLeadershipPerson(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     const role = formData.get('role') as string;
     const bio = formData.get('bio') as string;
     const full_bio = formData.get('full_bio') as string;
-
-    // Handle image file or existing URL
     const imageFile = formData.get('imageFile') as File;
     let imageUrl = formData.get('existingImageUrl') as string || '';
 
     if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `leadership/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, imageFile);
-
-        if (uploadError) {
-            console.error('Leadership image upload error:', uploadError);
-        } else {
-            const { data: { publicUrl } } = supabase.storage
-                .from('news_media')
-                .getPublicUrl(filePath);
-            imageUrl = publicUrl;
-        }
+        imageUrl = await saveFileLocally(imageFile, 'leadership');
     }
 
     const payload = {
@@ -355,49 +302,49 @@ export async function saveLeadershipPerson(formData: FormData) {
         full_bio,
         image_url: imageUrl,
         display_order: parseInt(formData.get('display_order') as string || '0'),
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('site_leadership').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('site_leadership').insert([payload]);
+    try {
+        if (id) {
+            await db.update(site_leadership).set({ ...payload, updated_at: new Date() }).where(eq(site_leadership.id, id));
+        } else {
+            await db.insert(site_leadership).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
+
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    if (result.error) return { success: false, error: result.error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteLeadershipPerson(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('site_leadership').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(site_leadership).where(eq(site_leadership.id, id));
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function getCarouselImages() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('site_carousel')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-    if (error) {
+    try {
+        return await db.query.site_carousel.findMany({
+            orderBy: [asc(site_carousel.display_order)]
+        });
+    } catch (error) {
         console.error('Error fetching carousel:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveCarouselImage(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const subtitle = formData.get('subtitle') as string;
@@ -406,22 +353,7 @@ export async function saveCarouselImage(formData: FormData) {
     let imageUrl = formData.get('existingImageUrl') as string || '';
 
     if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `carousel-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `carousel/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, imageFile);
-
-        if (uploadError) {
-            console.error('Carousel image upload error:', uploadError);
-        } else {
-            const { data: { publicUrl } } = supabase.storage
-                .from('news_media')
-                .getPublicUrl(filePath);
-            imageUrl = publicUrl;
-        }
+        imageUrl = await saveFileLocally(imageFile, 'carousel');
     }
 
     const payload = {
@@ -430,101 +362,89 @@ export async function saveCarouselImage(formData: FormData) {
         alt_text,
         image_url: imageUrl,
         display_order: parseInt(formData.get('display_order') as string || '0'),
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('site_carousel').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('site_carousel').insert([payload]);
+    try {
+        if (id) {
+            await db.update(site_carousel).set({ ...payload, updated_at: new Date() }).where(eq(site_carousel.id, id));
+        } else {
+            await db.insert(site_carousel).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
+
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    if (result.error) return { success: false, error: result.error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteCarouselImage(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('site_carousel').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(site_carousel).where(eq(site_carousel.id, id));
+        revalidatePath('/');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
 
 export async function getMDALogos() {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('site_mda_logos')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-    if (error) {
+    try {
+        return await db.query.site_mda_logos.findMany({
+            orderBy: [asc(site_mda_logos.display_order)]
+        });
+    } catch (error) {
         console.error('Error fetching MDA logos:', error);
         return [];
     }
-    return data;
 }
 
 export async function saveMDALogo(formData: FormData) {
-    const supabase = await createSupabaseServerClient();
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     const imageFile = formData.get('imageFile') as File;
     let logoUrl = formData.get('existingImageUrl') as string || '';
 
     if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `mda-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `mda-logos/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-            .from('news_media')
-            .upload(filePath, imageFile);
-
-        if (uploadError) {
-            console.error('MDA logo upload error:', uploadError);
-        } else {
-            const { data: { publicUrl } } = supabase.storage
-                .from('news_media')
-                .getPublicUrl(filePath);
-            logoUrl = publicUrl;
-        }
+        logoUrl = await saveFileLocally(imageFile, 'mda-logos');
     }
 
     const payload = {
         name,
         logo_url: logoUrl,
         display_order: parseInt(formData.get('display_order') as string || '0'),
-        updated_at: new Date().toISOString(),
     };
 
-    let result;
-    if (id) {
-        result = await supabase.from('site_mda_logos').update(payload).eq('id', id);
-    } else {
-        result = await supabase.from('site_mda_logos').insert([payload]);
+    try {
+        if (id) {
+            await db.update(site_mda_logos).set({ ...payload, updated_at: new Date() }).where(eq(site_mda_logos.id, id));
+        } else {
+            await db.insert(site_mda_logos).values({
+                id: uuidv4(),
+                ...payload
+            });
+        }
+
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
-
-    if (result.error) return { success: false, error: result.error.message };
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
 }
 
 export async function deleteMDALogo(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.from('site_mda_logos').delete().eq('id', id);
-    if (error) return { success: false, error: error.message };
-
-    revalidatePath('/news');
-    revalidatePath('/admin/news');
-    return { success: true };
+    try {
+        await db.delete(site_mda_logos).where(eq(site_mda_logos.id, id));
+        revalidatePath('/news');
+        revalidatePath('/admin/news');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }
-

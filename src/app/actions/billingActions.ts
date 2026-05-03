@@ -1,6 +1,9 @@
+
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { transactions, users, applications } from '@/lib/db/schema';
+import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
 
@@ -34,19 +37,15 @@ export async function createBill(
     description: string,
     originatingStateCode: string
 ): Promise<{ success: boolean; error?: string; }> {
-    const supabase = await createSupabaseServerClient();
-
-    const { data: userProfile, error: profileError } = await supabase
-        .from('users')
-        .select('phone, email')
-        .eq('uid', userId)
-        .single();
-
-    if (profileError || !userProfile) {
-        return { success: false, error: "Could not retrieve user details for billing." };
-    }
-
     try {
+        const userProfile = await db.query.users.findFirst({
+            where: eq(users.uid, userId)
+        });
+
+        if (!userProfile) {
+            return { success: false, error: "Could not retrieve user details for billing." };
+        }
+
         const payload = {
             "customer_Name": application.applicant_name,
             "customer_Phone": userProfile.phone || '08000000000',
@@ -69,26 +68,22 @@ export async function createBill(
             throw new Error(result.message || 'Failed to generate reference.');
         }
 
-        const { error: dbError } = await supabase
-            .from('transactions')
-            .insert({
-                user_id: userId,
-                application_id: application.id,
-                amount: amount,
-                description: description,
-                payment_reference: result.data.paymentReference,
-                status: 'Pending',
-                payer_name: application.applicant_name,
-                payer_email: userProfile.email,
-                payer_phone: userProfile.phone,
-            });
-
-        if (dbError) throw dbError;
+        await db.insert(transactions).values({
+            user_id: userId,
+            application_id: Number(application.id),
+            amount: amount.toString(),
+            description: description,
+            payment_reference: result.data.paymentReference,
+            status: 'Pending',
+            payer_name: application.applicant_name,
+            payer_email: userProfile.email,
+            payer_phone: userProfile.phone,
+        });
 
         revalidatePath('/dashboard/billing');
         return { success: true };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    } catch (error: any) {
+        return { success: false, error: error.message || "Unknown error" };
     }
 }
 
@@ -96,24 +91,20 @@ export async function createBill(
  * Generates a payment reference from the Osoftpay GeneralPayments API.
  */
 export async function createGeneralBill(
-    application: StoredApplication,
+    application: any,
     userId: string,
     amount: number,
     description: string
 ): Promise<{ success: boolean; error?: string; rrrLink?: string }> {
-    const supabase = await createSupabaseServerClient();
-
-    const { data: userProfile, error: profileError } = await supabase
-        .from('users')
-        .select('phone, email')
-        .eq('uid', userId)
-        .single();
-
-    if (profileError || !userProfile) {
-        return { success: false, error: "Could not retrieve user details." };
-    }
-
     try {
+        const userProfile = await db.query.users.findFirst({
+            where: eq(users.uid, userId)
+        });
+
+        if (!userProfile) {
+            return { success: false, error: "Could not retrieve user details." };
+        }
+
         let sanitizedPhone = (userProfile.phone || '08000000000').replace(/\D/g, '');
         if (sanitizedPhone.startsWith('234')) sanitizedPhone = '0' + sanitizedPhone.slice(3);
         sanitizedPhone = sanitizedPhone.slice(-11).padStart(11, '0');
@@ -128,8 +119,6 @@ export async function createGeneralBill(
             "Platform": "PayKaduna"
         };
 
-        console.log("Sending payload to Osoftpay:", JSON.stringify(payload));
-
         const response = await fetch('https://kasupda.osoftpay.net/api/GeneralPayments', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -138,8 +127,7 @@ export async function createGeneralBill(
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`Osoftpay General API error details: ${errorText}`);
-            throw new Error(`Osoftpay General API error: ${response.status} - ${errorText.substring(0, 100)}`);
+            throw new Error(`Osoftpay General API error: ${response.status}`);
         }
 
         const result: GeneralPaymentResponse = await response.json();
@@ -147,40 +135,33 @@ export async function createGeneralBill(
             throw new Error(result.message || 'Failed to generate reference.');
         }
 
-        const { error: dbError } = await supabase
-            .from('transactions')
-            .insert({
-                user_id: userId,
-                application_id: application.id,
-                amount: amount,
-                description: description,
-                payment_reference: result.reference,
-                payment_link: result.rrrLink,
-                status: 'Pending',
-                payer_name: application.applicant_name,
-                payer_email: userProfile.email,
-                payer_phone: userProfile.phone,
-            });
-
-        if (dbError) throw dbError;
+        await db.insert(transactions).values({
+            user_id: userId,
+            application_id: Number(application.id),
+            amount: amount.toString(),
+            description: description,
+            payment_reference: result.reference,
+            payment_link: result.rrrLink,
+            status: 'Pending',
+            payer_name: application.applicant_name,
+            payer_email: userProfile.email,
+            payer_phone: userProfile.phone,
+        });
 
         revalidatePath('/dashboard/billing');
         return { success: true, rrrLink: result.rrrLink };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    } catch (error: any) {
+        return { success: false, error: error.message || "Unknown error" };
     }
 }
 
 /**
- * Verifies a payment status and handles automatic DIN assignment.
+ * Verifies a payment status.
  */
 export async function verifyPayment(transactionId: number, paymentReference: string): Promise<{ success: boolean; status?: string; error?: string; }> {
-    const supabase = await createSupabaseServerClient();
-
     try {
         let response = await fetch(`https://kasupda.osoftpay.net/api/CallValidation/${paymentReference}`);
 
-        // If 404, try the alternative agency endpoint
         if (response.status === 404) {
             response = await fetch(`https://agency.osoftpay.net/api/CallValidation/${paymentReference}`);
         }
@@ -191,52 +172,14 @@ export async function verifyPayment(transactionId: number, paymentReference: str
         const isSuccessful = result.payment_Status === 'Successful' || result.status === '00';
         const newStatus = isSuccessful ? 'Verified' : 'Pending';
 
-        // Update transaction status
-        const { data: transaction, error: dbError } = await supabase
-            .from('transactions')
-            .update({ status: newStatus, last_verified_at: new Date().toISOString() })
-            .eq('id', transactionId)
-            .select('*, applications(*)')
-            .single();
-
-        if (dbError) throw new Error(dbError.message);
-
-        // Automatic DIN Generation Logic REMOVED - Admin must now manually generate DIN
-        if (false && isSuccessful && transaction && (transaction.description === 'DIN Application Fee' || (transaction.description === 'Approval Fees For Building Plan' && transaction.amount === 5000))) {
-            const applicationId = transaction.application_id;
-            const userId = transaction.user_id;
-            const finalDin = `DIN${String(applicationId).padStart(3, '0')}`;
-
-            // Update application status and DIN
-            const { error: appUpdateError } = await supabase
-                .from('applications')
-                .update({ din: finalDin, status: 'Approved' })
-                .eq('id', applicationId);
-
-            if (appUpdateError) console.error("App update error:", appUpdateError);
-
-            // Update user profile with DIN
-            const { error: userUpdateError } = await supabase
-                .from('users')
-                .update({ din: finalDin })
-                .eq('uid', userId);
-
-            if (userUpdateError) console.error("User update error:", userUpdateError);
-
-            revalidatePath('/admin/applications');
-        }
+        await db.update(transactions)
+            .set({ status: newStatus, last_verified_at: new Date() })
+            .where(eq(transactions.id, transactionId));
 
         revalidatePath('/dashboard/billing');
         revalidatePath('/admin/finance');
         return { success: true, status: newStatus };
     } catch (error: any) {
-        console.error("Verification error:", error);
-
-        // Provide a more user-friendly message for 404s
-        if (error.message?.includes('404')) {
-            return { success: false, error: "Payment record not found. This usually means the payment hasn't been made yet or the reference is incorrect." };
-        }
-
         return { success: false, error: error.message || "Unknown error" };
     }
 }
@@ -244,34 +187,25 @@ export async function verifyPayment(transactionId: number, paymentReference: str
 /**
  * Assigns a KBP number.
  */
-export async function assignKbp(applicationId: string, kbpNumber: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
-
+export async function assignKbp(applicationId: number, kbpNumber: string): Promise<{ success: boolean; error?: string }> {
     try {
-        const { data: transaction, error: transactionError } = await supabase
-            .from('transactions')
-            .select('status')
-            .eq('application_id', applicationId)
-            .eq('description', 'Approval Fees For Building Plan')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+        const lastTransaction = await db.query.transactions.findFirst({
+            where: eq(transactions.application_id, applicationId),
+            orderBy: [desc(transactions.created_at)]
+        });
 
-        if (transactionError || !transaction || transaction.status !== 'Verified') {
+        if (!lastTransaction || lastTransaction.status !== 'Verified') {
             return { success: false, error: "Payment not verified." };
         }
 
-        const { error: appUpdateError } = await supabase
-            .from('applications')
-            .update({ original_permit_id: kbpNumber, status: 'Approved', rejection_reason: null })
-            .eq('id', applicationId);
-
-        if (appUpdateError) throw appUpdateError;
+        await db.update(applications)
+            .set({ original_permit_id: kbpNumber, status: 'Approved', rejection_reason: null })
+            .where(eq(applications.id, applicationId));
 
         revalidatePath('/admin/applications');
         return { success: true };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    } catch (error: any) {
+        return { success: false, error: error.message || "Unknown error" };
     }
 }
 
@@ -279,65 +213,71 @@ export async function assignKbp(applicationId: string, kbpNumber: string): Promi
  * Fetches all transactions.
  */
 export async function getTransactions(status?: string): Promise<any[]> {
-    const supabase = await createSupabaseServerClient();
-    let query = supabase.from('transactions').select('*, applications(type)').order('created_at', { ascending: false });
-    if (status) query = query.eq('status', status);
-
-    const { data, error } = await query;
-    if (error) return [];
-    return data || [];
+    try {
+        if (status) {
+            return await db.query.transactions.findMany({
+                where: eq(transactions.status, status),
+                orderBy: [desc(transactions.created_at)],
+                with: {
+                    application: true
+                }
+            });
+        }
+        return await db.query.transactions.findMany({
+            orderBy: [desc(transactions.created_at)],
+            with: {
+                application: true
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+        return [];
+    }
 }
 
 /**
  * Fetches a single transaction.
  */
 export async function getTransactionById(id: number): Promise<any | null> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase.from('transactions').select('*, applications(*)').eq('id', id).single();
-    if (error) return null;
-    return data;
+    try {
+        return await db.query.transactions.findFirst({
+            where: eq(transactions.id, id),
+            with: {
+                application: true
+            }
+        });
+    } catch (error) {
+        return null;
+    }
 }
 
 /**
  * Manually generates a DIN for an application.
  */
-export async function generateDin(applicationId: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
-
+export async function generateDin(applicationId: number): Promise<{ success: boolean; error?: string }> {
     try {
-        // Fetch application to get user_id and ensure it exists
-        const { data: application, error: appError } = await supabase
-            .from('applications')
-            .select('user_id, id')
-            .eq('id', applicationId)
-            .single();
+        const application = await db.query.applications.findFirst({
+            where: eq(applications.id, applicationId)
+        });
 
-        if (appError || !application) {
+        if (!application) {
             return { success: false, error: "Application not found." };
         }
 
         const finalDin = `DIN${String(application.id).padStart(3, '0')}`;
 
-        // Update application status and DIN
-        const { error: appUpdateError } = await supabase
-            .from('applications')
-            .update({ din: finalDin, status: 'Approved', rejection_reason: null })
-            .eq('id', applicationId);
+        await db.update(applications)
+            .set({ din: finalDin, status: 'Approved', rejection_reason: null })
+            .where(eq(applications.id, applicationId));
 
-        if (appUpdateError) throw appUpdateError;
-
-        // Update user profile with DIN
-        const { error: userUpdateError } = await supabase
-            .from('users')
-            .update({ din: finalDin })
-            .eq('uid', application.user_id);
-
-        if (userUpdateError) console.error("User update error:", userUpdateError);
+        await db.update(users)
+            .set({ din: finalDin })
+            .where(eq(users.uid, application.user_id));
 
         revalidatePath('/admin/applications');
         revalidatePath('/admin/din-applications');
         return { success: true };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+    } catch (error: any) {
+        return { success: false, error: error.message || "Unknown error" };
     }
 }

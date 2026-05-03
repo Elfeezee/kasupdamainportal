@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from '@/lib/supabase/client';
+import { signIn } from 'next-auth/react';
 
 function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
   return (
@@ -42,53 +42,34 @@ export default function LoginForm() {
   }, [paramError, toast]);
 
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        // If user signs in, redirect them.
-        router.push(redirectTo);
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [router, redirectTo]);
-
-
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const result = await signIn('credentials', {
         email,
         password,
+        redirect: false,
       });
 
-      if (error) {
-        throw error;
+      if (result?.error) {
+        throw new Error(result.error === 'CredentialsSignin' ? 'Invalid email or password.' : result.error);
       }
       
       toast({
         title: 'Login Successful!',
         description: 'Redirecting to your dashboard...',
       });
-      // The onAuthStateChange listener will handle the redirect.
+      
+      router.push(redirectTo);
 
     } catch (error: any) {
-      let errorMessage = "An unknown error occurred.";
-      if (error.message.includes('Invalid login credentials')) {
-        errorMessage = "Invalid email or password. Please try again.";
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
+      setError(error.message);
       toast({
         title: 'Login Error',
-        description: errorMessage,
+        description: error.message,
         variant: 'destructive',
       });
     } finally {
