@@ -7,7 +7,12 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: '4500',
-        GOOGLE_APPLICATION_CREDENTIALS: '/var/secrets/firebase-sa.json'
+        GOOGLE_APPLICATION_CREDENTIALS: '/var/secrets/firebase-sa.json',
+        DB_HOST: 'localhost',
+        DB_USER: 'kasupda_user',
+        DB_PASSWORD: 'kasupda_pass',
+        DB_NAME: 'kasupda',
+        AUTH_SECRET: '29MoU+wtUObQ8p0SHjESEXu1Enp6qOtaCczTFQRjOYw='
       },
       env_production: {
         NODE_ENV: 'production'

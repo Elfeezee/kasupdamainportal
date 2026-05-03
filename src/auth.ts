@@ -15,22 +15,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        console.log('Authorize attempt for:', credentials?.email);
+        if (!credentials?.email || !credentials?.password) {
+          console.log('Missing credentials');
+          return null
+        }
         
-        const user = await db.query.users.findFirst({
-          where: eq(users.email, credentials.email as string)
-        })
+        try {
+          const user = await db.query.users.findFirst({
+            where: eq(users.email, credentials.email as string)
+          })
 
-        if (!user || !user.password) return null
+          if (!user) {
+            console.log('User not found in DB:', credentials.email);
+            return null
+          }
 
-        const isValid = await bcrypt.compare(credentials.password as string, user.password)
-        if (!isValid) return null
+          if (!user.password) {
+            console.log('User has no password set in DB');
+            return null
+          }
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
+          const isValid = await bcrypt.compare(credentials.password as string, user.password)
+          console.log('Password comparison result:', isValid);
+          
+          if (!isValid) return null
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+          }
+        } catch (error) {
+          console.error('DB Error during authorize:', error);
+          return null;
         }
       }
     })
