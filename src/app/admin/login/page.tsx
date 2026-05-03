@@ -10,36 +10,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShieldAlert, Loader2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from '@/lib/supabase/client';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: userProfile, error: profileError } = await supabase
-          .from('users')
-          .select('role')
-          .eq('uid', user.id)
-          .single();
-
-        const role = userProfile?.role;
-        if (role === 'Admin' || role === 'Super Admin') {
-          router.replace('/admin/dashboard');
-        } else if (role === 'Finance') {
-          router.replace('/admin/finance/dashboard');
-        }
+    if (status === 'authenticated' && session?.user) {
+      const role = (session.user as any).role;
+      if (role === 'Admin' || role === 'Super Admin') {
+        router.replace('/admin/dashboard');
+      } else if (role === 'Finance') {
+        router.replace('/admin/finance/dashboard');
       }
-    };
-    checkUser();
-  }, [router]);
+    }
+  }, [session, status, router]);
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>, role: 'Admin' | 'Finance') => {
     event.preventDefault();
@@ -47,46 +38,21 @@ export default function AdminLoginPage() {
     setError(null);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      const result = await signIn('credentials', {
         email,
         password,
+        redirect: false,
       });
 
-      if (authError) throw authError;
-
-      if (authData.user) {
-        const { data: userProfile, error: profileError } = await supabase
-          .from('users')
-          .select('role')
-          .eq('uid', authData.user.id)
-          .single();
-
-        if (profileError) {
-          console.error("Profile fetch error:", profileError);
-          throw new Error("Could not verify user role. Please ensure your account is properly set up.");
-        }
-
-        const userRole = userProfile?.role;
-
-        if (role === 'Admin' && (userRole === 'Admin' || userRole === 'Super Admin')) {
-          toast({ title: 'Login Successful!', description: 'Redirecting to the admin dashboard...' });
-          router.replace('/admin/dashboard');
-        } else if (role === 'Finance' && (userRole === 'Finance' || userRole === 'Admin' || userRole === 'Super Admin')) {
-          toast({ title: 'Login Successful!', description: 'Redirecting to the finance dashboard...' });
-          router.replace('/admin/finance/dashboard');
-        } else {
-          await supabase.auth.signOut();
-          throw new Error(`Access Denied. Your account does not have ${role} privileges.`);
-        }
+      if (result?.error) {
+        throw new Error(result.error === 'CredentialsSignin' ? 'Invalid email or password.' : result.error);
       }
+
+      // The useEffect will handle redirection once the session is updated
+      toast({ title: 'Login Successful!', description: 'Verifying your credentials...' });
 
     } catch (error: any) {
-      let errorMessage = "An unknown error occurred.";
-      if (error.message.includes('Invalid login credentials')) {
-        errorMessage = "Invalid email or password.";
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
+      const errorMessage = error.message || "An unknown error occurred.";
       setError(errorMessage);
       toast({ title: 'Login Error', description: errorMessage, variant: 'destructive' });
     } finally {
