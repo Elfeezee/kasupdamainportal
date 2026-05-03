@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -31,8 +32,9 @@ import {
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 import { Badge } from '@/components/ui/badge';
+import { getUnreadMessageCount } from '@/app/actions/contactActions';
 
 const adminNavItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -52,51 +54,28 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
   const { state, setOpenMobile } = useSidebar();
   const [unreadCount, setUnreadCount] = useState(0);
-  const [userRole, setUserRole] = useState<string | null>(null);
+
+  const userRole = (session?.user as any)?.role;
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase.from('users').select('role').eq('uid', user.id).single();
-        if (data) setUserRole(data.role);
-      }
-    };
-    fetchUserRole();
-
     const fetchUnreadCount = async () => {
       try {
-        const { count, error } = await supabase
-          .from('contact_messages')
-          .select('*', { count: 'exact', head: true })
-          .eq('read', false);
-
-        if (error) throw error;
-        setUnreadCount(count ?? 0);
+        const count = await getUnreadMessageCount();
+        setUnreadCount(count);
       } catch (error) {
         console.error("Error fetching unread message count:", error);
       }
     };
 
     fetchUnreadCount();
-
-    // Set up a real-time subscription
-    const channel = supabase
-      .channel('contact_messages')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' },
-        (payload) => {
-          // Re-fetch the count whenever a message is inserted, updated, or deleted
-          fetchUnreadCount();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    
+    // We can't do real-time easily with Drizzle/MySQL without WebSockets/Pusher
+    // For now, we'll just poll every 30 seconds or just fetch once
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleExitAdmin = () => {

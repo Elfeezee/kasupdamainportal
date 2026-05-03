@@ -6,10 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Fingerprint, Clock, CheckCircle2, XCircle, FileText, Award, ArrowRight, BookUser, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { applications as applicationsSchema } from '@/lib/db/schema';
+import { eq, and, desc } from 'drizzle-orm';
 
 type ApplicationStatus = 'Inprogress' | 'Approved' | 'Rejected' | 'Queried';
 
@@ -37,30 +40,29 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 async function getDinApplications(userId: string) {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('applications')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('type', 'DIN Application')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error("Error fetching user DIN applications from Supabase:", error);
+  try {
+    const data = await db.query.applications.findMany({
+      where: and(
+        eq(applicationsSchema.user_id, userId),
+        eq(applicationsSchema.type, 'DIN Application')
+      ),
+      orderBy: [desc(applicationsSchema.created_at)]
+    });
+    return data as unknown as StoredApplication[];
+  } catch (error) {
+    console.error("Error fetching user DIN applications:", error);
     return [];
   }
-  return data as StoredApplication[];
 }
 
 async function MyDinsPageComponent() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session || !session.user) {
     redirect('/login?redirectTo=/dashboard/my-dins');
   }
 
-  const applications = await getDinApplications(user.id);
+  const applications = await getDinApplications(session.user.id as string);
 
   return (
     <div className="max-w-7xl mx-auto space-y-10 py-6 animate-in fade-in duration-700">
@@ -153,7 +155,7 @@ async function MyDinsPageComponent() {
                     <div className="flex-1 min-w-0 text-left">
                       <p className="text-[10px] font-bold text-slate-400 uppercase">Submitted On</p>
                       <p className="text-sm font-bold text-slate-800 truncate leading-none mt-1">
-                        {app.created_at ? format(parseISO(app.created_at), 'MMM dd, yyyy') : 'N/A'}
+                        {app.created_at ? format(app.created_at instanceof Date ? app.created_at : parseISO(app.created_at as string), 'MMM dd, yyyy') : 'N/A'}
                       </p>
                     </div>
                   </div>

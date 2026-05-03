@@ -14,7 +14,8 @@ module.exports = {
         DB_NAME: 'kasupda',
         AUTH_SECRET: '29MoU+wtUObQ8p0SHjESEXu1Enp6qOtaCczTFQRjOYw=',
         AUTH_TRUST_HOST: 'true',
-        AUTH_URL: 'https://kasupda.org'
+        AUTH_URL: 'https://kasupda.org',
+        NEXTAUTH_URL: 'https://kasupda.org'
       },
       env_production: {
         NODE_ENV: 'production'

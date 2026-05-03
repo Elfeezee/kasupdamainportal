@@ -3,37 +3,36 @@ import React, { Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
 import { redirect } from 'next/navigation';
 import { ProfileEditActions } from '@/components/profile/ProfileEditActions';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 async function getProfileData() {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const session = await auth();
 
-    if (!user) {
+    if (!session || !session.user) {
         redirect('/login?redirectTo=/dashboard/profile');
     }
 
+    const userId = session.user.id;
+    const userEmail = session.user.email;
+
     let profile = {
-        name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'N/A',
-        email: user.email || 'N/A',
-        phone: user.phone || 'N/A',
+        name: session.user.name || userEmail?.split('@')[0] || 'N/A',
+        email: userEmail || 'N/A',
+        phone: 'N/A',
         din: 'Not yet assigned',
-        address: user.user_metadata?.address || 'Not available'
+        address: 'Not available'
     };
 
     try {
-        const { data: userProfile, error: profileError } = await supabase
-            .from('users')
-            .select('din, name, phone, address')
-            .eq('uid', user.id)
-            .maybeSingle();
-
-        if (profileError) {
-            console.error("Error fetching profile from DB:", profileError.message);
-        }
+        const userProfile = await db.query.users.findFirst({
+            where: eq(users.id, userId as string)
+        });
 
         if (userProfile) {
             profile.din = userProfile.din || 'Not yet assigned';
@@ -42,7 +41,7 @@ async function getProfileData() {
             profile.address = userProfile.address || profile.address;
         }
     } catch (error) {
-        console.error("A critical error occurred while fetching profile data:", error);
+        console.error("Error fetching profile data:", error);
     }
 
     return profile;
@@ -95,7 +94,6 @@ export default function ProfilePage() {
     );
 }
 
-// Keep a loading component for suspense boundary
 export function LoadingProfilePage() {
     return (
         <div className="space-y-8">

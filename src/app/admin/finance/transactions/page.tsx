@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -13,14 +14,14 @@ import { useToast } from '@/hooks/use-toast';
 import { format, parseISO } from 'date-fns';
 import { getTransactions } from '@/app/actions/billingActions';
 import Receipt from '@/components/billing/Receipt';
-import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 type TransactionStatus = 'Verified' | 'Pending' | 'Failed';
 
 interface Transaction {
     id: number;
-    created_at: string;
+    created_at: string | Date;
     user_id: string;
     application_id: string;
     amount: number;
@@ -50,9 +51,9 @@ const StatusBadge = ({ status }: { status: TransactionStatus }) => {
 }
 
 export default function FinanceTransactionsPage() {
+    const { data: session, status } = useSession();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
-    const [roleLoading, setRoleLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<'All' | TransactionStatus>('Verified');
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
@@ -60,23 +61,13 @@ export default function FinanceTransactionsPage() {
     const { toast } = useToast();
     const router = useRouter();
 
+    const roleLoading = status === 'loading';
+
     useEffect(() => {
-        const checkRole = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data } = await supabase.from('users').select('role').eq('uid', user.id).single();
-                if (data && (data.role === 'Super Admin' || data.role === 'Finance')) {
-                    setRoleLoading(false);
-                } else {
-                    toast({ title: "Access Denied", description: "You do not have permission to view finance transactions.", variant: "destructive" });
-                    router.push('/admin/dashboard');
-                }
-            } else {
-                router.push('/admin/login');
-            }
-        };
-        checkRole();
-    }, [router, toast]);
+        if (status === 'unauthenticated') {
+            router.push('/admin/login');
+        }
+    }, [status, router]);
 
     const loadTransactions = useCallback(async () => {
         if (roleLoading) return;
@@ -93,8 +84,10 @@ export default function FinanceTransactionsPage() {
     }, [statusFilter, toast, roleLoading]);
 
     useEffect(() => {
-        loadTransactions();
-    }, [loadTransactions]);
+        if (status === 'authenticated') {
+            loadTransactions();
+        }
+    }, [status, loadTransactions]);
 
     if (roleLoading) {
         return (
@@ -115,7 +108,7 @@ export default function FinanceTransactionsPage() {
 
         const headers = ['Date', 'Transaction ID', 'Reference', 'Applicant', 'App ID', 'Description', 'Amount', 'Status'];
         const rows = filteredTransactions.map(t => [
-            format(parseISO(t.created_at), 'yyyy-MM-dd HH:mm'),
+            format(t.created_at instanceof Date ? t.created_at : parseISO(t.created_at as string), 'yyyy-MM-dd HH:mm'),
             t.id,
             t.payment_reference,
             t.payer_name,
@@ -224,8 +217,8 @@ export default function FinanceTransactionsPage() {
                                     filteredTransactions.map((transaction) => (
                                         <TableRow key={transaction.id}>
                                             <TableCell className="text-xs">
-                                                {format(parseISO(transaction.created_at), 'dd MMM, yyyy')}
-                                                <div className="text-[10px] text-muted-foreground">{format(parseISO(transaction.created_at), 'HH:mm')}</div>
+                                                {format(transaction.created_at instanceof Date ? transaction.created_at : parseISO(transaction.created_at as string), 'dd MMM, yyyy')}
+                                                <div className="text-[10px] text-muted-foreground">{format(transaction.created_at instanceof Date ? transaction.created_at : parseISO(transaction.created_at as string), 'HH:mm')}</div>
                                             </TableCell>
                                             <TableCell className="font-mono text-[10px]">{transaction.payment_reference}</TableCell>
                                             <TableCell className="font-medium text-sm">

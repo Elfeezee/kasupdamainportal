@@ -8,9 +8,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTransactions } from '@/app/actions/billingActions';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { isToday, parseISO } from 'date-fns';
+import { useSession } from 'next-auth/react';
 
 interface DashboardStats {
   totalRevenue: number;
@@ -20,8 +20,8 @@ interface DashboardStats {
 }
 
 export default function FinanceDashboardPage() {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats>({
     totalRevenue: 0,
     transactionsToday: 0,
@@ -31,23 +31,13 @@ export default function FinanceDashboardPage() {
   const { toast } = useToast();
   const router = useRouter();
 
+  const roleLoading = status === 'loading';
+
   useEffect(() => {
-    const checkRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase.from('users').select('role').eq('uid', user.id).single();
-        if (data && (data.role === 'Super Admin' || data.role === 'Finance')) {
-          setRoleLoading(false);
-        } else {
-          toast({ title: "Access Denied", description: "You do not have permission to view finance statistics.", variant: "destructive" });
-          router.push('/admin/dashboard');
-        }
-      } else {
-        router.push('/admin/login');
-      }
-    };
-    checkRole();
-  }, [router, toast]);
+    if (status === 'unauthenticated') {
+      router.push('/admin/login');
+    }
+  }, [status, router]);
 
   const loadDashboardData = useCallback(async () => {
     if (roleLoading) return;
@@ -57,7 +47,10 @@ export default function FinanceDashboardPage() {
 
       const verifiedTransactions = transactions.filter(t => t.status === 'Verified');
       const totalRevenue = verifiedTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-      const transactionsToday = transactions.filter(t => isToday(parseISO(t.created_at))).length;
+      const transactionsToday = transactions.filter(t => {
+        const date = t.created_at instanceof Date ? t.created_at : parseISO(t.created_at as string);
+        return isToday(date);
+      }).length;
       const pendingVerifications = transactions.filter(t => t.status === 'Pending').length;
 
       // Process chart data
@@ -88,8 +81,10 @@ export default function FinanceDashboardPage() {
   }, [roleLoading, toast]);
 
   useEffect(() => {
-    loadDashboardData();
-  }, [loadDashboardData]);
+    if (status === 'authenticated') {
+      loadDashboardData();
+    }
+  }, [status, loadDashboardData]);
 
   if (roleLoading) {
     return (

@@ -22,9 +22,11 @@ export default function AdminDashboardLayout({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('Layout check - Status:', status);
     if (status === 'loading') return;
 
     if (status === 'unauthenticated') {
+      console.log('Layout - Unauthenticated, redirecting to login');
       toast({ title: 'Access Denied', description: 'You must be logged in to view this page.', variant: 'destructive' });
       router.replace('/admin/login');
       return;
@@ -32,11 +34,14 @@ export default function AdminDashboardLayout({
 
     const allowedRoles = ['Admin', 'Super Admin', 'Finance'];
     const userRole = (session?.user as any)?.role;
+    console.log('Layout - User Role:', userRole);
 
     if (session?.user && allowedRoles.includes(userRole)) {
+      console.log('Layout - Verified');
       setIsVerified(true);
     } else {
-      toast({ title: 'Access Denied', description: 'You do not have administrative privileges.', variant: 'destructive' });
+      console.log('Layout - Role not allowed or user missing, redirecting');
+      toast({ title: 'Access Denied', description: `You do not have administrative privileges. Role: ${userRole}`, variant: 'destructive' });
       router.replace('/admin/login');
     }
 

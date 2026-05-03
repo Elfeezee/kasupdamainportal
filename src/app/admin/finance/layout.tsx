@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+import { useSession } from 'next-auth/react';
+
 export default function FinanceAdminLayout({
   children,
 }: {
@@ -16,45 +18,30 @@ export default function FinanceAdminLayout({
 }) {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkFinanceAdminStatus = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (status === 'loading') return;
 
-      if (userError || !user) {
-        toast({ title: 'Access Denied', description: 'You must be logged in to view this page.', variant: 'destructive' });
-        router.replace('/admin/login');
-        return;
-      }
+    if (status === 'unauthenticated' || !session?.user) {
+      toast({ title: 'Access Denied', description: 'You must be logged in to view this page.', variant: 'destructive' });
+      router.replace('/admin/login');
+      return;
+    }
 
-      const { data: userProfile, error: profileError } = await supabase
-        .from('users')
-        .select('role')
-        .eq('uid', user.id)
-        .single();
+    const role = (session.user as any).role;
+    // Grant access if the user is a Super Admin or a specific Finance officer
+    if (role === 'Super Admin' || role === 'Finance') {
+      setIsVerified(true);
+    } else {
+      toast({ title: 'Access Denied', description: 'You do not have finance or super admin privileges.', variant: 'destructive' });
+      router.replace('/admin/dashboard');
+    }
 
-      if (profileError || !userProfile) {
-        toast({ title: 'Access Denied', description: 'Could not verify your user role.', variant: 'destructive' });
-        await supabase.auth.signOut();
-        router.replace('/admin/login');
-        return;
-      }
-
-      // Grant access if the user is a Super Admin or a specific Finance officer
-      if (userProfile.role === 'Super Admin' || userProfile.role === 'Finance') {
-        setIsVerified(true);
-      } else {
-        toast({ title: 'Access Denied', description: 'You do not have finance or super admin privileges.', variant: 'destructive' });
-        router.replace('/admin/dashboard');
-      }
-
-      setLoading(false);
-    };
-
-    checkFinanceAdminStatus();
-  }, [router, toast]);
+    setLoading(false);
+  }, [status, session, router, toast]);
 
   if (loading) {
     return (

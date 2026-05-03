@@ -2,27 +2,28 @@
 'use server';
 
 import React, { Suspense } from 'react';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Landmark, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import BillingTable from './BillingTable';
 import type { Transaction } from './BillingTable';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { transactions as transactionsSchema } from '@/lib/db/schema';
+import { eq, desc } from 'drizzle-orm';
 
 async function getBillingData(userId: string) {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-    if (error) {
+    try {
+        const data = await db.query.transactions.findMany({
+            where: eq(transactionsSchema.user_id, userId),
+            orderBy: [desc(transactionsSchema.created_at)]
+        });
+        return data as unknown as Transaction[];
+    } catch (error) {
         console.error("Error fetching user transactions:", error);
         return [];
     }
-    return data as Transaction[];
 }
 
 function LoadingSkeleton() {
@@ -44,19 +45,15 @@ function LoadingSkeleton() {
     );
 }
 
-// Make the main export an async Server Component
 export default async function BillingPage() {
-
-    // The data fetching logic is now directly in the page component.
     const PageComponent = async () => {
-        const supabase = await createSupabaseServerClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const session = await auth();
 
-        if (!user) {
+        if (!session || !session.user) {
             redirect('/login?redirectTo=/dashboard/billing');
         }
 
-        const transactions = await getBillingData(user.id);
+        const transactions = await getBillingData(session.user.id as string);
 
         return (
             <div className="space-y-8">

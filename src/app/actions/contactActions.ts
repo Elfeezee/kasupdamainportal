@@ -1,49 +1,68 @@
+
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { z } from 'zod';
+import { db } from '@/lib/db';
+import { contact_messages } from '@/lib/db/schema';
+import { eq, count } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
+import { v4 as uuidv4 } from 'uuid';
 
-const ContactFormSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-  subject: z.string().min(3, { message: 'Subject must be at least 3 characters.' }),
-  message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
-});
+export async function getUnreadMessageCount() {
+    try {
+        const result = await db.select({ value: count() })
+            .from(contact_messages)
+            .where(eq(contact_messages.is_read, false));
+        
+        return result[0]?.value || 0;
+    } catch (error) {
+        console.error('Error fetching unread message count:', error);
+        return 0;
+    }
+}
 
-export async function saveContactMessage(
-  formData: FormData
-): Promise<{ success: boolean; error?: string; fieldErrors?: any }> {
-  const supabase = await createSupabaseServerClient();
+export async function getContactMessages() {
+    try {
+        return await db.query.contact_messages.findMany({
+            orderBy: (messages, { desc }) => [desc(messages.created_at)]
+        });
+    } catch (error) {
+        console.error('Error fetching contact messages:', error);
+        return [];
+    }
+}
 
-  const validatedFields = ContactFormSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    subject: formData.get('subject'),
-    message: formData.get('message'),
-  });
+export async function markMessageAsRead(id: string) {
+    try {
+        await db.update(contact_messages)
+            .set({ is_read: true })
+            .where(eq(contact_messages.id, id));
+        
+        revalidatePath('/admin/messages');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
 
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
-      error: 'Please check the form fields for errors.',
-    };
-  }
+export async function deleteMessage(id: string) {
+    try {
+        await db.delete(contact_messages).where(eq(contact_messages.id, id));
+        revalidatePath('/admin/messages');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
 
-  const { name, email, subject, message } = validatedFields.data;
-
-  try {
-    const { error } = await supabase
-      .from('contact_messages')
-      .insert([{ name, email, subject, message }]);
-
-    if (error) throw error;
-
-    return { success: true };
-
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown server error occurred.';
-    console.error('Save Contact Message Error:', errorMessage);
-    return { success: false, error: `Failed to save message: ${errorMessage}` };
-  }
+export async function submitContactForm(data: { name: string, email: string, subject: string, message: string }) {
+    try {
+        await db.insert(contact_messages).values({
+            id: uuidv4(),
+            ...data,
+            is_read: false,
+        });
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
 }

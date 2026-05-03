@@ -1,38 +1,50 @@
+
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq, desc } from 'drizzle-orm';
+import { auth } from '@/auth';
 
 /**
  * Fetches all users for the super admin dashboard.
  */
 export async function getAllUsers(): Promise<any[]> {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-    if (error) {
+    try {
+        const data = await db.query.users.findMany({
+            orderBy: [desc(users.createdAt)]
+        });
+        
+        // Map MySQL schema fields to what the UI expects (AppUser interface)
+        return data.map(user => ({
+            uid: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            created_at: user.createdAt,
+            din: user.din
+        }));
+    } catch (error) {
         console.error('Error fetching users:', error);
         return [];
     }
-    return data || [];
 }
 
 /**
  * Updates a user's role.
  */
 export async function updateUserRole(uid: string, newRole: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
+    const session = await auth();
+    if (!session || (session.user as any).role !== 'Super Admin') {
+        return { success: false, error: 'Unauthorized. Only Super Admins can change roles.' };
+    }
 
     try {
-        const { error } = await supabase
-            .from('users')
-            .update({ role: newRole })
-            .eq('uid', uid);
-
-        if (error) throw error;
+        await db.update(users)
+            .set({ role: newRole as any })
+            .where(eq(users.id, uid));
 
         revalidatePath('/admin/users');
         return { success: true };
@@ -45,18 +57,16 @@ export async function updateUserRole(uid: string, newRole: string): Promise<{ su
 
 /**
  * Deletes a user from the public users table.
- * Note: This does not delete the user from Supabase Auth without the service role key.
  */
 export async function deleteUserRecord(uid: string): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
+    const session = await auth();
+    if (!session || (session.user as any).role !== 'Super Admin') {
+        return { success: false, error: 'Unauthorized. Only Super Admins can delete users.' };
+    }
 
     try {
-        const { error } = await supabase
-            .from('users')
-            .delete()
-            .eq('uid', uid);
-
-        if (error) throw error;
+        await db.delete(users)
+            .where(eq(users.id, uid));
 
         revalidatePath('/admin/users');
         return { success: true };
@@ -68,23 +78,29 @@ export async function deleteUserRecord(uid: string): Promise<{ success: boolean;
 }
 
 /**
- * Manually creates a user record in the public users table.
- * Note: This does not create a Supabase Auth account.
+ * Manually creates a user record in the database.
  */
 export async function createUserRecord(data: { name: string, email: string, role: string, phone?: string }): Promise<{ success: boolean; error?: string }> {
-    const supabase = await createSupabaseServerClient();
+    const session = await auth();
+    if (!session || (session.user as any).role !== 'Super Admin') {
+        return { success: false, error: 'Unauthorized. Only Super Admins can create users.' };
+    }
 
     try {
-        // We need a UID for the public.users table. 
-        // Since we can't create an Auth user without the service role key,
-        // this is primarily for pre-registering users or for systems where 
-        // Auth is handled separately.
-        // For now, we'll return an error explaining this limitation if we don't have a UID.
+        // Since we don't have a password here, we'll need to set a default or handle it
+        // For now, this is just to create the record. 
+        // Real user creation usually happens via signup or a dedicated admin form with password.
+        
+        await db.insert(users).values({
+            id: crypto.randomUUID(), // Or let MySQL generate if using auto-increment, but schema uses string ID
+            name: data.name,
+            email: data.email,
+            role: data.role as any,
+            phone: data.phone,
+        });
 
-        return {
-            success: false,
-            error: "Creating a full user account requires the Supabase Service Role Key. Please use the Supabase Dashboard to add users to Auth first, then they will appear here automatically."
-        };
+        revalidatePath('/admin/users');
+        return { success: true };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, error: `Failed to create user: ${errorMessage}` };

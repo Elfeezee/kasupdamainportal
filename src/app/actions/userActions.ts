@@ -1,48 +1,33 @@
 
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 export async function updateUserProfile(formData: {
     name?: string;
     phone?: string;
     address?: string;
 }) {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const session = await auth();
 
-    if (!user) {
+    if (!session || !session.user) {
         return { success: false, error: 'User not authenticated' };
     }
 
     try {
-        // Update user metadata in Supabase Auth
-        const { error: authError } = await supabase.auth.updateUser({
-            data: {
-                full_name: formData.name,
-                phone: formData.phone,
-                address: formData.address
-            }
-        });
-
-        if (authError) throw authError;
-
-        // Update the users table
-        const { error: dbError } = await supabase
-            .from('users')
-            .update({
+        // Update the users table in MySQL
+        await db.update(users)
+            .set({
                 name: formData.name,
                 phone: formData.phone,
                 address: formData.address
             })
-            .eq('uid', user.id);
-
-        if (dbError) {
-            // If the table update fails, we still have auth metadata updated, 
-            // but let's log it.
-            console.error('Error updating users table:', dbError);
-        }
+            .where(eq(users.id, session.user.id as string));
 
         revalidatePath('/dashboard/profile');
         return { success: true };
@@ -53,14 +38,20 @@ export async function updateUserProfile(formData: {
 }
 
 export async function changeUserPassword(password: string) {
-    const supabase = await createSupabaseServerClient();
+    const session = await auth();
+
+    if (!session || !session.user) {
+        return { success: false, error: 'User not authenticated' };
+    }
 
     try {
-        const { error } = await supabase.auth.updateUser({
-            password: password
-        });
-
-        if (error) throw error;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        await db.update(users)
+            .set({
+                password: hashedPassword
+            })
+            .where(eq(users.id, session.user.id as string));
 
         return { success: true };
     } catch (error: any) {

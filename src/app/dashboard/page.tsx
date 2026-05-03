@@ -8,13 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Clock, CalendarDays, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSession } from 'next-auth/react';
 
 const DashboardPage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -24,46 +23,36 @@ const DashboardPage: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            router.push('/login?redirectTo=/dashboard');
-        } else {
-            setUser(session.user);
-            const { data: userProfile } = await supabase
-              .from('users')
-              .select('role')
-              .eq('uid', session.user.id)
-              .single();
+    if (status === 'loading') return;
 
-            if (userProfile && userProfile.role === 'Admin') {
-                setIsAdmin(true);
-            } else {
-                setIsAdmin(false);
-            }
-            setLoading(false);
-        }
-    };
-    checkSession();
-  }, [router]);
+    if (status === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard');
+    } else if (session?.user) {
+      const role = (session.user as any).role;
+      if (role === 'Admin' || role === 'Super Admin') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    }
+  }, [status, session, router]);
 
   useEffect(() => {
     // This effect runs only on the client, after hydration, to prevent mismatch
-    // by ensuring that date/time is not rendered on the server.
     const updateDateTime = () => {
         const now = new Date();
         setCurrentDate(format(now, "MMMM d, yyyy"));
         setCurrentTime(now.toLocaleTimeString());
     };
 
-    // Set initial date/time and then update every second
     updateDateTime();
     const timer = setInterval(updateDateTime, 1000);
     
     return () => clearInterval(timer); // Cleanup on unmount
   }, []);
   
-  if (loading) {
+  if (loading || status === 'loading') {
     return (
         <div className="space-y-8">
             <Skeleton className="h-12 w-1/2" />
@@ -76,12 +65,11 @@ const DashboardPage: React.FC = () => {
     );
   }
   
-  if (!user) {
-    // This will be shown briefly before the redirection effect runs
+  if (!session?.user) {
     return <div className="text-center p-8">Redirecting to login...</div>;
   }
 
-  const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+  const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'User';
 
   return (
     <div className="w-full space-y-8">

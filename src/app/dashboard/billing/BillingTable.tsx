@@ -14,7 +14,7 @@ import Receipt from '@/components/billing/Receipt';
 
 export interface Transaction {
     id: number;
-    created_at: string;
+    created_at: string | Date;
     amount: number;
     description: string;
     payment_reference: string;
@@ -122,7 +122,7 @@ export default function BillingTable({ transactions: initialTransactions }: { tr
                     <TableBody>
                         {transactions.map((t) => (
                             <TableRow key={t.id}>
-                                <TableCell className="whitespace-nowrap">{format(parseISO(t.created_at), 'dd MMM, yyyy')}</TableCell>
+                                <TableCell className="whitespace-nowrap">{format(t.created_at instanceof Date ? t.created_at : parseISO(t.created_at as string), 'dd MMM, yyyy')}</TableCell>
                                 <TableCell>{t.description}</TableCell>
                                 <TableCell className="font-medium">{t.amount.toLocaleString()}</TableCell>
                                 <TableCell className="font-mono text-xs">{t.payment_reference}</TableCell>

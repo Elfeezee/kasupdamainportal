@@ -29,6 +29,8 @@ const financeNavItems = [
   { href: '/admin/finance/transactions', label: 'Transactions', icon: Landmark },
 ];
 
+import { signOut } from 'next-auth/react';
+
 export default function FinanceSidebar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -48,8 +50,7 @@ export default function FinanceSidebar() {
   
   const handleLogout = async () => {
     setOpenMobile(false);
-    await supabase.auth.signOut();
-    router.push('/admin/login');
+    await signOut({ callbackUrl: '/admin/login' });
     toast({ title: 'Logged Out' });
   };
 
