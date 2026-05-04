@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Landmark, CheckCircle2, Printer, Download } from 'lucide-react';
+import { CheckCircle2, Printer, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { QRCodeSVG } from 'qrcode.react';
@@ -48,8 +49,8 @@ export default function Receipt({ transaction }: ReceiptProps) {
                     {/* Header with Logo/Branding */}
                     <div className="bg-primary/5 border-b-2 border-slate-100 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div className="flex items-center gap-3">
-                            <div className="bg-primary p-2 rounded-lg">
-                                <Landmark className="h-8 w-8 text-white" />
+                            <div className="bg-primary p-2 rounded-lg flex items-center justify-center">
+                                <Image src="/image/logo.png" alt="KASUPDA Logo" width={40} height={40} className="object-contain" />
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-black tracking-tight text-primary">KASUPDA</h1>
