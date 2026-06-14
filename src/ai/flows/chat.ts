@@ -1,5 +1,4 @@
 
-'use server';
 /**
  * @fileoverview A chatbot flow for answering questions about KASUPDA.
  */

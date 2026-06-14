@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, User, CornerDownLeft, Loader2 } from 'lucide-react';
-import { chat } from '@/ai/flows/chat';
+import { submitChatMessage } from '@/app/actions/chatActions';
 import { cn } from '@/lib/utils';
 
 interface Message {
@@ -37,10 +37,7 @@ export default function ChatBot() {
         content: msg.content,
       }));
       
-      const response = await chat({
-        history: historyForApi,
-        question: input,
-      });
+      const response = await submitChatMessage(historyForApi, input);
 
       const modelMessage: Message = { role: 'model', content: response };
       setMessages((prev) => [...prev, modelMessage]);
