@@ -303,9 +303,9 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                     </div>
 
                     {receivedDocuments.length > 0 && (
-                        <div className="pt-4 mt-4">
+                        <div className="pt-4 mt-4 ml-auto max-w-md">
                             <h3 className="text-[11px] font-semibold mb-2">The following documents were received:</h3>
-                            <div className="space-y-1 text-[11px] max-w-md">
+                            <div className="space-y-1 text-[11px]">
                                 {receivedDocuments.map(docName => (
                                     <div key={docName} className="border-b border-black pb-1">
                                         <span>{docName}</span>
