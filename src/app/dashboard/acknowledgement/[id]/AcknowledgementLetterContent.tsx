@@ -334,7 +334,7 @@ const LetterToPrint = React.forwardRef<HTMLDivElement, { applicationData: Stored
                         <div className="leading-snug text-sm space-y-1 text-red-600 font-bold">
                             <p>i. does not constitute an approval or permit for development.</p>
                             <p>ii. does not in any way validate the authenticity of the documents submitted, as all documents are subject to further verification for authenticity.</p>
-                            <p>iii. dust be presented at the time of collection of the Development Permit.</p>
+                            <p>iii. must be presented at the time of collection of the Development Permit.</p>
                             <p>iv. applicants are required to promptly notify the Authority of any change in contact address or other vital information contained in the original application.</p>
                         </div>
                     </div>
