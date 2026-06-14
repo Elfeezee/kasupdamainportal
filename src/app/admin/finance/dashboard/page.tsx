@@ -46,7 +46,7 @@ export default function FinanceDashboardPage() {
       const transactions = await getTransactions();
 
       const verifiedTransactions = transactions.filter(t => t.status === 'Verified');
-      const totalRevenue = verifiedTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+      const totalRevenue = verifiedTransactions.reduce((sum, t) => sum + Number(t.amount || 0), 0);
       const transactionsToday = transactions.filter(t => {
         const date = t.created_at instanceof Date ? t.created_at : parseISO(t.created_at as string);
         return isToday(date);
@@ -56,8 +56,8 @@ export default function FinanceDashboardPage() {
       // Process chart data
       const revenueByType: Record<string, number> = {};
       verifiedTransactions.forEach(t => {
-        const type = t.applications?.type || 'Other';
-        const simpleType = type.split('(')[0].trim().replace(' Application', '');
+        const type = t.application?.type || 'Other';
+        const simpleType = typeof type === 'string' ? type.split('(')[0].trim().replace(' Application', '') : 'Other';
         revenueByType[simpleType] = (revenueByType[simpleType] || 0) + (t.amount || 0);
       });
 
@@ -95,7 +95,11 @@ export default function FinanceDashboardPage() {
   }
 
   const overviewCards = [
-    { title: "Total Revenue", value: `₦${stats.totalRevenue.toLocaleString()}`, icon: DollarSign },
+    { 
+      title: "Total Revenue", 
+      value: `₦${stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+      icon: DollarSign 
+    },
     { title: "Transactions Today", value: stats.transactionsToday.toString(), icon: Banknote },
     { title: "Pending Verifications", value: stats.pendingVerifications.toString(), icon: Landmark },
   ];

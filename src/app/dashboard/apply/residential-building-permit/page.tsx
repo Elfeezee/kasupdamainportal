@@ -21,8 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
@@ -191,19 +190,13 @@ export default function ResidentialBuildingPermitPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [user, setUser] = React.useState<User | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   React.useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/residential-building-permit');
-      } else {
-        setUser(session.user);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/residential-building-permit');
+    }
+  }, [sessionStatus, router]);
 
   const form = useForm<PermitApplicationFormValues>({
     resolver: zodResolver(permitApplicationSchema),
@@ -265,7 +258,7 @@ export default function ResidentialBuildingPermitPage() {
   ] as any);
 
   const onSubmit = async (data: PermitApplicationFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
       return;
     }
@@ -275,47 +268,14 @@ export default function ResidentialBuildingPermitPage() {
     formData.append('type', "Building Permit (Individual)");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     formData.append('applicantName', applicantName);
-    formData.append('userId', user.id);
-
-    // Upload files to Supabase and get URLs
-    const fileUploads: Promise<void>[] = [];
-    const fileUrls: Record<string, string> = {};
-
-    Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof FileList && value.length > 0 && value[0].size > 0) {
-        const file = value[0];
-        const filePath = `${user.id}/${Date.now()}-${file.name}`;
-        fileUploads.push(
-          supabase.storage.from('application_documents').upload(filePath, file)
-            .then(({ data: uploadData, error }) => {
-              if (error) {
-                throw new Error(`Upload failed for ${key}: ${error.message}`);
-              }
-              const { data: publicUrlData } = supabase.storage.from('application_documents').getPublicUrl(filePath);
-              fileUrls[key] = publicUrlData.publicUrl;
-            })
-        );
-      }
-    });
-
-    try {
-      await Promise.all(fileUploads);
-    } catch (uploadError: any) {
-      console.error("File upload failed:", uploadError);
-      toast({
-        title: "Upload Failed",
-        description: uploadError.message,
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
-      return;
-    }
+    formData.append('userId', session.user.id);
 
     // Convert all data to a serializable format for FormData
     Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof FileList && value.length > 0 && value[0].size > 0) {
-        // Use the uploaded URL instead of the file
-        formData.append(key, fileUrls[key]);
+      if (value instanceof FileList && value.length > 0) {
+        if (value[0].size > 0) {
+          formData.append(key, value[0]);
+        }
       } else if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (typeof value === 'object' && value !== null && !(value instanceof FileList)) {
@@ -386,7 +346,7 @@ export default function ResidentialBuildingPermitPage() {
     }
   };
 
-  if (!user) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
         <Card>

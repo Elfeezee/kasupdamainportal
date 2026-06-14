@@ -1,10 +1,12 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { MoreHorizontal, Search, UserPlus, Trash2, ShieldCheck, UserCog, Loader2 } from 'lucide-react';
+import { MoreHorizontal, Search, UserPlus, Trash2, ShieldCheck, UserCog, Loader2, KeyRound } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -19,9 +21,10 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { getAllUsers, updateUserRole, deleteUserRecord } from '@/app/actions/superAdminActions';
+import { getAllUsers, updateUserRole, deleteUserRecord, updateUserPassword } from '@/app/actions/superAdminActions';
 import { cn } from '@/lib/utils';
 import AddUserDialog from './AddUserDialog';
+import ChangePasswordDialog from './ChangePasswordDialog';
 
 // Define a user structure based on supabase data
 interface AppUser {
@@ -30,7 +33,7 @@ interface AppUser {
   email: string | null;
   phone: string | null;
   role: 'Applicant' | 'Admin' | 'Finance' | 'Super Admin';
-  created_at: string;
+  created_at: string | Date;
   din: string | null;
 }
 
@@ -41,6 +44,8 @@ export default function ManageUsersPage() {
   const [userToDelete, setUserToDelete] = useState<AppUser | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [userToChangePassword, setUserToChangePassword] = useState<AppUser | null>(null);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const fetchUsers = React.useCallback(async () => {
@@ -224,7 +229,7 @@ export default function ManageUsersPage() {
                           {user.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-xs text-slate-500">{user.created_at ? format(parseISO(user.created_at), 'dd MMM, yyyy') : 'N/A'}</TableCell>
+                      <TableCell className="text-xs text-slate-500">{user.created_at ? format((user.created_at as any) instanceof Date ? (user.created_at as any) : parseISO(user.created_at as string), 'dd MMM, yyyy') : 'N/A'}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -256,6 +261,13 @@ export default function ManageUsersPage() {
                                 </DropdownMenuSubContent>
                               </DropdownMenuPortal>
                             </DropdownMenuSub>
+                            <DropdownMenuItem onClick={() => {
+                              setUserToChangePassword(user);
+                              setIsPasswordDialogOpen(true);
+                            }}>
+                              <KeyRound className="mr-2 h-4 w-4" />
+                              <span>Change Password</span>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => openDeleteDialog(user)} className="text-destructive focus:bg-destructive/5">
                               <Trash2 className="mr-2 h-4 w-4" /> Delete Record
@@ -297,6 +309,12 @@ export default function ManageUsersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ChangePasswordDialog 
+        user={userToChangePassword} 
+        isOpen={isPasswordDialogOpen} 
+        onOpenChange={setIsPasswordDialogOpen} 
+      />
 
     </div>
   );

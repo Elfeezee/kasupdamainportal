@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { getContactMessages, markMessageAsRead, deleteMessage } from '@/app/actions/contactActions';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -25,13 +25,13 @@ import { Badge } from '@/components/ui/badge';
 
 // Define a structure for the contact message
 interface ContactMessage {
-  id: number;
+  id: string;
   name: string | null;
   email: string | null;
   subject: string | null;
   message: string | null;
   created_at: string;
-  read: boolean;
+  is_read: boolean;
 }
 
 export default function ManageContactMessagesPage() {
@@ -47,16 +47,11 @@ export default function ManageContactMessagesPage() {
   const fetchMessages = React.useCallback(async () => {
       setLoading(true);
       try {
-        const { data: fetchedMessages, error } = await supabase
-            .from('contact_messages')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        
-        setMessages(fetchedMessages || []);
+        const fetchedMessages = await getContactMessages();
+        // fetchedMessages already has is_read from the database
+        setMessages(fetchedMessages as unknown as ContactMessage[] || []);
       } catch (error) {
-           console.error("Failed to fetch messages from Supabase:", error);
+           console.error("Failed to fetch messages:", error);
            toast({
             title: "Error",
             description: "Failed to load messages from the database.",
@@ -72,25 +67,21 @@ export default function ManageContactMessagesPage() {
     fetchMessages();
   }, [fetchMessages]);
   
-  const markAsRead = async (message: ContactMessage) => {
-    if (message.read) return; // Don't re-mark if already read
+  const handleMarkAsRead = async (message: ContactMessage) => {
+    if (message.is_read) return; // Don't re-mark if already read
 
     try {
-        const { error } = await supabase
-            .from('contact_messages')
-            .update({ read: true })
-            .eq('id', message.id);
+        const result = await markMessageAsRead(message.id);
 
-        if (error) throw error;
+        if (!result.success) throw new Error(result.error);
 
         // Optimistically update the UI
         setMessages(prev => 
-            prev.map(msg => msg.id === message.id ? { ...msg, read: true } : msg)
+            prev.map(msg => msg.id === message.id ? { ...msg, is_read: true } : msg)
         );
 
     } catch (error) {
         console.error("Error marking message as read:", error);
-        // We don't toast here to avoid bothering the user for a background task.
     }
   };
 
@@ -104,18 +95,15 @@ export default function ManageContactMessagesPage() {
   const openViewDialog = (message: ContactMessage) => {
     setSelectedMessage(message);
     setIsViewDialogOpen(true);
-    markAsRead(message); // Mark as read when opened
+    handleMarkAsRead(message); // Mark as read when opened
   };
   
   const handleDeleteMessage = async () => {
     if (!messageToDelete) return;
     try {
-        const { error } = await supabase
-            .from('contact_messages')
-            .delete()
-            .eq('id', messageToDelete.id);
+        const result = await deleteMessage(messageToDelete.id);
         
-        if (error) throw error;
+        if (!result.success) throw new Error(result.error);
 
         setMessages(prev => prev.filter(msg => msg.id !== messageToDelete.id));
         toast({
@@ -193,11 +181,11 @@ export default function ManageContactMessagesPage() {
                     <TableRow 
                       key={message.id} 
                       onClick={() => openViewDialog(message)} 
-                      className={cn("cursor-pointer", !message.read && "bg-primary/5 font-semibold")}
+                      className={cn("cursor-pointer", !message.is_read && "bg-primary/5 font-semibold")}
                     >
                         <TableCell className="font-medium">
                             <div className="flex items-center gap-2">
-                               {!message.read && <div className="h-2 w-2 rounded-full bg-accent" />}
+                               {!message.is_read && <div className="h-2 w-2 rounded-full bg-accent" />}
                                <div className="flex flex-col">
                                     <span>{message.name || 'N/A'}</span>
                                     <span className="text-xs text-muted-foreground font-normal">{message.email || 'No email'}</span>

@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { ListChecks, Clock, CheckCircle2, XCircle, AlertTriangle, FileSpreadsheet, Award, CreditCard, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { applications, transactions } from '@/lib/db/schema';
+import { eq, desc } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { StoredApplication } from '@/app/admin/(main)/applications/page';
@@ -111,31 +114,36 @@ const ApplicationTracker = ({ app }: { app: ApplicationWithTransaction }) => {
 
 
 async function getApplications(userId: string) {
-  const supabase = await createSupabaseServerClient();
-
   // We explicitly select transactions to determine payment status
-  const { data, error } = await supabase
-    .from('applications')
-    .select('*, transactions(status, amount, payment_reference)')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+  const data = await db.query.applications.findMany({
+    where: eq(applications.user_id, userId),
+    orderBy: [desc(applications.created_at)],
+    with: {
+      transactions: true
+    }
+  });
 
-  if (error) {
-    console.error("Error fetching user applications from Supabase:", error);
-    return [];
-  }
-  return data as ApplicationWithTransaction[];
+  return data.map(app => ({
+    ...app,
+    id: String(app.id),
+    status: app.status as any,
+    created_at: app.created_at?.toISOString() || '',
+    transactions: app.transactions.map(tx => ({
+        ...tx,
+        amount: Number(tx.amount)
+    }))
+  })) as ApplicationWithTransaction[];
 }
 
 async function MyApplicationsPageComponent() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
   if (!user) {
     redirect('/login?redirectTo=/dashboard/my-applications');
   }
 
-  const applications = await getApplications(user.id);
+  const applications = await getApplications(user.id!);
 
   return (
     <div className="space-y-8 w-full max-w-7xl mx-auto pb-10">

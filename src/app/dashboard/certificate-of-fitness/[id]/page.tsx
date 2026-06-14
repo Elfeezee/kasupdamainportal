@@ -2,34 +2,51 @@
 'use server';
 
 import React, { Suspense } from 'react';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { applications } from '@/lib/db/schema';
+import { eq, and } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import CertificateOfFitnessContent from './CertificateOfFitnessContent';
 
 async function getApplicationData(id: string) {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const session = await auth();
+    const user = session?.user;
 
     if (!user) {
         redirect(`/login?redirectTo=/dashboard/certificate-of-fitness/${id}`);
     }
 
-    const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', id)
-        .eq('user_id', user.id)
-        .eq('type', 'Certificate of Fitness')
-        .eq('status', 'Approved')
-        .single();
+    const appId = parseInt(id);
+    if (isNaN(appId)) notFound();
 
-    if (error || !data) {
-        console.error('Error fetching certificate of fitness data:', error);
+    const data = await db.query.applications.findFirst({
+        where: and(
+            eq(applications.id, appId),
+            eq(applications.user_id, user.id as string),
+            eq(applications.type, 'Certificate of Fitness'),
+            eq(applications.status, 'Approved')
+        )
+    });
+
+    if (!data) {
         notFound();
     }
 
-    return data;
+    // Cast data to StoredApplication format (MySQL date to string)
+    return {
+        id: String(data.id),
+        created_at: data.created_at?.toISOString() || '',
+        user_id: data.user_id,
+        type: data.type,
+        applicant_name: data.applicant_name,
+        status: data.status as any,
+        rejection_reason: data.rejection_reason || undefined,
+        original_permit_id: data.original_permit_id || undefined,
+        din: data.din || undefined,
+        data: data.data,
+    };
 }
 
 function CertificateLoadingSkeleton() {

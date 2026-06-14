@@ -22,8 +22,7 @@ import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 
 const phoneRegex = /^\d{11}$/;
 
@@ -141,19 +140,13 @@ export default function StreetNamingPermitPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/street-naming-permit');
-      } else {
-        setUser(session.user);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/street-naming-permit');
+    }
+  }, [sessionStatus, router]);
 
   const form = useForm<StreetNamingPermitFormValues>({
     resolver: zodResolver(streetNamingPermitSchema),
@@ -214,7 +207,7 @@ export default function StreetNamingPermitPage() {
   const watchedEducationLevel = watch("educationLevel");
 
   const onSubmit = async (data: StreetNamingPermitFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
       return;
     }
@@ -223,7 +216,7 @@ export default function StreetNamingPermitPage() {
     formData.append('type', "Street Naming Permit");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     formData.append('applicantName', applicantName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof FileList && value.length > 0) {
@@ -287,7 +280,7 @@ export default function StreetNamingPermitPage() {
     }
   };
 
-  if (!user) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="container mx-auto px-2 sm:px-4 py-8">
         <Card>

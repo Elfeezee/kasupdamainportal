@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { getAdminApplications, deleteApplication, updateApplicationStatus } from '@/app/actions/adminActions';
 import ApplicationDetails from '../applications/ApplicationDetails';
 import type { StoredApplication } from '../applications/page';
 
@@ -63,38 +63,14 @@ export default function DinApplicationsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
-      // Step 1: Fetch all verified transactions to get application IDs
-      const { data: verifiedTransactions, error: txError } = await supabase
-        .from('transactions')
-        .select('application_id')
-        .eq('status', 'Verified');
-
-      if (txError) throw txError;
-
-      // Step 2: Get unique application IDs from verified transactions
-      const verifiedAppIds = [...new Set(
-        verifiedTransactions
-          ?.map(tx => tx.application_id)
-          .filter(id => id != null) || []
-      )];
-
-      if (verifiedAppIds.length === 0) {
-        setApplications([]);
-        return;
+      const result = await getAdminApplications(['DIN Application']);
+      if (result.success) {
+        setApplications(result.data as StoredApplication[]);
+      } else {
+        throw new Error(result.error);
       }
-
-      // Step 3: Fetch only DIN applications that have verified payments
-      const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('type', 'DIN Application')
-        .in('id', verifiedAppIds)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setApplications(data as StoredApplication[]);
     } catch (error) {
-      console.error("Error fetching DIN applications from Supabase:", error);
+      console.error("Error fetching DIN applications:", error);
       toast({ title: "Error", description: "Failed to load DIN applications.", variant: "destructive" });
     } finally {
       setLoading(false);
@@ -113,10 +89,13 @@ export default function DinApplicationsPage() {
   const handleDelete = async () => {
     if (!applicationToDelete) return;
     try {
-      const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
-      if (error) throw error;
-      setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
-      toast({ title: "Application Deleted", description: `Application for DIN (${applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
+      const result = await deleteApplication(Number(applicationToDelete.id));
+      if (result.success) {
+        setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
+        toast({ title: "Application Deleted", description: `Application for DIN (${applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
     } finally {
@@ -132,10 +111,13 @@ export default function DinApplicationsPage() {
       return;
     }
     try {
-      const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', appId);
-      if (error) throw error;
-      setApplications(prevApps => prevApps.map(app => app.id === appId ? { ...app, status: newStatus } : app));
-      toast({ title: `Application ${newStatus}`, description: `The application (ID: ${appId}) has been marked as ${newStatus}.` });
+      const result = await updateApplicationStatus(Number(appId), newStatus, null);
+      if (result.success) {
+        setApplications(prevApps => prevApps.map(app => app.id === appId ? { ...app, status: newStatus } : app));
+        toast({ title: `Application ${newStatus}`, description: `The application (ID: ${appId}) has been marked as ${newStatus}.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }

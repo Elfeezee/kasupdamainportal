@@ -21,17 +21,16 @@ import { cn } from '@/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { getAdminApplications, deleteApplication, updateApplicationStatus, updateApplicationData } from '@/app/actions/adminActions';
 import ApplicationDetails from './ApplicationDetails';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { updateApplicationData } from '@/app/actions/adminActions';
 import { assignKbp } from '@/app/actions/billingActions';
 
 
 // A more complete type definition that reflects the new schema
 export interface StoredApplication {
-  id: string;
+  id: string | number;
   created_at: string;
   user_id: string;
   type: string;
@@ -92,38 +91,14 @@ export default function ManageApplicationsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
-      // Step 1: Fetch all verified transactions to get application IDs
-      const { data: verifiedTransactions, error: txError } = await supabase
-        .from('transactions')
-        .select('application_id')
-        .eq('status', 'Verified');
-
-      if (txError) throw txError;
-
-      // Step 2: Get unique application IDs from verified transactions
-      const verifiedAppIds = [...new Set(
-        verifiedTransactions
-          ?.map(tx => tx.application_id)
-          .filter(id => id != null) || []
-      )];
-
-      if (verifiedAppIds.length === 0) {
-        setApplications([]);
-        return;
+      const result = await getAdminApplications();
+      if (result.success) {
+        setApplications(result.data as StoredApplication[]);
+      } else {
+        throw new Error(result.error);
       }
-
-      // Step 3: Fetch only applications that have verified payments
-      const { data: apps, error: appError } = await supabase
-        .from('applications')
-        .select('*')
-        .in('id', verifiedAppIds)
-        .order('created_at', { ascending: false });
-
-      if (appError) throw appError;
-
-      setApplications(apps as StoredApplication[]);
     } catch (error) {
-      console.error("Error fetching applications from Supabase:", error);
+      console.error("Error fetching applications:", error);
       toast({ title: "Error", description: "Failed to load applications.", variant: "destructive" });
     } finally {
       setLoading(false);
@@ -148,10 +123,13 @@ export default function ManageApplicationsPage() {
   const handleDelete = async () => {
     if (!applicationToDelete) return;
     try {
-      const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
-      if (error) throw error;
-      setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
-      toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
+      const result = await deleteApplication(Number(applicationToDelete.id));
+      if (result.success) {
+        setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
+        toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.din || applicationToDelete.id}) has been deleted.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
     } finally {
@@ -167,10 +145,13 @@ export default function ManageApplicationsPage() {
       return;
     }
     try {
-      const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', app.id);
-      if (error) throw error;
-      setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
-      toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.din || app.id}) has been marked as ${newStatus}.` });
+      const result = await updateApplicationStatus(Number(app.id), newStatus, null);
+      if (result.success) {
+        setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
+        toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.din || app.id}) has been marked as ${newStatus}.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }
@@ -185,7 +166,7 @@ export default function ManageApplicationsPage() {
 
     try {
       // For non-DIN applications, update the permit ID
-      const result = await updateApplicationData(ackApp.id, { original_permit_id: ackFileNumber });
+      const result = await updateApplicationData(Number(ackApp.id), { original_permit_id: ackFileNumber });
 
       if (result.success) {
         toast({ title: "Assignment Successful", description: `The file number has been assigned to the application.` });
@@ -222,7 +203,7 @@ export default function ManageApplicationsPage() {
     setIsAssigningKbp(true);
 
     try {
-      const result = await assignKbp(kbpApp.id, kbpNumber);
+      const result = await assignKbp(Number(kbpApp.id), kbpNumber);
 
       if (result.success) {
         toast({ title: "KBP Assigned & Approved", description: `KBP number ${kbpNumber} has been assigned and the application is approved.` });
@@ -309,7 +290,7 @@ export default function ManageApplicationsPage() {
                 ) : filteredApplications.length > 0 ? (
                   filteredApplications.map((app) => (
                     <Fragment key={app.id}>
-                      <TableRow className="cursor-pointer" onClick={() => toggleRow(app.id)}>
+                      <TableRow className="cursor-pointer" onClick={() => toggleRow(String(app.id))}>
                         <TableCell className="px-2">
                           <Button variant="ghost" size="icon" className="h-8 w-8">
                             {expandedRow === app.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -318,7 +299,7 @@ export default function ManageApplicationsPage() {
                         <TableCell className="font-medium text-xs">{app.original_permit_id || app.din || app.id}</TableCell>
                         <TableCell>{app.applicant_name}</TableCell>
                         <TableCell className="text-sm">{app.type}</TableCell>
-                        <TableCell>{app.created_at ? format(parseISO(app.created_at), 'dd/MM/yyyy') : 'N/A'}</TableCell>
+                        <TableCell>{app.created_at ? format((app.created_at as any) instanceof Date ? (app.created_at as any) : parseISO(app.created_at as string), 'dd/MM/yyyy') : 'N/A'}</TableCell>
                         <TableCell><StatusBadge status={app.status as ApplicationStatus} /></TableCell>
                         <TableCell className="text-right">
                           <DropdownMenu>

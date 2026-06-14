@@ -12,8 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { useToast } from "@/hooks/use-toast";
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 import { Award, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -76,8 +75,7 @@ export default function CertificateOfFitnessPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status: sessionStatus } = useSession();
 
   const form = useForm<FitnessCertificateFormValues>({
     resolver: zodResolver(fitnessCertificateSchema),
@@ -89,20 +87,13 @@ export default function CertificateOfFitnessPage() {
   const { clearStorage } = useFormPersistence(form, 'certificate-of-fitness-form', ['doc_building_permit', 'doc_co']);
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/certificate-of-fitness');
-      } else {
-        setUser(session.user);
-        setLoading(false);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/certificate-of-fitness');
+    }
+  }, [sessionStatus, router]);
 
   const onSubmit = async (data: FitnessCertificateFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit.", variant: "destructive" });
       return;
     }
@@ -111,7 +102,7 @@ export default function CertificateOfFitnessPage() {
     const formData = new FormData();
     formData.append('type', "Certificate of Fitness");
     formData.append('applicantName', data.applicantName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     // Correctly name the fields for the server action
     if (data.doc_building_permit[0]) {
@@ -151,7 +142,7 @@ export default function CertificateOfFitnessPage() {
     }
   };
 
-  if (loading) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
         <LoadingSkeleton />

@@ -2,8 +2,8 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { applications } from '@/lib/db/schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { applications, transactions, users } from '@/lib/db/schema';
+import { eq, and, sql, inArray, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 // Action to update the main data of an application
@@ -95,5 +95,98 @@ export async function updateApplicationStatus(
     const errorMessage = error.message || 'An unknown server error occurred.';
     console.error('Update Application Status Error:', errorMessage);
     return { success: false, error: `Failed to update application status: ${errorMessage}` };
+  }
+}
+
+// Action to fetch applications for admin (only those with verified transactions)
+export async function getAdminApplications(
+  filterTypes?: string[]
+): Promise<{ success: boolean; data?: any[]; error?: string }> {
+  try {
+    // 1. Get IDs of applications with verified transactions
+    const verifiedTxs = await db.select({ appId: transactions.application_id })
+      .from(transactions)
+      .where(eq(transactions.status, 'Verified'));
+    
+    const verifiedAppIds = verifiedTxs.map(tx => tx.appId).filter(Boolean) as number[];
+
+    if (verifiedAppIds.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    // 2. Fetch applications
+    let query = db.select().from(applications).where(inArray(applications.id, verifiedAppIds));
+    
+    if (filterTypes && filterTypes.length > 0) {
+      query = db.select().from(applications).where(
+        and(
+          inArray(applications.id, verifiedAppIds),
+          inArray(applications.type, filterTypes)
+        )
+      );
+    }
+
+    const apps = await db.query.applications.findMany({
+      where: filterTypes && filterTypes.length > 0 
+        ? and(inArray(applications.id, verifiedAppIds), inArray(applications.type, filterTypes))
+        : inArray(applications.id, verifiedAppIds),
+      orderBy: [desc(applications.created_at)]
+    });
+
+    return { success: true, data: apps };
+  } catch (error: any) {
+    console.error('Get Admin Applications Error:', error);
+    return { success: false, error: `Failed to fetch applications: ${error.message}` };
+  }
+}
+
+// Action to delete an application
+export async function deleteApplication(applicationId: number): Promise<{ success: boolean; error?: string }> {
+  try {
+    await db.delete(applications).where(eq(applications.id, applicationId));
+    revalidatePath('/admin/applications');
+    revalidatePath('/admin/din-applications');
+    revalidatePath('/admin/permit-applications');
+    revalidatePath('/admin/stage-approvals');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Delete Application Error:', error);
+    return { success: false, error: `Failed to delete application: ${error.message}` };
+  }
+}
+
+// Action to fetch a single application by ID
+export async function getApplicationById(applicationId: number): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const app = await db.query.applications.findFirst({
+      where: eq(applications.id, applicationId)
+    });
+    if (!app) return { success: false, error: 'Application not found.' };
+    return { success: true, data: app };
+  } catch (error: any) {
+    console.error('Get Application By ID Error:', error);
+    return { success: false, error: `Failed to fetch application: ${error.message}` };
+  }
+}
+
+// Action to fetch ALL applications for dashboard stats
+export async function getAllApplications(): Promise<{ success: boolean; data?: any[]; error?: string }> {
+  try {
+    const apps = await db.select().from(applications).orderBy(desc(applications.created_at));
+    return { success: true, data: apps };
+  } catch (error: any) {
+    console.error('Get All Applications Error:', error);
+    return { success: false, error: `Failed to fetch applications: ${error.message}` };
+  }
+}
+
+// Action to check database connection
+export async function checkDbConnection(): Promise<{ success: boolean; error?: string }> {
+  try {
+    await db.select({ count: sql`count(*)` }).from(users);
+    return { success: true };
+  } catch (error: any) {
+    console.error('Check DB Connection Error:', error);
+    return { success: false, error: error.message };
   }
 }

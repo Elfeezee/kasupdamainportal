@@ -6,15 +6,16 @@ import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { auth } from '@/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Fetches all users for the super admin dashboard.
  */
 export async function getAllUsers(): Promise<any[]> {
     try {
-        const data = await db.query.users.findMany({
-            orderBy: [desc(users.createdAt)]
-        });
+        console.log('Fetching all users from database...');
+        const data = await db.select().from(users).orderBy(desc(users.created_at));
+        console.log(`Found ${data.length} users.`);
         
         // Map MySQL schema fields to what the UI expects (AppUser interface)
         return data.map(user => ({
@@ -23,7 +24,7 @@ export async function getAllUsers(): Promise<any[]> {
             email: user.email,
             phone: user.phone,
             role: user.role,
-            created_at: user.createdAt,
+            created_at: user.created_at,
             din: user.din
         }));
     } catch (error) {
@@ -92,7 +93,7 @@ export async function createUserRecord(data: { name: string, email: string, role
         // Real user creation usually happens via signup or a dedicated admin form with password.
         
         await db.insert(users).values({
-            id: crypto.randomUUID(), // Or let MySQL generate if using auto-increment, but schema uses string ID
+            id: uuidv4(),
             name: data.name,
             email: data.email,
             role: data.role as any,
@@ -104,5 +105,30 @@ export async function createUserRecord(data: { name: string, email: string, role
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, error: `Failed to create user: ${errorMessage}` };
+    }
+}
+import bcrypt from 'bcryptjs';
+
+/**
+ * Updates a user's password.
+ */
+export async function updateUserPassword(uid: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+    const session = await auth();
+    if (!session || (session.user as any).role !== 'Super Admin') {
+        return { success: false, error: 'Unauthorized. Only Super Admins can change passwords.' };
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        await db.update(users)
+            .set({ password: hashedPassword })
+            .where(eq(users.id, uid));
+
+        return { success: true };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        console.error('Update Password Error:', errorMessage);
+        return { success: false, error: `Failed to update password: ${errorMessage}` };
     }
 }

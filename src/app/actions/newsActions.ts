@@ -48,6 +48,24 @@ export async function getNewsItem(id: string) {
         return null;
     }
 }
+export async function getContentItem(id: string, type: 'news' | 'publication' | 'statistic' | 'event' | 'leadership' | 'carousel' | 'mda') {
+    try {
+        if (type === 'news') return await getNewsItem(id);
+        
+        let result;
+        if (type === 'publication') result = await db.query.publications.findFirst({ where: eq(publications.id, id) });
+        else if (type === 'statistic') result = await db.query.site_statistics.findFirst({ where: eq(site_statistics.id, id) });
+        else if (type === 'event') result = await db.query.site_events.findFirst({ where: eq(site_events.id, id) });
+        else if (type === 'leadership') result = await db.query.site_leadership.findFirst({ where: eq(site_leadership.id, id) });
+        else if (type === 'carousel') result = await db.query.site_carousel.findFirst({ where: eq(site_carousel.id, id) });
+        else if (type === 'mda') result = await db.query.site_mda_logos.findFirst({ where: eq(site_mda_logos.id, id) });
+        
+        return result || null;
+    } catch (error) {
+        console.error(`Error fetching ${type}:`, error);
+        return null;
+    }
+}
 
 export async function getPublications() {
     try {

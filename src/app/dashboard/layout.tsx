@@ -32,7 +32,10 @@ export default function DashboardLayout({
   // Handle redirection if not authenticated
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login?redirectTo=' + pathname);
+      const timer = setTimeout(() => {
+        router.push('/login?redirectTo=' + pathname);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [status, router, pathname]);
 

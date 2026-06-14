@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
+import { getApplicationById, updateApplicationData, updateApplicationStatus, deleteApplication } from '@/app/actions/adminActions';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -13,7 +13,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { updateApplicationData, updateApplicationStatus } from '@/app/actions/adminActions';
 import ApplicationDetails from '../ApplicationDetails';
 import type { StoredApplication } from '../page';
 
@@ -44,19 +43,15 @@ export default function ApplicationDetailPage() {
   const fetchApplication = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', appId)
-        .single();
-
-      if (error) throw error;
-
-      setApplication(data as StoredApplication);
-      setEditedData(data || {});
-      setRejectionReason(data.rejection_reason || '');
-      setQueryNote(data.rejection_reason || ''); // Reuse column for query note
-
+      const result = await getApplicationById(Number(appId));
+      if (result.success) {
+        setApplication(result.data as StoredApplication);
+        setEditedData(result.data || {});
+        setRejectionReason(result.data.rejection_reason || '');
+        setQueryNote(result.data.rejection_reason || ''); // Reuse column for query note
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       console.error("Failed to fetch application:", error);
       toast({ title: "Error", description: "Could not load application details.", variant: "destructive" });
@@ -87,7 +82,7 @@ export default function ApplicationDetailPage() {
     if (!application) return;
     setIsSaving(true);
     try {
-      const result = await updateApplicationData(application.id, editedData);
+      const result = await updateApplicationData(Number(application.id), editedData);
       if (result.success) {
         toast({ title: "Success", description: "Application data updated successfully." });
         setIsEditing(false);
@@ -118,7 +113,7 @@ export default function ApplicationDetailPage() {
 
     setIsStatusUpdating(true);
     try {
-      const result = await updateApplicationStatus(application.id, newStatus, null);
+      const result = await updateApplicationStatus(Number(application.id), newStatus, null);
       if (result.success) {
         toast({ title: "Status Updated", description: `Application has been marked as ${newStatus}.` });
         fetchApplication();
@@ -140,7 +135,7 @@ export default function ApplicationDetailPage() {
     setIsStatusUpdating(true);
     setIsRejectionDialogOpen(false);
     try {
-      const result = await updateApplicationStatus(application.id, 'Rejected', rejectionReason);
+      const result = await updateApplicationStatus(Number(application.id), 'Rejected', rejectionReason);
       if (result.success) {
         toast({ title: "Application Rejected", description: "The application has been marked as rejected." });
         fetchApplication();
@@ -162,7 +157,7 @@ export default function ApplicationDetailPage() {
     setIsStatusUpdating(true);
     setIsQueryDialogOpen(false);
     try {
-      const result = await updateApplicationStatus(application.id, 'Queried', queryNote);
+      const result = await updateApplicationStatus(Number(application.id), 'Queried', queryNote);
       if (result.success) {
         toast({ title: "Application Queried", description: "The query has been sent to the user." });
         fetchApplication();
@@ -179,7 +174,17 @@ export default function ApplicationDetailPage() {
   const handleDeleteApplication = async () => {
     if (!application) return;
     setIsDeleteDialogOpen(false);
-    toast({ title: "Action Disabled", description: "Deleting from the detail page is disabled for safety.", variant: "destructive" });
+    try {
+      const result = await deleteApplication(Number(application.id));
+      if (result.success) {
+        toast({ title: "Success", description: "Application deleted successfully." });
+        router.push('/admin/applications');
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Could not delete application.", variant: "destructive" });
+    }
   };
 
 

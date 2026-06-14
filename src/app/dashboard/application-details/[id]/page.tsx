@@ -1,6 +1,9 @@
 
 import React from 'react';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
+import { applications } from '@/lib/db/schema';
+import { eq, and } from 'drizzle-orm';
 import { redirect, notFound } from 'next/navigation';
 import UserApplicationDetailView from './UserApplicationDetailView';
 
@@ -9,36 +12,41 @@ interface PageProps {
 }
 
 async function getApplication(id: string, userId: string) {
-    const supabase = await createSupabaseServerClient();
+    const appId = parseInt(id);
+    if (isNaN(appId)) return null;
 
-    // We fetch the single application ensuring it belongs to the user
-    const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('id', id)
-        .eq('user_id', userId)
-        .single();
+    const data = await db.query.applications.findFirst({
+        where: and(
+            eq(applications.id, appId),
+            eq(applications.user_id, userId)
+        )
+    });
 
-    if (error || !data) {
-        return null;
-    }
     return data;
 }
 
 export default async function UserApplicationDetailsPage({ params }: PageProps) {
     const { id } = await params;
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const session = await auth();
+    const user = session?.user;
 
     if (!user) {
         redirect('/login');
     }
 
-    const application = await getApplication(id, user.id);
+    const applicationData = await getApplication(id, user.id!);
 
-    if (!application) {
+    if (!applicationData) {
         notFound();
     }
+
+    // Cast to expected format if needed
+    const application = {
+        ...applicationData,
+        id: String(applicationData.id),
+        status: applicationData.status as any,
+        created_at: applicationData.created_at?.toISOString() || '',
+    };
 
     return <UserApplicationDetailView application={application} />;
 }

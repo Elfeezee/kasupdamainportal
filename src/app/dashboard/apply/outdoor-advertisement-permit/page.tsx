@@ -18,8 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 
 const phoneRegex = /^\d{11}$/;
 
@@ -125,19 +124,13 @@ export default function OutdoorAdvertisementPermitPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-permit');
-      } else {
-        setUser(session.user);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/outdoor-advertisement-permit');
+    }
+  }, [sessionStatus, router]);
 
   const form = useForm<OutdoorAdvertisementPermitFormValues>({
     resolver: zodResolver(outdoorAdvertisementPermitSchema),
@@ -181,7 +174,7 @@ export default function OutdoorAdvertisementPermitPage() {
   const watchedTypeOfLand = watch("siteTypeOfLand");
 
   const onSubmit = async (data: OutdoorAdvertisementPermitFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
       return;
     }
@@ -192,7 +185,7 @@ export default function OutdoorAdvertisementPermitPage() {
 
     formData.append('type', "Outdoor Advertisement Permit");
     formData.append('applicantName', data.applicantCompanyNameIndividual);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     // Iterate over the form data and append to FormData
     Object.entries(data).forEach(([key, value]) => {
@@ -283,7 +276,7 @@ export default function OutdoorAdvertisementPermitPage() {
     }
   };
 
-  if (!user) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="container mx-auto px-2 sm:px-4 py-8">
         <Card>

@@ -54,15 +54,24 @@ export async function deleteMessage(id: string) {
     }
 }
 
-export async function submitContactForm(data: { name: string, email: string, subject: string, message: string }) {
+export async function saveContactMessage(formData: FormData) {
     try {
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        const subject = formData.get('subject') as string;
+        const message = formData.get('message') as string;
+
         await db.insert(contact_messages).values({
             id: uuidv4(),
-            ...data,
+            name,
+            email,
+            subject,
+            message,
             is_read: false,
         });
         return { success: true };
     } catch (error: any) {
+        console.error("Error saving contact message:", error);
         return { success: false, error: error.message };
     }
 }

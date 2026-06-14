@@ -4,8 +4,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import ContentForm from '../ContentForm';
 import { useParams, useSearchParams } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { supabase } from '@/lib/supabase/client';
+import { getContentItem } from '@/app/actions/newsActions';
 
 function EditContentPageContent() {
     const params = useParams();
@@ -21,19 +20,10 @@ function EditContentPageContent() {
 
     useEffect(() => {
         const fetchData = async () => {
-            let table = 'news_items';
-            if (type === 'publication') table = 'publications';
-            else if (type === 'statistic') table = 'site_statistics';
-            else if (type === 'event') table = 'site_events';
-            else if (type === 'leadership') table = 'site_leadership';
-            else if (type === 'carousel') table = 'site_carousel';
-            else if (type === 'mda') table = 'site_mda_logos';
-
             try {
-                const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
-                if (error) throw error;
-                if (data) {
-                    setData(data);
+                const result = await getContentItem(id, type);
+                if (result) {
+                    setData(result);
                 }
             } catch (error) {
                 console.error(`Error fetching ${type}:`, error);

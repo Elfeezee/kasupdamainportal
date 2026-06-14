@@ -91,16 +91,18 @@ const FileActionButtons = ({ url, fileName }: { url: string, fileName: string })
         setIsGenerating(true);
         setLoadingError(null);
         try {
-            // Extract path from URL
-            const parts = url.split('/application_documents/');
-            if (parts.length < 2) throw new Error('Invalid file URL format stored in database.');
-            const path = parts[1];
+            // If it's already a full URL or a local path starting with /uploads, return it as is
+            if (url.startsWith('http') || url.startsWith('/uploads')) {
+                return url;
+            }
 
-            const result = await getSignedUrl(path);
+            // Otherwise, it might be a raw path from Supabase that needs to be processed
+            // This is a fallback for older records that might only store the path
+            const result = await getSignedUrl(url);
             if (result.success && result.url) {
                 return result.url;
             } else {
-                throw new Error(result.error || 'The file record exists, but the document could not be retrieved from secure storage.');
+                throw new Error(result.error || 'The file record exists, but the document could not be retrieved.');
             }
         } catch (error: any) {
             const errorMsg = error.message || "Could not access the file.";

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Clock, CheckCircle2, XCircle, BarChart as BarChartIcon, Loader2 } from 'lucide-react';
 import { Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart } from 'recharts';
-import { supabase } from '@/lib/supabase/client';
+import { getAllApplications } from '@/app/actions/adminActions';
 import type { StoredApplication } from '../applications/page';
 import { useToast } from '@/hooks/use-toast';
 
@@ -32,7 +32,7 @@ const processApplicationData = (applications: StoredApplication[]) => {
       stats.inprogress++;
     }
 
-    const simpleType = app.type.split('(')[0].trim();
+    const simpleType = typeof app.type === 'string' ? app.type.split('(')[0].trim() : 'Unknown';
     if (!stats.byType[simpleType]) {
       stats.byType[simpleType] = { inprogress: 0, approved: 0, rejected: 0, total: 0 };
     }
@@ -63,7 +63,10 @@ const processApplicationData = (applications: StoredApplication[]) => {
   };
 };
 
-const initialData = {
+const initialData: {
+  overview: { title: string; value: string; icon: any }[];
+  chartData: { name: string; approved: number; inprogress: number; rejected: number }[];
+} = {
   overview: [
     { title: "Total Applications", value: "0", icon: FileText },
     { title: "Inprogress Applications", value: "0", icon: Clock },
@@ -82,18 +85,14 @@ export default function AdminDashboardPage() {
     const getDashboardData = async () => {
       setLoading(true);
       try {
-        const { data, error } = await supabase.from('applications').select('*');
-        if (error) {
-          throw error;
-        }
-
-        if (data && data.length > 0) {
-          setDashboardData(processApplicationData(data as StoredApplication[]));
+        const result = await getAllApplications();
+        if (result.success && result.data) {
+          setDashboardData(processApplicationData(result.data as StoredApplication[]));
         } else {
           setDashboardData(initialData);
         }
       } catch (error) {
-        console.error("Error loading dashboard data from Supabase:", error);
+        console.error("Error loading dashboard data:", error);
         toast({
           title: "Error",
           description: "Failed to load dashboard data.",

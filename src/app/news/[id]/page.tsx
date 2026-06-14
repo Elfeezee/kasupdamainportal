@@ -1,5 +1,4 @@
 
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getNewsItem } from '@/app/actions/newsActions';
 import { format } from 'date-fns';
 import Image from 'next/image';

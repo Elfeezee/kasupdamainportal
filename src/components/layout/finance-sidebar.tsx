@@ -22,7 +22,7 @@ import {
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+
 
 const financeNavItems = [
   { href: '/admin/finance/dashboard', label: 'Finance Dashboard', icon: LayoutDashboard },

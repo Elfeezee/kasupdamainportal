@@ -36,9 +36,11 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/theme-provider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle as UIDialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
 
 
 export default function Header() {
+  const { data: session } = useSession();
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
 
@@ -134,7 +136,7 @@ export default function Header() {
   ];
 
   const EServiceSubLinks = [
-    { href: "/apply-for-permit", label: "Apply for permit" },
+    { href: session ? "/dashboard/apply" : "/apply-for-permit", label: "Apply for permit" },
     { href: "/dashboard/apply/din-application", label: "Apply for DIN" },
     { href: "https://permit.kasupda.kdsg.gov.ng/", label: "Renew permit", external: true },
     { href: "/dashboard/stage-approval", label: "Apply for Stage approval", disabled: true },

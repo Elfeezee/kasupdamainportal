@@ -13,8 +13,7 @@ import { Loader2, Fingerprint } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { Textarea } from '@/components/ui/textarea';
@@ -59,13 +58,13 @@ type DinApplicationFormValues = z.infer<typeof dinApplicationSchema>;
 
 import { useFormPersistence } from '@/hooks/use-form-persistence';
 
-function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: User, onSubmit: (data: DinApplicationFormValues, clearStorage: () => void) => void, isSubmitting: boolean }) {
+function DinApplicationForm({ user, onSubmit, isSubmitting }: { user: any, onSubmit: (data: DinApplicationFormValues, clearStorage: () => void) => void, isSubmitting: boolean }) {
   const form = useForm<DinApplicationFormValues>({
     resolver: zodResolver(dinApplicationSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: user.user_metadata?.full_name?.split(' ')[0] || "",
-      surname: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || "",
+      firstName: user.name?.split(' ')[0] || "",
+      surname: user.name?.split(' ').slice(1).join(' ') || "",
       middleName: "",
       applicantAddress: "",
       plotAddress: "",
@@ -255,29 +254,18 @@ function LoadingCard() {
 export default function DinApplicationPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [user, setUser] = useState<User | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const checkUser = async () => {
-      setLoading(true);
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (sessionError || !session) {
-        toast({ title: 'Authentication Required', description: 'Please log in to apply for a DIN.', variant: 'destructive' });
-        router.push('/login?redirectTo=/dashboard/apply/din-application');
-        return;
-      }
-
-      setUser(session.user);
-      setLoading(false);
-    };
-    checkUser();
-  }, [router, toast]);
+    if (sessionStatus === 'unauthenticated') {
+      toast({ title: 'Authentication Required', description: 'Please log in to apply for a DIN.', variant: 'destructive' });
+      router.push('/login?redirectTo=/dashboard/apply/din-application');
+    }
+  }, [sessionStatus, router, toast]);
 
   const onSubmit = async (data: DinApplicationFormValues, clearStorage: () => void) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to proceed.", variant: "destructive" });
       return;
     }
@@ -289,7 +277,7 @@ export default function DinApplicationPage() {
     const formData = new FormData();
     formData.append('type', 'DIN Application');
     formData.append('applicantName', applicantName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     // Append all other form values to FormData
     Object.entries(data).forEach(([key, value]) => {
@@ -333,9 +321,9 @@ export default function DinApplicationPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8">
-      {loading && <LoadingCard />}
-      {!loading && user && (
-        <DinApplicationForm user={user} onSubmit={onSubmit} isSubmitting={isSubmitting} />
+      {sessionStatus === 'loading' && <LoadingCard />}
+      {sessionStatus === 'authenticated' && session.user && (
+        <DinApplicationForm user={session.user} onSubmit={onSubmit} isSubmitting={isSubmitting} />
       )}
     </div>
   );

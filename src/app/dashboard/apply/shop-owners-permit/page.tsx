@@ -21,8 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 
 const phoneRegex = /^\d{11}$/;
 
@@ -100,19 +99,13 @@ export default function ShopOwnersPermitPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/shop-owners-permit');
-      } else {
-        setUser(session.user);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/shop-owners-permit');
+    }
+  }, [sessionStatus, router]);
 
   const form = useForm<ShopOwnersPermitFormValues>({
     resolver: zodResolver(shopOwnersPermitSchema),
@@ -155,7 +148,7 @@ export default function ShopOwnersPermitPage() {
   const { clearStorage } = useFormPersistence(form, 'shop-owners-permit-form');
 
   const onSubmit = async (data: ShopOwnersPermitFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
       return;
     }
@@ -165,7 +158,7 @@ export default function ShopOwnersPermitPage() {
     formData.append('type', "Temporary Shop Owners Permit");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     formData.append('applicantName', applicantName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     for (const [key, value] of Object.entries(data)) {
       if (value instanceof FileList && value.length > 0) {
@@ -229,7 +222,7 @@ export default function ShopOwnersPermitPage() {
     }
   };
 
-  if (!user) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="container mx-auto px-2 sm:px-4 py-8">
         <Card>

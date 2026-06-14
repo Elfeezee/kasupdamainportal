@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { signUp } from '@/app/actions/authActions';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 import { z } from 'zod';
 
@@ -32,7 +32,14 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
 export default function ApplyForPermitPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session, status: sessionStatus } = useSession();
   
+  useEffect(() => {
+    if (sessionStatus === 'authenticated') {
+      router.push('/dashboard/apply');
+    }
+  }, [sessionStatus, router]);
+
   const [formData, setFormData] = useState({
     applicantName: '',
     email: '',

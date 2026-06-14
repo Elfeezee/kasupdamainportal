@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { format, parseISO } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase/client';
+import { getAdminApplications, deleteApplication, updateApplicationStatus } from '@/app/actions/adminActions';
 import ApplicationDetails from '../applications/ApplicationDetails';
 import type { StoredApplication } from '../applications/page';
 
@@ -63,14 +63,12 @@ export default function StageApprovalsPage() {
   const loadApplications = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('applications')
-        .select('*')
-        .eq('type', 'Stage Approval Application')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setApplications(data as StoredApplication[]);
+      const result = await getAdminApplications(['Stage Approval Application']);
+      if (result.success) {
+        setApplications(result.data as StoredApplication[]);
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: "Error", description: "Failed to load stage approval applications.", variant: "destructive" });
     } finally {
@@ -90,10 +88,13 @@ export default function StageApprovalsPage() {
   const handleDelete = async () => {
     if (!applicationToDelete) return;
     try {
-      const { error } = await supabase.from('applications').delete().eq('id', applicationToDelete.id);
-      if (error) throw error;
-      setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
-      toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.id}) has been deleted.` });
+      const result = await deleteApplication(Number(applicationToDelete.id));
+      if (result.success) {
+        setApplications(prev => prev.filter(app => app.id !== applicationToDelete.id));
+        toast({ title: "Application Deleted", description: `Application ID (${applicationToDelete.original_permit_id || applicationToDelete.id}) has been deleted.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not delete the application.', variant: 'destructive' });
     } finally {
@@ -109,10 +110,13 @@ export default function StageApprovalsPage() {
       return;
     }
     try {
-      const { error } = await supabase.from('applications').update({ status: newStatus, rejection_reason: null }).eq('id', app.id);
-      if (error) throw error;
-      setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
-      toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.id}) has been marked as ${newStatus}.` });
+      const result = await updateApplicationStatus(Number(app.id), newStatus, null);
+      if (result.success) {
+        setApplications(prevApps => prevApps.map(a => a.id === app.id ? { ...a, status: newStatus } : a));
+        toast({ title: `Application ${newStatus}`, description: `The application (${app.original_permit_id || app.id}) has been marked as ${newStatus}.` });
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       toast({ title: 'Error', description: 'Could not update the application status.', variant: 'destructive' });
     }

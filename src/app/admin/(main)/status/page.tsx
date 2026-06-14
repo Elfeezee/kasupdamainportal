@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/lib/supabase/client';
+import { checkDbConnection } from '@/app/actions/adminActions';
 import { CheckCircle2, AlertTriangle, Loader2, Server } from 'lucide-react';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
@@ -17,17 +17,12 @@ export default function StatusPage() {
     setDbStatus('loading');
     setErrorMessage(null);
     try {
-      // Perform a simple, lightweight query to check the connection.
-      // Fetching the count of users is a good, low-impact test.
-      const { error } = await supabase
-        .from('users')
-        .select('uid', { count: 'exact', head: true });
-
-      if (error) {
-        throw error;
+      const result = await checkDbConnection();
+      if (result.success) {
+        setDbStatus('success');
+      } else {
+        throw new Error(result.error);
       }
-
-      setDbStatus('success');
     } catch (error: any) {
       setDbStatus('error');
       setErrorMessage(error.message || 'An unknown error occurred.');
@@ -81,7 +76,7 @@ export default function StatusPage() {
         <CardHeader>
           <CardTitle>Database Connection</CardTitle>
           <CardDescription>
-            Verify that the application can successfully communicate with the Supabase database.
+            Verify that the application can successfully communicate with the MySQL database.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

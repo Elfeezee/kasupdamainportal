@@ -39,7 +39,7 @@ export async function createBill(
 ): Promise<{ success: boolean; error?: string; }> {
     try {
         const userProfile = await db.query.users.findFirst({
-            where: eq(users.uid, userId)
+            where: eq(users.id, userId)
         });
 
         if (!userProfile) {
@@ -98,7 +98,7 @@ export async function createGeneralBill(
 ): Promise<{ success: boolean; error?: string; rrrLink?: string }> {
     try {
         const userProfile = await db.query.users.findFirst({
-            where: eq(users.uid, userId)
+            where: eq(users.id, userId)
         });
 
         if (!userProfile) {
@@ -272,7 +272,7 @@ export async function generateDin(applicationId: number): Promise<{ success: boo
 
         await db.update(users)
             .set({ din: finalDin })
-            .where(eq(users.uid, application.user_id));
+            .where(eq(users.id, application.user_id));
 
         revalidatePath('/admin/applications');
         revalidatePath('/admin/din-applications');

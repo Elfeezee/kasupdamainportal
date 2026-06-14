@@ -14,8 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from "@/hooks/use-toast";
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 import { ChevronLeft, ChevronRight, ClipboardCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -87,21 +86,13 @@ export default function StageApprovalPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/login?redirectTo=/dashboard/apply/stage-approval');
-      } else {
-        setUser(session.user);
-        setLoading(false);
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login?redirectTo=/dashboard/apply/stage-approval');
+    }
+  }, [sessionStatus, router]);
 
   const { register, handleSubmit, control, formState: { errors }, trigger, reset } = useForm<StageApprovalFormValues>({
     resolver: zodResolver(stageApprovalSchema),
@@ -109,7 +100,7 @@ export default function StageApprovalPage() {
   });
 
   useEffect(() => {
-    if (user) {
+    if (session?.user) {
       reset({
         firstName: "",
         middleName: "",
@@ -121,11 +112,11 @@ export default function StageApprovalPage() {
         declaration: false,
       });
     }
-  }, [user, reset]);
+  }, [session, reset]);
 
 
   const onSubmit = async (data: StageApprovalFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit.", variant: "destructive" });
       return;
     }
@@ -135,7 +126,7 @@ export default function StageApprovalPage() {
     formData.append('type', "Stage Approval Application");
     const applicantName = `${data.firstName} ${data.surname}`;
     formData.append('applicantName', applicantName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     Object.entries(data).forEach(([key, value]) => {
       if (key === 'doc_co' || key === 'doc_building_permit') {
@@ -197,7 +188,7 @@ export default function StageApprovalPage() {
     }
   };
 
-  if (loading) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="container mx-auto px-2 sm:px-4 py-8">
         <LoadingSkeleton />

@@ -21,8 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { saveApplication } from '@/app/actions/applicationActions';
 import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { useSession } from 'next-auth/react';
 
 const phoneRegex = /^\d{11}$/;
 
@@ -157,22 +156,14 @@ export default function MastPermitPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      const currentUser = session?.user || null;
-      setUser(currentUser);
-      if (!currentUser) {
-        toast({ title: 'Authentication Error', description: 'You must be logged in to proceed.', variant: 'destructive' });
-        router.push('/login');
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
+    if (sessionStatus === 'unauthenticated') {
+      toast({ title: 'Authentication Error', description: 'You must be logged in to proceed.', variant: 'destructive' });
+      router.push('/login');
     }
-  }, [router, toast]);
+  }, [sessionStatus, router, toast]);
 
   const form = useForm<MastPermitFormValues>({
     resolver: zodResolver(mastPermitSchema),
@@ -230,7 +221,7 @@ export default function MastPermitPage() {
   const watchedMastType = watch("mastType");
 
   const onSubmit = async (data: MastPermitFormValues) => {
-    if (!user) {
+    if (!session?.user) {
       toast({ title: "Error", description: "You must be logged in to submit an application.", variant: "destructive" });
       return;
     }
@@ -239,7 +230,7 @@ export default function MastPermitPage() {
     const formData = new FormData();
     formData.append('type', "Mast Installation Permit");
     formData.append('applicantName', data.orgName);
-    formData.append('userId', user.id);
+    formData.append('userId', session.user.id);
 
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof FileList && value.length > 0) {
@@ -316,7 +307,7 @@ export default function MastPermitPage() {
     }
   };
 
-  if (!user) {
+  if (sessionStatus === 'loading') {
     return (
       <div className="container mx-auto px-2 sm:px-4 py-8">
         <Card>

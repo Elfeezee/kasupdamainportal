@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Carousel, type CarouselImage } from "@/components/ui/carousel";
 import { getNewsItems, getStatistics, getEvents, getLeadership, getCarouselImages } from "@/app/actions/newsActions";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 
 const initialCarouselImages: CarouselImage[] = [
   {
@@ -40,6 +41,7 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export default function Home() {
+  const { data: session, status: sessionStatus } = useSession();
   const [stats, setStats] = useState<any[]>([]);
   const [news, setNews] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
@@ -109,7 +111,7 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
                   <Button size="lg" asChild className="rounded-xl px-8 font-bold shadow-xl hover:scale-105 transition-transform">
-                    <Link href="/apply-for-permit">
+                    <Link href={session ? "/dashboard/apply" : "/apply-for-permit"}>
                       Apply for Permit
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>

@@ -26,10 +26,14 @@ export default function AdminDashboardLayout({
     if (status === 'loading') return;
 
     if (status === 'unauthenticated') {
-      console.log('Layout - Unauthenticated, redirecting to login');
-      toast({ title: 'Access Denied', description: 'You must be logged in to view this page.', variant: 'destructive' });
-      router.replace('/admin/login');
-      return;
+      // Check if we were previously verified or if it's a transient state
+      const timer = setTimeout(() => {
+        if (status === 'unauthenticated') {
+          console.log('Layout - Unauthenticated, redirecting to login');
+          router.replace('/admin/login');
+        }
+      }, 500); // 500ms grace period
+      return () => clearTimeout(timer);
     }
 
     const allowedRoles = ['Admin', 'Super Admin', 'Finance'];
@@ -39,13 +43,13 @@ export default function AdminDashboardLayout({
     if (session?.user && allowedRoles.includes(userRole)) {
       console.log('Layout - Verified');
       setIsVerified(true);
-    } else {
-      console.log('Layout - Role not allowed or user missing, redirecting');
+      setLoading(false);
+    } else if (session?.user) {
+      console.log('Layout - Role not allowed, redirecting');
       toast({ title: 'Access Denied', description: `You do not have administrative privileges. Role: ${userRole}`, variant: 'destructive' });
       router.replace('/admin/login');
+      setLoading(false);
     }
-
-    setLoading(false);
   }, [status, session, router, toast]);
 
   if (loading) { // Show a loading screen while we verify
