@@ -34,7 +34,10 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '250mb',
     },
+    cpus: 2,
+    workerThreads: false,
   },
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

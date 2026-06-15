@@ -8,6 +8,59 @@ import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { QRCodeSVG } from 'qrcode.react';
 
+function numberToWords(amount: number): string {
+    if (!amount || isNaN(amount)) return '';
+    if (amount === 0) return 'Zero Naira Only';
+    
+    const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+    const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+    
+    const formatChunk = (n: number) => {
+        let str = '';
+        if (n >= 100) {
+            str += a[Math.floor(n / 100)] + ' Hundred ';
+            n %= 100;
+        }
+        if (n >= 20) {
+            str += b[Math.floor(n / 10)] + ' ';
+            n %= 10;
+        }
+        if (n > 0) {
+            str += a[n] + ' ';
+        }
+        return str.trim();
+    };
+
+    let wholePart = Math.floor(amount);
+    const fractionalPart = Math.round((amount - wholePart) * 100);
+
+    let words = '';
+    
+    if (wholePart >= 1000000000) {
+        words += formatChunk(Math.floor(wholePart / 1000000000)) + ' Billion ';
+        wholePart %= 1000000000;
+    }
+    if (wholePart >= 1000000) {
+        words += formatChunk(Math.floor(wholePart / 1000000)) + ' Million ';
+        wholePart %= 1000000;
+    }
+    if (wholePart >= 1000) {
+        words += formatChunk(Math.floor(wholePart / 1000)) + ' Thousand ';
+        wholePart %= 1000;
+    }
+    if (wholePart > 0) {
+        words += formatChunk(wholePart);
+    }
+    
+    let result = words.trim() ? words.trim() + ' Naira' : '';
+    
+    if (fractionalPart > 0) {
+        result += (result ? ' and ' : '') + formatChunk(fractionalPart) + ' Kobo';
+    }
+    
+    return result ? result + ' Only' : '';
+}
+
 interface ReceiptProps {
     transaction: {
         id: string | number;
@@ -127,6 +180,14 @@ export default function Receipt({ transaction }: ReceiptProps) {
                                         </td>
                                         <td className="px-4 py-4 text-right">
                                             <p className="text-lg font-black text-primary">₦{transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-slate-100/50 border-t border-slate-100">
+                                        <td colSpan={2} className="px-4 py-3 text-right">
+                                            <p className="text-xs italic text-slate-600">
+                                                <span className="font-semibold mr-1">Amount in words:</span>
+                                                {numberToWords(transaction.amount)}
+                                            </p>
                                         </td>
                                     </tr>
                                 </tfoot>
