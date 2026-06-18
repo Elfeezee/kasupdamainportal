@@ -14,7 +14,7 @@ const paymentHistory = [
     id: "PAY-2024-001",
     date: "2024-07-15",
     description: "DIN Application Fee",
-    amount: "₦10,000.00",
+    amount: "₦20,000.00",
     status: "Paid",
   },
   {

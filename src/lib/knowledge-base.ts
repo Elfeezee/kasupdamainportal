@@ -26,7 +26,7 @@ export const knowledgeBase = [
       The official application process for obtaining a building permit at KASUPDA consists of 4 main steps:
       Step 1: Application Channels - Choose between physical (Headquarters/Zonal Offices) or online portal. Download BPI or BPO forms.
       Step 2: Required Documentation - Prepare proof of land ownership, architectural drawings (sealed by registered Architect), Site Analysis Report (SAR), M&E drawings, and structural drawings (for storey buildings).
-      Step 3: Submission & Fees - Pay processing fees (Individuals: ₦10,000, Organizations: ₦20,000; Express options available). Submit documents via Customer Service Unit or Online Portal. Get Acknowledgement Letter and BPI Number.
+      Step 3: Submission & Fees - Pay processing fees (Individuals: ₦20,000, Organizations: ₦50,000; Express options available). Submit documents via Customer Service Unit or Online Portal. Get Acknowledgement Letter and BPI Number.
       Step 4: Collection of Certificate - Notification of approval within 5-10 working days. Assessment of final fees based on development size. Final payment and collection of certificate.
     `,
   },
@@ -34,8 +34,8 @@ export const knowledgeBase = [
     source: "Building Permit Guidelines - Fees & Requirements",
     content: `
       Processing Fees:
-      - Individuals: ₦10,000 (Standard), ₦50,000 (Express)
-      - Organizations: ₦20,000 (Standard), ₦100,000 (Express)
+      - Individuals: ₦20,000 (Standard), ₦50,000 (Express)
+      - Organizations: ₦50,000 (Standard), ₦100,000 (Express)
       
       Main Requirements:
       - Proof of Land Ownership (Digital C of O preferred)

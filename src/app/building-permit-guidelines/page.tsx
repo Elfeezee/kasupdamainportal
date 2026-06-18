@@ -350,9 +350,9 @@ export default function BuildingPermitGuidelinesPage() {
                                                         <div>
                                                             <p className="font-bold text-xs mb-1 opacity-60">Processing Fees:</p>
                                                             <ul className="ml-6 text-sm grid grid-cols-1 md:grid-cols-2 gap-1 uppercase font-bold text-slate-800">
-                                                                <li className="flex justify-between md:block">Individuals: <span className="text-green-600">₦10,000</span></li>
+                                                                <li className="flex justify-between md:block">Individuals: <span className="text-green-600">₦20,000</span></li>
                                                                 <li className="flex justify-between md:block">Individuals (Express Service): <span className="text-green-600">₦50,000</span></li>
-                                                                <li className="flex justify-between md:block">Companies/Organisations: <span className="text-green-600">₦20,000</span></li>
+                                                                <li className="flex justify-between md:block">Companies/Organisations: <span className="text-green-600">₦50,000</span></li>
                                                                 <li className="flex justify-between md:block">Companies/Organisations (Express Service): <span className="text-green-600">₦100,000</span></li>
                                                             </ul>
                                                         </div>

@@ -132,6 +132,7 @@ const permitApplicationSchema = z.object({
   plotDistrict: z.string().optional(),
   plotLGA: z.string().optional(),
   plotDescriptionAddress: z.string().min(1, "Plot Description/Address is required"),
+  serviceType: z.enum(["Standard", "Express"]).default("Standard"),
 
   // Box 6: Documents
   docLandTitle: requiredFileValidation,
@@ -181,7 +182,7 @@ const steps = [
   { id: 2, name: "Applicant Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
   { id: 3, name: "Representative", fields: ['repEmail'] as FieldName<PermitApplicationFormValues>[] },
   { id: 4, name: "Representative Address", fields: [] as FieldName<PermitApplicationFormValues>[] },
-  { id: 5, name: "Plot Details", fields: ['plotDescriptionAddress'] as FieldName<PermitApplicationFormValues>[] },
+  { id: 5, name: "Plot Details", fields: ['plotDescriptionAddress', 'serviceType'] as FieldName<PermitApplicationFormValues>[] },
   { id: 6, name: "Documents & Declaration", fields: ['declaration', 'docLandTitle', 'docArchitecturalWorksDrawings', 'docMechanicalWorksDrawings', 'docStructuralDrawings', 'docStructuralCalculationSheets', 'docSoilTest', 'docKepaEiaApproval', 'docSar', 'docApplicantId', 'docUtilityBill'] as FieldName<PermitApplicationFormValues>[] },
 ];
 
@@ -247,6 +248,7 @@ export default function ResidentialBuildingPermitPage() {
       plotDistrict: "",
       plotLGA: "",
       plotDescriptionAddress: "",
+      serviceType: "Standard",
       declaration: false,
     }
   });
@@ -756,6 +758,31 @@ export default function ResidentialBuildingPermitPage() {
                 <Label htmlFor="plotDescriptionAddress">Plot Description / Address*</Label>
                 <Textarea id="plotDescriptionAddress" {...register("plotDescriptionAddress")} />
                 {errors.plotDescriptionAddress && <p className="text-destructive text-xs mt-1">{errors.plotDescriptionAddress.message}</p>}
+              </div>
+              <div className="space-y-2 pt-2">
+                <Label className="text-sm sm:text-base font-semibold">Service Option*</Label>
+                <Controller
+                  name="serviceType"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-col sm:flex-row gap-4 mt-2">
+                      <div className="flex items-center space-x-2 border rounded-md p-3 flex-1 hover:bg-slate-50 cursor-pointer">
+                        <RadioGroupItem value="Standard" id="service_standard" />
+                        <div>
+                          <Label htmlFor="service_standard" className="font-bold cursor-pointer text-sm">Standard Service</Label>
+                          <p className="text-xs text-muted-foreground">₦20,000 (Processing takes 5-10 working days)</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2 border rounded-md p-3 flex-1 hover:bg-slate-50 cursor-pointer">
+                        <RadioGroupItem value="Express" id="service_express" />
+                        <div>
+                          <Label htmlFor="service_express" className="font-bold cursor-pointer text-sm text-green-700">Express Service</Label>
+                          <p className="text-xs text-muted-foreground">₦50,000 (Processing takes 3 working days)</p>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                  )}
+                />
               </div>
             </CardContent>
           </Card>

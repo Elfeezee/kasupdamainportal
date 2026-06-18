@@ -97,7 +97,17 @@ export async function saveApplication(
         if (!insertedData) throw new Error("Failed to retrieve inserted application.");
 
         if (type === 'DIN Application') {
-            await createGeneralBill(insertedData, userId, 5000, 'Approval Fees For Building Plan');
+            await createGeneralBill(insertedData, userId, 20000, 'DIN Application Fee');
+        } else if (type === 'Building Permit (Individual)') {
+            const isExpress = (insertedData.data as any)?.serviceType === 'Express';
+            const amount = isExpress ? 50000 : 20000;
+            const description = isExpress ? 'Building Permit (Individual) - Express Fee' : 'Building Permit (Individual) - Standard Fee';
+            await createGeneralBill(insertedData, userId, amount, description);
+        } else if (type === 'Building Permit (Organization)') {
+            const isExpress = (insertedData.data as any)?.serviceType === 'Express';
+            const amount = isExpress ? 100000 : 50000;
+            const description = isExpress ? 'Building Permit (Organization) - Express Fee' : 'Building Permit (Organization) - Standard Fee';
+            await createGeneralBill(insertedData, userId, amount, description);
         } else {
             await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
         }
