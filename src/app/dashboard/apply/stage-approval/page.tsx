@@ -116,7 +116,7 @@ export default function StageApprovalPage() {
     formData.append('type', "Stage Approval Application");
     const applicantName = `${data.firstName} ${data.surname}`;
     formData.append('applicantName', applicantName);
-    formData.append('userId', session.user.id);
+    formData.append('userId', session.user.id ?? '');
 
     Object.entries(data).forEach(([key, value]) => {
       if (key === 'doc_co' || key === 'doc_building_permit') {
@@ -135,7 +135,16 @@ export default function StageApprovalPage() {
 
       if (result.success) {
         clearStorage();
-        router.push(`/dashboard/apply/success?id=${result.applicationId}`);
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive"
+          });
+          router.push('/dashboard/billing');
+        } else {
+          router.push('/dashboard/billing');
+        }
       } else {
         throw new Error(result.error || "An unknown error occurred.");
       }

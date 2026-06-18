@@ -280,10 +280,8 @@ export default function CommercialIndustrialOtherPermitPage() {
             description: result.error,
             variant: "destructive"
           });
-          router.push('/dashboard/my-applications');
-        } else {
-          router.push(`/dashboard/billing`);
         }
+        router.push(`/dashboard/billing`);
       } else {
         throw new Error(result.error || "An unknown error occurred.");
       }

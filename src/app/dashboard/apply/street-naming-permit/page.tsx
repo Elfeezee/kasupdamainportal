@@ -216,7 +216,7 @@ export default function StreetNamingPermitPage() {
     formData.append('type', "Street Naming Permit");
     const applicantName = [data.firstName, data.middleName, data.surname].filter(Boolean).join(' ');
     formData.append('applicantName', applicantName);
-    formData.append('userId', session.user.id);
+    formData.append('userId', session.user.id ?? '');
 
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof FileList && value.length > 0) {
@@ -240,6 +240,13 @@ export default function StreetNamingPermitPage() {
       const result = await saveApplication(formData);
       if (result.success) {
         clearStorage();
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive",
+          });
+        }
         router.push(`/dashboard/billing`);
       } else {
         throw new Error(result.error || "An unknown error occurred.");

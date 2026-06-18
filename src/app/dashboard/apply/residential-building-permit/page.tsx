@@ -304,10 +304,10 @@ export default function ResidentialBuildingPermitPage() {
             description: result.error,
             variant: "destructive"
           });
-          router.push('/dashboard/my-applications');
         } else {
-          router.push(`/dashboard/billing`);
+          toast({ title: "Application Submitted", description: "Please proceed with payment." });
         }
+        router.push('/dashboard/billing');
       } else {
         throw new Error(result.error || "An unknown server error occurred.");
       }

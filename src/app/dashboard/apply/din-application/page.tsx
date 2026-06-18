@@ -301,11 +301,10 @@ export default function DinApplicationPage() {
             description: result.error,
             variant: "destructive"
           });
-          router.push('/dashboard/my-dins'); // Redirect to my-dins for DIN application
         } else {
           toast({ title: "Application Submitted", description: "Please proceed with payment to get your DIN." });
-          router.push(`/dashboard/billing`);
         }
+        router.push('/dashboard/billing');
       } else {
         throw new Error(result.error || "An unknown error occurred during DIN application submission.");
       }

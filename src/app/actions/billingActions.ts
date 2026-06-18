@@ -151,6 +151,25 @@ export async function createGeneralBill(
         revalidatePath('/dashboard/billing');
         return { success: true, rrrLink: result.rrrLink };
     } catch (error: any) {
+        // Fallback: save a pending transaction with a local reference so the bill is visible
+        try {
+            const fallbackRef = `LOCAL-${Date.now()}-${application.id}`;
+            await db.insert(transactions).values({
+                user_id: userId,
+                application_id: Number(application.id),
+                amount: amount.toString(),
+                description: description,
+                payment_reference: fallbackRef,
+                status: 'Pending',
+                payer_name: application.applicant_name,
+                payer_email: userProfile?.email,
+                payer_phone: userProfile?.phone,
+            });
+            revalidatePath('/dashboard/billing');
+            console.warn('Osoftpay API failed, fallback transaction saved:', fallbackRef);
+        } catch (fallbackError: any) {
+            console.error('Fallback transaction also failed:', fallbackError.message);
+        }
         return { success: false, error: error.message || "Unknown error" };
     }
 }

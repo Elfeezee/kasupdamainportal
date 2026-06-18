@@ -144,11 +144,19 @@ export default function StageApprovalPage() {
       const result = await saveApplication(formData);
 
       if (result.success) {
-        toast({
-          title: "Application Submitted!",
-          description: `Your stage approval application has been received.`,
-        });
-        router.push('/dashboard/my-applications');
+        if (result.error) {
+          toast({
+            title: "Application Saved with Issues",
+            description: result.error,
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Application Submitted!",
+            description: `Your stage approval application has been received. Please proceed to payment.`,
+          });
+        }
+        router.push('/dashboard/billing');
       } else {
         throw new Error(result.error || "An unknown error occurred.");
       }

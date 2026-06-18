@@ -96,20 +96,28 @@ export async function saveApplication(
 
         if (!insertedData) throw new Error("Failed to retrieve inserted application.");
 
+        let billingResult: { success: boolean; error?: string; rrrLink?: string };
+
         if (type === 'DIN Application') {
-            await createGeneralBill(insertedData, userId, 20000, 'DIN Application Fee');
+            billingResult = await createGeneralBill(insertedData, userId, 20000, 'DIN Application Fee');
         } else if (type === 'Building Permit (Individual)') {
             const isExpress = (insertedData.data as any)?.serviceType === 'Express';
             const amount = isExpress ? 50000 : 20000;
             const description = isExpress ? 'Building Permit (Individual) - Express Fee' : 'Building Permit (Individual) - Standard Fee';
-            await createGeneralBill(insertedData, userId, amount, description);
+            billingResult = await createGeneralBill(insertedData, userId, amount, description);
         } else if (type === 'Building Permit (Organization)') {
             const isExpress = (insertedData.data as any)?.serviceType === 'Express';
             const amount = isExpress ? 100000 : 50000;
             const description = isExpress ? 'Building Permit (Organization) - Express Fee' : 'Building Permit (Organization) - Standard Fee';
-            await createGeneralBill(insertedData, userId, amount, description);
+            billingResult = await createGeneralBill(insertedData, userId, amount, description);
         } else {
-            await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
+            billingResult = await createGeneralBill(insertedData, userId, 10000, 'Approval Fees For Building Plan');
+        }
+
+        if (!billingResult.success) {
+            console.error('Billing generation failed:', billingResult.error);
+            // Application is saved but billing failed — return partial success so user can retry payment from billing page
+            return { success: true, applicationId, applicantName, error: `Application saved, but payment bill could not be generated: ${billingResult.error}. Please contact support or try refreshing Billing & Payments.` };
         }
 
         return { success: true, applicationId, applicantName };
